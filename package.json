@@ -1,0 +1,19 @@
+{
+  "name": "blood-chain-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nguyenphucthienan/BloodChainAPI.git"
+  },
+  "author": "Nguyen Phuc Thien An",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nguyenphucthienan/BloodChainAPI/issues"
+  },
+  "homepage": "https://github.com/nguyenphucthienan/BloodChainAPI#readme"
+}
