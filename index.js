@@ -4,6 +4,7 @@ const config = require('./config');
 
 require('./startups/db')();
 require('./startups/registerModels')();
+require('./startups/seeds')();
 require('./services/passport')();
 
 require('./startups/utils')(app);
