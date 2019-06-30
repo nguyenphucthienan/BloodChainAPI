@@ -1,4 +1,8 @@
 module.exports = {
   port: process.env.PORT,
-  mongoUri: process.env.MONGO_URI
+  mongoUri: process.env.MONGO_URI,
+  secretKey: process.env.SECRET_KEY,
+  token: {
+    expirationTime: process.env.TOKEN_EXPIRATION_TIME
+  },
 };
