@@ -6,8 +6,9 @@ const config = require('./config');
 require('./startups/db')();
 require('./startups/registerModels')();
 require('./startups/seeds')();
-require('./services/passport')();
+require('./startups/validation')();
 require('./startups/logging')();
+require('./services/passport')();
 
 require('./startups/utils')(app);
 require('./startups/cors')(app);

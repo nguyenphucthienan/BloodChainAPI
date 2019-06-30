@@ -1,4 +1,5 @@
 const roleService = require('../services/roleService');
+const { validateRole } = require('../validations/roleValidation');
 
 exports.getRoles = async (req, res) => {
   const roles = await roleService.getRoles();
@@ -7,7 +8,6 @@ exports.getRoles = async (req, res) => {
 
 exports.getRole = async (req, res) => {
   const { id } = req.params;
-
   const role = await roleService.getRoleById(id);
 
   if (!role) {
@@ -18,13 +18,18 @@ exports.getRole = async (req, res) => {
 };
 
 exports.createRole = async (req, res) => {
-  const role = await roleService.createRole(req.body);
+  const { error } = validateRole(req.body);
+  if (error) {
+    return res.status(400).send(error.toString());
+  }
+
+  const { name } = req.body;
+  const role = await roleService.createRole(name);
   return res.send(role);
 };
 
 exports.deleteRole = async (req, res) => {
   const { id } = req.params;
-
   const role = await roleService.deleteRoleById(id);
 
   if (!role) {

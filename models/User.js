@@ -24,11 +24,13 @@ const userSchema = new Schema({
   },
   firstName: {
     type: String,
-    required: 'First name is required'
+    required: 'First name is required',
+    trim: true
   },
   lastName: {
     type: String,
-    required: 'Last name is required'
+    required: 'Last name is required',
+    trim: true
   },
   photoUrl: {
     type: String,

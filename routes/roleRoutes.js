@@ -7,24 +7,28 @@ const hasRoles = require('../middlewares/hasRoles');
 const catchErrors = require('../middlewares/catchErrors');
 const { requireJwtAuth } = require('../middlewares/passportAuth');
 
-router.get('/roles',
+router.get('/',
   requireJwtAuth,
   hasRoles([RoleNames.ADMIN]),
-  catchErrors(roleController.getRoles));
+  catchErrors(roleController.getRoles)
+);
 
-router.get('/roles/:id',
+router.get('/:id',
   requireJwtAuth,
   hasRoles([RoleNames.ADMIN]),
-  catchErrors(roleController.getRole));
+  catchErrors(roleController.getRole)
+);
 
-router.post('/roles',
+router.post('/',
   requireJwtAuth,
   hasRoles([RoleNames.ADMIN]),
-  catchErrors(roleController.createRole));
+  catchErrors(roleController.createRole)
+);
 
-router.delete('/roles/:id',
+router.delete('/:id',
   requireJwtAuth,
   hasRoles([RoleNames.ADMIN]),
-  catchErrors(roleController.deleteRole));
+  catchErrors(roleController.deleteRole)
+);
 
 module.exports = router;
