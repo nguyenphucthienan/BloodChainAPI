@@ -61,7 +61,7 @@ userSchema.methods.comparePassword = async function comparePassword(inputPasswor
   });
 };
 
-userSchema.methods.generateToken = function() { 
+userSchema.methods.generateToken = function () {
   const user = this;
   const roles = user.roles.map(role => role.name);
   return jwt.sign(

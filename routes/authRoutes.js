@@ -5,7 +5,7 @@ const authController = require('../controllers/authController');
 const catchErrors = require('../middlewares/catchErrors');
 const { requireLocalAuth, requireJwtAuth } = require('../middlewares/passportAuth');
 
-router.post('/register',authController.register);
+router.post('/register', authController.register);
 
 router.post('/check-username',
   catchErrors(authController.checkUsername));
