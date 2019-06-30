@@ -8,6 +8,7 @@ require('./startups/seeds')();
 require('./services/passport')();
 
 require('./startups/utils')(app);
+require('./startups/cors')(app);
 require('./startups/routes')(app);
 
 app.listen(config.port, () => {

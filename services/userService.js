@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 const User = mongoose.model('User');
 
-
 exports.getUserById = (id) => {
   const _id = mongoose.Types.ObjectId(id);
   return User.findById({ _id })

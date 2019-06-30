@@ -5,4 +5,5 @@ module.exports = {
   token: {
     expirationTime: process.env.TOKEN_EXPIRATION_TIME
   },
+  corsWhitelist: process.env.CORS_WHITELIST.split(' ')
 };
