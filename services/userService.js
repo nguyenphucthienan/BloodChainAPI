@@ -14,10 +14,17 @@ exports.getUserByUsername = username => (
     .exec()
 );
 
-exports.createUser = (username, password, firstName, lastName) => {
+exports.getUserByEmail = email => (
+  User.findOne({ email })
+    .populate('roles')
+    .exec()
+);
+
+exports.createUser = (username, password, email, firstName, lastName) => {
   const newUser = new User({
     username,
     password,
+    email,
     firstName,
     lastName
   });

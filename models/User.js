@@ -1,8 +1,10 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
+const Role = mongoose.model('Role');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt-nodejs');
 const BcryptUtils = require('../utils/BcryptUtils');
+const RoleNames = require('../constants/RoleNames');
 const config = require('../config');
 
 const userSchema = new Schema({
@@ -19,6 +21,8 @@ const userSchema = new Schema({
   },
   email: {
     type: String,
+    required: 'Email is required',
+    unique: true,
     lowercase: true,
     trim: true
   },
@@ -44,6 +48,9 @@ const userSchema = new Schema({
 
 userSchema.pre('save', async function hashPassword(next) {
   const user = this;
+
+  const memberRole = await Role.findOne({ name: RoleNames.DONOR });
+  user.roles.push(memberRole);
 
   try {
     user.password = await BcryptUtils.hashPassword(user.password);
