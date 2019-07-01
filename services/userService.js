@@ -20,14 +20,7 @@ exports.getUserByEmail = email => (
     .exec()
 );
 
-exports.createUser = (username, password, email, firstName, lastName) => {
-  const newUser = new User({
-    username,
-    password,
-    email,
-    firstName,
-    lastName
-  });
-
+exports.createUser = (user) => {
+  const newUser = new User(user);
   return newUser.save();
 };

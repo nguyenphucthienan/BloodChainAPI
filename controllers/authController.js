@@ -8,14 +8,7 @@ exports.register = async (req, res) => {
     return res.status(400).send(error.toString());
   }
 
-  const {
-    username,
-    password,
-    email,
-    firstName,
-    lastName
-  } = req.body;
-
+  const { username, email } = req.body;
   let user = await userService.getUserByUsername(username);
   if (user) {
     return res.status(409).send({ message: 'Username already exists' });
@@ -26,7 +19,7 @@ exports.register = async (req, res) => {
     return res.status(409).send({ message: 'Email has been used' });
   }
 
-  const newUser = await userService.createUser(username, password, email, firstName, lastName);
+  const newUser = await userService.createUser(req.body);
   const token = newUser.generateToken();
   return res.json({ token });
 };

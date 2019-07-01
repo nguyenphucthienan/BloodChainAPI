@@ -7,8 +7,8 @@ exports.getRoleById = id => (
   Role.findById(id).exec()
 );
 
-exports.createRole = (name) => {
-  const newRole = new Role({ name });
+exports.createRole = (role) => {
+  const newRole = new Role(role);
   return newRole.save();
 };
 
