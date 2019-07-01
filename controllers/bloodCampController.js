@@ -1,9 +1,22 @@
 const bloodCampService = require('../services/bloodCampService');
 const { validateBloodCamp } = require('../validations/bloodCampValidations');
+const UrlUtils = require('../utils/UrlUtils');
+const Pagination = require('../helpers/Pagination');
 
 exports.getBloodCamps = async (req, res) => {
-  const bloodCamps = await bloodCampService.getBloodCamps();
-  return res.send(bloodCamps);
+  const paginationObj = UrlUtils.createPaginationObject(req.query);
+  const filterObj = UrlUtils.createFilterObject(req.query);
+  const sortObj = UrlUtils.createSortObject(req.query);
+
+  const authors = await bloodCampService.getBloodCamps(paginationObj, filterObj, sortObj);
+  const totalItems = await bloodCampService.countBloodCamps(filterObj);
+
+  const data = {
+    items: authors,
+    pagination: new Pagination(paginationObj.page, paginationObj.size, totalItems)
+  };
+
+  return res.send(data);
 };
 
 exports.getBloodCamp = async (req, res) => {

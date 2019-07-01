@@ -7,11 +7,7 @@ const hasRoles = require('../middlewares/hasRoles');
 const catchErrors = require('../middlewares/catchErrors');
 const { requireJwtAuth } = require('../middlewares/passportAuth');
 
-router.get('/',
-  requireJwtAuth,
-  hasRoles([RoleNames.ADMIN]),
-  catchErrors(bloodCampController.getBloodCamps)
-);
+router.get('/', catchErrors(bloodCampController.getBloodCamps));
 
 router.get('/:id',
   requireJwtAuth,
