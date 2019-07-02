@@ -1,17 +1,13 @@
 const Joi = require('@hapi/joi');
+const pointSchema = require('./schemas/pointSchema');
 
 exports.validateBloodCamp = (bloodCamp) => {
   const schema = Joi.object().keys({
     name: Joi.string().min(3).max(255).required(),
-    location: Joi.object()
-      .keys({
-        type: Joi.string().required().valid(['Point']),
-        coordinates: Joi.array().ordered([
-          Joi.number().min(-180).max(180).required(),
-          Joi.number().min(-90).max(90).required()
-        ])
-      })
-      .description('Please use this format [longitude, latitude]')
+    address: Joi.string().min(3).max(1000).required(),
+    email: Joi.string().max(255).email({ minDomainSegments: 2 }).required(),
+    phone: Joi.string().min(3).max(255).required(),
+    location: pointSchema
   });
 
   return schema.validate(bloodCamp);
