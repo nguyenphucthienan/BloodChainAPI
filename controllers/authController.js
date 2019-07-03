@@ -5,7 +5,7 @@ const { validateUser } = require('../validations/userValidation');
 exports.register = async (req, res) => {
   const { error } = validateUser(req.body);
   if (error) {
-    return res.status(400).send(error.toString());
+    return res.status(400).send({ message: error.toString() });
   }
 
   const { username, email } = req.body;

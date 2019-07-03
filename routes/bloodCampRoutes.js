@@ -21,6 +21,12 @@ router.post('/',
   catchErrors(bloodCampController.createBloodCamp)
 );
 
+router.put('/:id',
+  requireJwtAuth,
+  hasRoles([RoleNames.ADMIN]),
+  catchErrors(bloodCampController.updateBloodCamp)
+);
+
 router.delete('/:id',
   requireJwtAuth,
   hasRoles([RoleNames.ADMIN]),

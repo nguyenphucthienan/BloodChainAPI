@@ -20,7 +20,7 @@ exports.getRole = async (req, res) => {
 exports.createRole = async (req, res) => {
   const { error } = validateRole(req.body);
   if (error) {
-    return res.status(400).send(error.toString());
+    return res.status(400).send({ message: error.toString() });
   }
 
   const role = await roleService.createRole(req.body);

@@ -11,7 +11,9 @@ exports.getBloodCamps = (paginationObj, filterObj, sortObj) => (
 );
 
 exports.getBloodCampById = id => (
-  BloodCamp.findById(id).exec()
+  BloodCamp
+    .findById(id)
+    .exec()
 );
 
 exports.createBloodCamp = (bloodCamp) => {
@@ -19,10 +21,21 @@ exports.createBloodCamp = (bloodCamp) => {
   return newBloodCamp.save();
 };
 
+exports.updateBloodCampById = (id, bloodCamp) => (
+  BloodCamp
+    .findByIdAndUpdate(id, bloodCamp, { new: true })
+    .exec()
+);
+
 exports.deleteBloodCampById = id => (
-  BloodCamp.findByIdAndDelete(id).exec()
+  BloodCamp
+    .findByIdAndDelete(id)
+    .exec()
 );
 
 exports.countBloodCamps = filterObj => (
-  BloodCamp.find(filterObj).countDocuments().exec()
+  BloodCamp
+    .find(filterObj)
+    .countDocuments()
+    .exec()
 );
