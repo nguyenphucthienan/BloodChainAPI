@@ -35,4 +35,10 @@ router.delete('/:id',
   catchErrors(userController.deleteUser)
 );
 
+router.post('/:id/roles',
+  requireJwtAuth,
+  hasRoles([RoleNames.ADMIN]),
+  catchErrors(userController.assignRoleToUser)
+);
+
 module.exports = router;

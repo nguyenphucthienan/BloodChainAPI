@@ -1,5 +1,8 @@
 const _ = require('lodash');
 const userService = require('../services/userService');
+const roleService = require('../services/roleService');
+const bloodCampService = require('../services/bloodCampService');
+const RoleNames = require('../constants/RoleNames');
 const BcryptUtils = require('../utils/BcryptUtils');
 const UrlUtils = require('../utils/UrlUtils');
 const Pagination = require('../helpers/Pagination');
@@ -86,3 +89,37 @@ exports.deleteUser = async (req, res) => {
 
   return res.send(user);
 };
+
+exports.assignRoleToUser = async (req, res) => {
+  const { id } = req.params;
+  const { roleId, organizationId } = req.body;
+
+  const role = await roleService.getRoleById(roleId);
+  if (!role) {
+    return res.status(404).send({ message: 'Role not found' });
+  }
+
+  let organization;
+  switch (role.name) {
+    case RoleNames.BLOOD_CAMP: {
+      const bloodCamp = await bloodCampService.getBloodCampById(organizationId);
+      if (!bloodCamp) {
+        return res.status(404).send({ message: 'Blood camp not found' });
+      }
+
+      organization = 'bloodCamp';
+      break;
+    }
+
+    default: {
+      return res.status(400).send({ message: 'Invalid role' });
+    }
+  }
+
+  const user = await userService.assignRoleToUser(id, roleId, { [organization]: organizationId })
+  if (!user) {
+    return res.status(404).send();
+  }
+
+  return res.send({ message: 'Assign role successfully' });
+}

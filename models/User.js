@@ -47,7 +47,11 @@ const userSchema = new Schema({
   roles: [{
     type: Schema.Types.ObjectId,
     ref: 'Role'
-  }]
+  }],
+  bloodCamp: {
+    type: Schema.Types.ObjectId,
+    ref: 'BloodCamp'
+  }
 }, { timestamps: true });
 
 userSchema.pre('save', async function hashPassword(next) {

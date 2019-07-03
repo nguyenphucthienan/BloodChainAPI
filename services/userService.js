@@ -6,11 +6,25 @@ exports.getUsers = (paginationObj, filterObj, sortObj) => (
     { $match: filterObj },
     {
       $lookup: {
+        from: 'bloodcamps',
+        localField: 'bloodCamp',
+        foreignField: '_id',
+        as: 'bloodCamp'
+      }
+    },
+    {
+      $unwind: {
+        path: '$bloodCamp',
+        preserveNullAndEmptyArrays: true
+      }
+    },
+    {
+      $lookup: {
         from: 'roles',
         localField: 'roles',
         foreignField: '_id',
         as: 'roles'
-      },
+      }
     },
     {
       $project: {
@@ -24,6 +38,8 @@ exports.getUsers = (paginationObj, filterObj, sortObj) => (
         photoUrl: 1,
         'roles._id': 1,
         'roles.name': 1,
+        'bloodCamp._id': 1,
+        'bloodCamp.name': 1
       }
     },
     { $sort: sortObj },
@@ -33,21 +49,37 @@ exports.getUsers = (paginationObj, filterObj, sortObj) => (
 );
 
 exports.getUserById = (id) => {
-  const _id = mongoose.Types.ObjectId(id);
-  return User.findById({ _id })
-    .populate('roles')
+  return User.findById(id)
+    .populate('roles', '_id name')
+    .populate('bloodCamp', '_id name')
+    .select(
+      {
+        _id: 1,
+        createdAt: 1,
+        updatedAt: 1,
+        username: 1,
+        email: 1,
+        firstName: 1,
+        lastName: 1,
+        photoUrl: 1,
+        roles: 1,
+        bloodCamp: 1
+      }
+    )
     .exec();
 };
 
 exports.getUserByUsername = username => (
   User.findOne({ username })
-    .populate('roles')
+    .populate('roles', '_id name')
+    .populate('bloodCamp', '_id name')
     .exec()
 );
 
 exports.getUserByEmail = email => (
   User.findOne({ email })
-    .populate('roles')
+    .populate('roles', '_id name')
+    .populate('bloodCamp', '_id name')
     .exec()
 );
 
@@ -69,3 +101,14 @@ exports.countUsers = filterObj => (
     .countDocuments()
     .exec()
 );
+
+exports.assignRoleToUser = (id, roleId, organization) => {
+  return User
+    .findByIdAndUpdate(id,
+      {
+        $addToSet: { roles: roleId },
+        $set: { ...organization }
+      },
+      { new: true })
+    .exec();
+};

@@ -9,6 +9,7 @@ exports.validateUser = (user) => {
     lastName: Joi.string().max(255).required(),
     phone: Joi.string().max(255),
     photoUrl: Joi.string().uri(),
+    bloodCamp: Joi.objectId()
   });
 
   return schema.validate(user);
