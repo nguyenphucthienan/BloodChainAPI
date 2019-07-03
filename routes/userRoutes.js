@@ -1,36 +1,38 @@
 const express = require('express');
 const router = express.Router();
 
-const bloodCampController = require('../controllers/bloodCampController');
+const userController = require('../controllers/userController');
 const RoleNames = require('../constants/RoleNames');
 const hasRoles = require('../middlewares/hasRoles');
 const catchErrors = require('../middlewares/catchErrors');
 const { requireJwtAuth } = require('../middlewares/passportAuth');
 
 router.get('/',
-  catchErrors(bloodCampController.getBloodCamps)
+  requireJwtAuth,
+  hasRoles([RoleNames.ADMIN]),
+  catchErrors(userController.getUsers)
 );
 
 router.get('/:id',
-  catchErrors(bloodCampController.getBloodCamp)
+  catchErrors(userController.getUser)
 );
 
 router.post('/',
   requireJwtAuth,
   hasRoles([RoleNames.ADMIN]),
-  catchErrors(bloodCampController.createBloodCamp)
+  catchErrors(userController.createUser)
 );
 
-router.put('/:id',
+router.put('/',
   requireJwtAuth,
   hasRoles([RoleNames.ADMIN]),
-  catchErrors(bloodCampController.updateBloodCamp)
+  catchErrors(userController.updateUser)
 );
 
 router.delete('/:id',
   requireJwtAuth,
   hasRoles([RoleNames.ADMIN]),
-  catchErrors(bloodCampController.deleteBloodCamp)
+  catchErrors(userController.deleteUser)
 );
 
 module.exports = router;

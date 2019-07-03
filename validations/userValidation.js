@@ -6,7 +6,9 @@ exports.validateUser = (user) => {
     password: Joi.string().min(5).max(255).required(),
     email: Joi.string().max(255).email({ minDomainSegments: 2 }).required(),
     firstName: Joi.string().max(255).required(),
-    lastName: Joi.string().max(255).required()
+    lastName: Joi.string().max(255).required(),
+    phone: Joi.string().max(255),
+    photoUrl: Joi.string().uri(),
   });
 
   return schema.validate(user);

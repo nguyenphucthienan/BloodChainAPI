@@ -23,7 +23,9 @@ exports.createBloodCamp = (bloodCamp) => {
 
 exports.updateBloodCampById = (id, bloodCamp) => (
   BloodCamp
-    .findByIdAndUpdate(id, bloodCamp, { new: true })
+    .findByIdAndUpdate(id,
+      { $set: bloodCamp },
+      { new: true })
     .exec()
 );
 

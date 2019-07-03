@@ -36,6 +36,10 @@ const userSchema = new Schema({
     required: 'Last name is required',
     trim: true
   },
+  phone: {
+    type: String,
+    trim: true
+  },
   photoUrl: {
     type: String,
     trim: true
