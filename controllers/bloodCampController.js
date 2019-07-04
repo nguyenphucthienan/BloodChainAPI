@@ -1,4 +1,6 @@
+const userService = require('../services/userService');
 const bloodCampService = require('../services/bloodCampService');
+const RoleNames = require('../constants/RoleNames');
 const UrlUtils = require('../utils/UrlUtils');
 const Pagination = require('../helpers/Pagination');
 const { validateBloodCamp } = require('../validations/bloodCampValidations');
@@ -65,4 +67,16 @@ exports.deleteBloodCamp = async (req, res) => {
   }
 
   return res.send(bloodCamp);
+};
+
+exports.getStaffsOfBloodCamps = async (req, res) => {
+  const { id } = req.params;
+  const bloodCamp = await bloodCampService.getBloodCampById(id);
+
+  if (!bloodCamp) {
+    return res.status(404).send();
+  }
+
+  const users = await userService.getStaffsOfOrganization(RoleNames.BLOOD_CAMP, id);
+  return res.send(users);
 };

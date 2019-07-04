@@ -1,5 +1,9 @@
 const mongoose = require('mongoose');
 const User = mongoose.model('User');
+const Role = mongoose.model('Role');
+const BloodCamp = mongoose.model('BloodCamp');
+const RoleNames = require('../constants/RoleNames');
+const OrganizationFieldNames = require('../constants/OrganizationFieldNames');
 
 exports.getUsers = (paginationObj, filterObj, sortObj) => (
   User.aggregate([
@@ -102,13 +106,91 @@ exports.countUsers = filterObj => (
     .exec()
 );
 
-exports.assignRoleToUser = (id, roleId, organization) => {
-  return User
-    .findByIdAndUpdate(id,
-      {
-        $addToSet: { roles: roleId },
-        $set: { ...organization }
-      },
-      { new: true })
-    .exec();
+exports.getStaffsOfOrganization = async (organizationRoleName, organizationId) => {
+  const role = await Role.findOne({ name: organizationRoleName });
+  const users = await User
+    .find({
+      roles: role._id,
+      [OrganizationFieldNames[organizationRoleName]]: organizationId
+    })
+    .select({
+      _id: 1,
+      username: 1
+    })
+    .sort({
+      username: 1
+    });
+
+  return users;
 };
+
+exports.assignOrganization = async (userIds, roleId, organizationId) => {
+  const role = await Role.findById(roleId);
+  if (!role) {
+    return { success: 0, errors: userIds.length };
+  }
+
+  let success = 0, errors = 0;
+
+  const organizationRoleName = role.name;
+  const organizationRoleFieldName = OrganizationFieldNames[organizationRoleName];
+  if (!organizationRoleFieldName) {
+    return { success: 0, errors: userIds.length };
+  }
+
+  switch (organizationRoleName) {
+    case RoleNames.BLOOD_CAMP: {
+      const bloodCamp = await BloodCamp.findById(organizationId);
+      if (!bloodCamp) {
+        return { success: 0, errors: userIds.length };
+      }
+      break;
+    }
+
+    default: {
+      break;
+    }
+  }
+
+  const existingUsers = await this.getStaffsOfOrganization(RoleNames.BLOOD_CAMP, organizationId);
+  const existingIds = existingUsers.map(user => user._id.toString());
+
+  const allIds = Array.from(new Set([...existingIds, ...userIds]));
+  const commonIds = existingIds.filter(id => userIds.includes(id));
+  const uncommonIds = allIds.filter(id => !commonIds.includes(id));
+
+  for (let userId of uncommonIds) {
+    let user;
+    if (existingIds.includes(userId)) {
+      user = await User.findOneAndUpdate(
+        {
+          _id: userId,
+          [organizationRoleFieldName]: { $exists: true }
+        },
+        {
+          $pull: { roles: roleId },
+          $unset: { [organizationRoleFieldName]: 1 }
+        },
+        { new: true });
+    } else {
+      user = await User.findOneAndUpdate(
+        {
+          _id: userId,
+          [organizationRoleFieldName]: { $exists: false }
+        },
+        {
+          $addToSet: { roles: roleId },
+          $set: { [organizationRoleFieldName]: organizationId }
+        },
+        { new: true });
+    }
+
+    if (!user) {
+      errors += 1;
+    } else {
+      success += 1;
+    }
+  }
+
+  return { success, errors };
+}

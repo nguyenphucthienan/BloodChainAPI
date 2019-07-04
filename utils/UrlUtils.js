@@ -2,6 +2,28 @@ const _ = require('lodash');
 const mongoose = require('mongoose');
 
 class UrlUtils {
+  static createUserFilterObject(query) {
+    const filters = _.omit(query, ['page', 'size', 'sort']);
+    if (_.isEmpty(filters)) {
+      return {};
+    }
+
+    const textFields = ['username', 'email', 'firstName', 'lastName'];
+
+    const filterObject = {};
+    for (const key in filters) {
+      if (key === '_id') {
+        filterObject[key] = mongoose.Types.ObjectId(filters[key]);
+      } else if (textFields.includes(key)) {
+        filterObject[key] = new RegExp(filters[key], 'i');
+      } else {
+        filterObject[key] = filters[key];
+      }
+    }
+
+    return filterObject;
+  }
+
   static createFilterObject(query) {
     const filters = _.omit(query, ['page', 'size', 'sort']);
     if (_.isEmpty(filters)) {

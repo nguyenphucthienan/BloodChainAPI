@@ -1,8 +1,5 @@
 const _ = require('lodash');
 const userService = require('../services/userService');
-const roleService = require('../services/roleService');
-const bloodCampService = require('../services/bloodCampService');
-const RoleNames = require('../constants/RoleNames');
 const BcryptUtils = require('../utils/BcryptUtils');
 const UrlUtils = require('../utils/UrlUtils');
 const Pagination = require('../helpers/Pagination');
@@ -10,7 +7,7 @@ const { validateUser } = require('../validations/userValidation');
 
 exports.getUsers = async (req, res) => {
   const paginationObj = UrlUtils.createPaginationObject(req.query);
-  const filterObj = UrlUtils.createFilterObject(req.query);
+  const filterObj = UrlUtils.createUserFilterObject(req.query);
   const sortObj = UrlUtils.createSortObject(req.query);
 
   const users = await userService.getUsers(paginationObj, filterObj, sortObj);
@@ -90,36 +87,8 @@ exports.deleteUser = async (req, res) => {
   return res.send(user);
 };
 
-exports.assignRoleToUser = async (req, res) => {
-  const { id } = req.params;
-  const { roleId, organizationId } = req.body;
-
-  const role = await roleService.getRoleById(roleId);
-  if (!role) {
-    return res.status(404).send({ message: 'Role not found' });
-  }
-
-  let organization;
-  switch (role.name) {
-    case RoleNames.BLOOD_CAMP: {
-      const bloodCamp = await bloodCampService.getBloodCampById(organizationId);
-      if (!bloodCamp) {
-        return res.status(404).send({ message: 'Blood camp not found' });
-      }
-
-      organization = 'bloodCamp';
-      break;
-    }
-
-    default: {
-      return res.status(400).send({ message: 'Invalid role' });
-    }
-  }
-
-  const user = await userService.assignRoleToUser(id, roleId, { [organization]: organizationId })
-  if (!user) {
-    return res.status(404).send();
-  }
-
-  return res.send({ message: 'Assign role successfully' });
-}
+exports.assignOrganization = async (req, res) => {
+  const { userIds, roleId, organizationId } = req.body;
+  const results = await userService.assignOrganization(userIds, roleId, organizationId);
+  return res.send(results);
+};

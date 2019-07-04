@@ -33,4 +33,10 @@ router.delete('/:id',
   catchErrors(bloodCampController.deleteBloodCamp)
 );
 
+router.get('/:id/staffs',
+  requireJwtAuth,
+  hasRoles([RoleNames.ADMIN]),
+  catchErrors(bloodCampController.getStaffsOfBloodCamps)
+)
+
 module.exports = router;
