@@ -88,7 +88,7 @@ exports.deleteUser = async (req, res) => {
 };
 
 exports.assignOrganization = async (req, res) => {
-  const { userIds, roleId, organizationId } = req.body;
-  const results = await userService.assignOrganization(userIds, roleId, organizationId);
+  const { userIds, roleName, organizationId } = req.body;
+  const results = await userService.assignOrganization(userIds, roleName, organizationId);
   return res.send(results);
 };

@@ -10,11 +10,11 @@ exports.getBloodCamps = async (req, res) => {
   const filterObj = UrlUtils.createFilterObject(req.query);
   const sortObj = UrlUtils.createSortObject(req.query);
 
-  const authors = await bloodCampService.getBloodCamps(paginationObj, filterObj, sortObj);
+  const bloodCamps = await bloodCampService.getBloodCamps(paginationObj, filterObj, sortObj);
   const totalItems = await bloodCampService.countBloodCamps(filterObj);
 
   const data = {
-    items: authors,
+    items: bloodCamps,
     pagination: new Pagination(paginationObj.page, paginationObj.size, totalItems)
   };
 

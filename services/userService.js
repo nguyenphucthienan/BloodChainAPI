@@ -124,15 +124,14 @@ exports.getStaffsOfOrganization = async (organizationRoleName, organizationId) =
   return users;
 };
 
-exports.assignOrganization = async (userIds, roleId, organizationId) => {
-  const role = await Role.findById(roleId);
+exports.assignOrganization = async (userIds, organizationRoleName, organizationId) => {
+  const role = await Role.findOne({ name: organizationRoleName });
   if (!role) {
     return { success: 0, errors: userIds.length };
   }
 
   let success = 0, errors = 0;
 
-  const organizationRoleName = role.name;
   const organizationRoleFieldName = OrganizationFieldNames[organizationRoleName];
   if (!organizationRoleFieldName) {
     return { success: 0, errors: userIds.length };
@@ -168,7 +167,7 @@ exports.assignOrganization = async (userIds, roleId, organizationId) => {
           [organizationRoleFieldName]: { $exists: true }
         },
         {
-          $pull: { roles: roleId },
+          $pull: { roles: role._id },
           $unset: { [organizationRoleFieldName]: 1 }
         },
         { new: true });
@@ -179,7 +178,7 @@ exports.assignOrganization = async (userIds, roleId, organizationId) => {
           [organizationRoleFieldName]: { $exists: false }
         },
         {
-          $addToSet: { roles: roleId },
+          $addToSet: { roles: role._id },
           $set: { [organizationRoleFieldName]: organizationId }
         },
         { new: true });

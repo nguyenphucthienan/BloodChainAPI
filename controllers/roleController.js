@@ -1,9 +1,22 @@
 const roleService = require('../services/roleService');
+const UrlUtils = require('../utils/UrlUtils');
+const Pagination = require('../helpers/Pagination');
 const { validateRole } = require('../validations/roleValidation');
 
 exports.getRoles = async (req, res) => {
-  const roles = await roleService.getRoles();
-  return res.send(roles);
+  const paginationObj = UrlUtils.createPaginationObject(req.query);
+  const filterObj = UrlUtils.createFilterObject(req.query);
+  const sortObj = UrlUtils.createSortObject(req.query);
+
+  const roles = await roleService.getRoles(paginationObj, filterObj, sortObj);
+  const totalItems = await roleService.countRoles(filterObj);
+
+  const data = {
+    items: roles,
+    pagination: new Pagination(paginationObj.page, paginationObj.size, totalItems)
+  };
+
+  return res.send(data);
 };
 
 exports.getRole = async (req, res) => {
