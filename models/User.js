@@ -63,6 +63,10 @@ const userSchema = new Schema({
   bloodTestCenter: {
     type: Schema.Types.ObjectId,
     ref: 'BloodTestCenter'
+  },
+  bloodSeparationCenter: {
+    type: Schema.Types.ObjectId,
+    ref: 'BloodSeparationCenter'
   }
 }, { timestamps: true });
 

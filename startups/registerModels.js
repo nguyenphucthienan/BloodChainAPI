@@ -3,4 +3,5 @@ module.exports = () => {
   require('../models/User');
   require('../models/BloodCamp');
   require('../models/BloodTestCenter');
+  require('../models/BloodSeparationCenter');
 };

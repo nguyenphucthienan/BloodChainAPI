@@ -40,6 +40,20 @@ exports.getUsers = (paginationObj, filterObj, sortObj) => (
     },
     {
       $lookup: {
+        from: 'bloodseparationcenters',
+        localField: 'bloodSeparationCenter',
+        foreignField: '_id',
+        as: 'bloodSeparationCenter'
+      }
+    },
+    {
+      $unwind: {
+        path: '$bloodSeparationCenter',
+        preserveNullAndEmptyArrays: true
+      }
+    },
+    {
+      $lookup: {
         from: 'roles',
         localField: 'roles',
         foreignField: '_id',
@@ -64,7 +78,9 @@ exports.getUsers = (paginationObj, filterObj, sortObj) => (
         'bloodCamp._id': 1,
         'bloodCamp.name': 1,
         'bloodTestCenter._id': 1,
-        'bloodTestCenter.name': 1
+        'bloodTestCenter.name': 1,
+        'bloodSeparationCenter._id': 1,
+        'bloodSeparationCenter.name': 1
       }
     },
     { $sort: sortObj },
@@ -92,7 +108,8 @@ exports.getUserById = (id) => {
         photoUrl: 1,
         roles: 1,
         bloodCamp: 1,
-        bloodTestCenter: 1
+        bloodTestCenter: 1,
+        bloodSeparationCenter: 1
       }
     )
     .exec();
@@ -117,7 +134,8 @@ exports.getUserByUsername = username => (
         photoUrl: 1,
         roles: 1,
         bloodCamp: 1,
-        bloodTestCenter: 1
+        bloodTestCenter: 1,
+        bloodSeparationCenter: 1
       }
     )
     .exec()
@@ -141,7 +159,8 @@ exports.getUserByEmail = email => (
         photoUrl: 1,
         roles: 1,
         bloodCamp: 1,
-        bloodTestCenter: 1
+        bloodTestCenter: 1,
+        bloodSeparationCenter: 1
       }
     )
     .exec()
