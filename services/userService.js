@@ -3,6 +3,8 @@ const User = mongoose.model('User');
 const Role = mongoose.model('Role');
 const BloodCamp = mongoose.model('BloodCamp');
 const BloodTestCenter = mongoose.model('BloodTestCenter');
+const BloodSeparationCenter = mongoose.model('BloodSeparationCenter');
+const BloodBank = mongoose.model('BloodBank');
 const generator = require('generate-password');
 const RoleNames = require('../constants/RoleNames');
 const OrganizationFieldNames = require('../constants/OrganizationFieldNames');
@@ -54,6 +56,20 @@ exports.getUsers = (paginationObj, filterObj, sortObj) => (
     },
     {
       $lookup: {
+        from: 'bloodbanks',
+        localField: 'bloodBank',
+        foreignField: '_id',
+        as: 'bloodBank'
+      }
+    },
+    {
+      $unwind: {
+        path: '$bloodBank',
+        preserveNullAndEmptyArrays: true
+      }
+    },
+    {
+      $lookup: {
         from: 'roles',
         localField: 'roles',
         foreignField: '_id',
@@ -80,7 +96,9 @@ exports.getUsers = (paginationObj, filterObj, sortObj) => (
         'bloodTestCenter._id': 1,
         'bloodTestCenter.name': 1,
         'bloodSeparationCenter._id': 1,
-        'bloodSeparationCenter.name': 1
+        'bloodSeparationCenter.name': 1,
+        'bloodBank._id': 1,
+        'bloodBank.name': 1,
       }
     },
     { $sort: sortObj },
@@ -109,7 +127,8 @@ exports.getUserById = (id) => {
         roles: 1,
         bloodCamp: 1,
         bloodTestCenter: 1,
-        bloodSeparationCenter: 1
+        bloodSeparationCenter: 1,
+        bloodBank: 1
       }
     )
     .exec();
@@ -135,7 +154,8 @@ exports.getUserByUsername = username => (
         roles: 1,
         bloodCamp: 1,
         bloodTestCenter: 1,
-        bloodSeparationCenter: 1
+        bloodSeparationCenter: 1,
+        bloodBank: 1
       }
     )
     .exec()
@@ -160,7 +180,8 @@ exports.getUserByEmail = email => (
         roles: 1,
         bloodCamp: 1,
         bloodTestCenter: 1,
-        bloodSeparationCenter: 1
+        bloodSeparationCenter: 1,
+        bloodBank: 1
       }
     )
     .exec()
@@ -238,6 +259,20 @@ exports.assignOrganization = async (userIds, organizationRoleName, organizationI
     case RoleNames.BLOOD_TEST_CENTER: {
       const bloodTestCenter = await BloodTestCenter.findById(organizationId);
       if (!bloodTestCenter) {
+        return { success: 0, errors: userIds.length };
+      }
+      break;
+    }
+    case RoleNames.BLOOD_SEPARATION_CENTER: {
+      const bloodSeparationCenter = await BloodSeparationCenter.findById(organizationId);
+      if (!bloodSeparationCenter) {
+        return { success: 0, errors: userIds.length };
+      }
+      break;
+    }
+    case RoleNames.BLOOD_BANK: {
+      const bloodBank = await BloodBank.findById(organizationId);
+      if (!bloodBank) {
         return { success: 0, errors: userIds.length };
       }
       break;
