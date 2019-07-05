@@ -3,6 +3,7 @@ const { Schema } = mongoose;
 const Role = mongoose.model('Role');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt-nodejs');
+const pointSchema = require('./schemas/pointSchema');
 const BcryptUtils = require('../utils/BcryptUtils');
 const RoleNames = require('../constants/RoleNames');
 const config = require('../config');
@@ -39,6 +40,13 @@ const userSchema = new Schema({
   phone: {
     type: String,
     trim: true
+  },
+  address: {
+    type: String,
+    trim: true
+  },
+  location: {
+    type: pointSchema
   },
   photoUrl: {
     type: String,

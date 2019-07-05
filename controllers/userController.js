@@ -3,7 +3,7 @@ const userService = require('../services/userService');
 const BcryptUtils = require('../utils/BcryptUtils');
 const UrlUtils = require('../utils/UrlUtils');
 const Pagination = require('../helpers/Pagination');
-const { validateUser } = require('../validations/userValidation');
+const { validateCreateUser } = require('../validations/userValidation');
 
 exports.getUsers = async (req, res) => {
   const paginationObj = UrlUtils.createPaginationObject(req.query);
@@ -33,7 +33,7 @@ exports.getUser = async (req, res) => {
 };
 
 exports.createUser = async (req, res) => {
-  const { error } = validateUser(req.body);
+  const { error } = validateCreateUser(req.body);
   if (error) {
     return res.status(400).send({ message: error.toString() });
   }
@@ -50,8 +50,7 @@ exports.createUser = async (req, res) => {
   }
 
   const newUser = await userService.createUser(req.body);
-  const returnUser = _.omit(newUser.toObject(), ['password']);
-  return res.send(returnUser);
+  return res.send(newUser);
 };
 
 exports.updateUser = async (req, res) => {

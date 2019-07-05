@@ -1,9 +1,9 @@
 const _ = require('lodash');
 const userService = require('../services/userService');
-const { validateUser } = require('../validations/userValidation');
+const { validateRegisterUser } = require('../validations/userValidation');
 
 exports.register = async (req, res) => {
-  const { error } = validateUser(req.body);
+  const { error } = validateRegisterUser(req.body);
   if (error) {
     return res.status(400).send({ message: error.toString() });
   }
@@ -19,9 +19,9 @@ exports.register = async (req, res) => {
     return res.status(409).send({ message: 'Email has been used' });
   }
 
-  const newUser = await userService.createUser(req.body);
+  const newUser = await userService.registerUser(req.body);
   const token = newUser.generateToken();
-  return res.json({ token });
+  return res.send({ token });
 };
 
 exports.checkUsername = async (req, res) => {

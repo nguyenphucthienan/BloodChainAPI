@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const User = mongoose.model('User');
 const Role = mongoose.model('Role');
 const BloodCamp = mongoose.model('BloodCamp');
+const generator = require('generate-password');
 const RoleNames = require('../constants/RoleNames');
 const OrganizationFieldNames = require('../constants/OrganizationFieldNames');
 
@@ -36,9 +37,12 @@ exports.getUsers = (paginationObj, filterObj, sortObj) => (
         createdAt: 1,
         updatedAt: 1,
         username: 1,
-        email: 1,
         firstName: 1,
         lastName: 1,
+        email: 1,
+        phone: 1,
+        address: 1,
+        location: 1,
         photoUrl: 1,
         'roles._id': 1,
         'roles.name': 1,
@@ -62,9 +66,12 @@ exports.getUserById = (id) => {
         createdAt: 1,
         updatedAt: 1,
         username: 1,
-        email: 1,
         firstName: 1,
         lastName: 1,
+        email: 1,
+        phone: 1,
+        adddress: 1,
+        location: 1,
         photoUrl: 1,
         roles: 1,
         bloodCamp: 1
@@ -77,6 +84,23 @@ exports.getUserByUsername = username => (
   User.findOne({ username })
     .populate('roles', '_id name')
     .populate('bloodCamp', '_id name')
+    .select(
+      {
+        _id: 1,
+        createdAt: 1,
+        updatedAt: 1,
+        username: 1,
+        firstName: 1,
+        lastName: 1,
+        email: 1,
+        phone: 1,
+        adddress: 1,
+        location: 1,
+        photoUrl: 1,
+        roles: 1,
+        bloodCamp: 1
+      }
+    )
     .exec()
 );
 
@@ -84,12 +108,39 @@ exports.getUserByEmail = email => (
   User.findOne({ email })
     .populate('roles', '_id name')
     .populate('bloodCamp', '_id name')
+    .select(
+      {
+        _id: 1,
+        createdAt: 1,
+        updatedAt: 1,
+        username: 1,
+        email: 1,
+        firstName: 1,
+        lastName: 1,
+        adddress: 1,
+        location: 1,
+        photoUrl: 1,
+        roles: 1,
+        bloodCamp: 1
+      }
+    )
     .exec()
 );
 
-exports.createUser = (user) => {
+exports.registerUser = (user) => {
   const newUser = new User(user);
   return newUser.save();
+};
+
+exports.createUser = async (user) => {
+  const rawPassword = generator.generate({
+    length: 10,
+    numbers: true
+  });
+
+  const newUser = new User({ ...user, password: rawPassword });
+  const returnUser = await newUser.save();
+  return { ...returnUser.toObject(), rawPassword };
 };
 
 exports.updateUserById = (id, user) => (
