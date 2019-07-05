@@ -99,6 +99,8 @@ exports.getUsers = (paginationObj, filterObj, sortObj) => (
         username: 1,
         firstName: 1,
         lastName: 1,
+        gender: 1,
+        birthdate: 1,
         email: 1,
         phone: 1,
         address: 1,
@@ -140,6 +142,8 @@ exports.getUserById = (id) => {
         username: 1,
         firstName: 1,
         lastName: 1,
+        gender: 1,
+        birthdate: 1,
         email: 1,
         phone: 1,
         adddress: 1,
@@ -172,6 +176,8 @@ exports.getUserByUsername = username => (
         username: 1,
         firstName: 1,
         lastName: 1,
+        gender: 1,
+        birthdate: 1,
         email: 1,
         phone: 1,
         adddress: 1,
@@ -205,6 +211,8 @@ exports.getUserByEmail = email => (
         email: 1,
         firstName: 1,
         lastName: 1,
+        gender: 1,
+        birthdate: 1,
         adddress: 1,
         location: 1,
         photoUrl: 1,
@@ -280,45 +288,35 @@ exports.assignOrganization = async (userIds, organizationRoleName, organizationI
     return { success: 0, errors: userIds.length };
   }
 
+  let organization;
   switch (organizationRoleName) {
     case RoleNames.BLOOD_CAMP: {
-      const bloodCamp = await BloodCamp.findById(organizationId);
-      if (!bloodCamp) {
-        return { success: 0, errors: userIds.length };
-      }
+      organization = await BloodCamp.findById(organizationId);
       break;
     }
     case RoleNames.BLOOD_TEST_CENTER: {
-      const bloodTestCenter = await BloodTestCenter.findById(organizationId);
-      if (!bloodTestCenter) {
-        return { success: 0, errors: userIds.length };
-      }
+      organization = await BloodTestCenter.findById(organizationId);
       break;
     }
     case RoleNames.BLOOD_SEPARATION_CENTER: {
-      const bloodSeparationCenter = await BloodSeparationCenter.findById(organizationId);
-      if (!bloodSeparationCenter) {
-        return { success: 0, errors: userIds.length };
-      }
+      organization = await BloodSeparationCenter.findById(organizationId);
       break;
     }
     case RoleNames.BLOOD_BANK: {
-      const bloodBank = await BloodBank.findById(organizationId);
-      if (!bloodBank) {
-        return { success: 0, errors: userIds.length };
-      }
+      organization = await BloodBank.findById(organizationId);
       break;
     }
     case RoleNames.HOSPITAL: {
-      const hospital = await Hospital.findById(organizationId);
-      if (!hospital) {
-        return { success: 0, errors: userIds.length };
-      }
+      organization = await Hospital.findById(organizationId);
       break;
     }
     default: {
       break;
     }
+  }
+
+  if (!organization) {
+    return { success: 0, errors: userIds.length };
   }
 
   const existingUsers = await this.getStaffsOfOrganization(organizationRoleName, organizationId);

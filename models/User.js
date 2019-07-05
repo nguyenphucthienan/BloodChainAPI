@@ -6,6 +6,7 @@ const bcrypt = require('bcrypt-nodejs');
 const pointSchema = require('./schemas/pointSchema');
 const BcryptUtils = require('../utils/BcryptUtils');
 const RoleNames = require('../constants/RoleNames');
+const Genders = require('../constants/Genders');
 const config = require('../config');
 
 const userSchema = new Schema({
@@ -36,6 +37,19 @@ const userSchema = new Schema({
     type: String,
     required: 'Last name is required',
     trim: true
+  },
+  gender: {
+    type: String,
+    enum: [
+      Genders.MALE,
+      Genders.FEMALE,
+      Genders.OTHER
+    ],
+    required: 'Gender is required',
+  },
+  birthdate: {
+    type: Date,
+    required: 'Birthdate is required'
   },
   phone: {
     type: String,

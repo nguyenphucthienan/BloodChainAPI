@@ -1,5 +1,6 @@
 const Joi = require('@hapi/joi');
 const pointSchema = require('./schemas/pointSchema');
+const Genders = require('../constants/Genders');
 
 exports.validateRegisterUser = (user) => {
   const schema = Joi.object().keys({
@@ -8,7 +9,10 @@ exports.validateRegisterUser = (user) => {
     email: Joi.string().max(255).email({ minDomainSegments: 2 }).required(),
     firstName: Joi.string().max(255).required(),
     lastName: Joi.string().max(255).required(),
-    phone: Joi.string().max(255)
+    gender: Joi.string().required().valid([Genders.MALE, Genders.FEMALE, Genders.OTHER]),
+    birthdate: Joi.date().required(),
+    phone: Joi.string().max(255),
+    address: Joi.string().max(1000).required()
   });
 
   return schema.validate(user);
@@ -20,6 +24,8 @@ exports.validateCreateUser = (user) => {
     email: Joi.string().max(255).email({ minDomainSegments: 2 }).required(),
     firstName: Joi.string().max(255).required(),
     lastName: Joi.string().max(255).required(),
+    gender: Joi.string().required().valid([Genders.MALE, Genders.FEMALE, Genders.OTHER]),
+    birthdate: Joi.date().required(),
     phone: Joi.string().max(255),
     address: Joi.string().max(1000).required(),
     location: pointSchema
