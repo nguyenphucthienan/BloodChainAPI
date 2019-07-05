@@ -59,6 +59,10 @@ const userSchema = new Schema({
   bloodCamp: {
     type: Schema.Types.ObjectId,
     ref: 'BloodCamp'
+  },
+  bloodTestCenter: {
+    type: Schema.Types.ObjectId,
+    ref: 'BloodTestCenter'
   }
 }, { timestamps: true });
 

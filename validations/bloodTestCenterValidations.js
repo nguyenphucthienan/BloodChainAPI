@@ -1,7 +1,7 @@
 const Joi = require('@hapi/joi');
 const pointSchema = require('./schemas/pointSchema');
 
-exports.validateBloodCamp = (bloodCamp) => {
+exports.validateBloodTestCenter = (bloodTestCenter) => {
   const schema = Joi.object().keys({
     name: Joi.string().min(3).max(255).required(),
     email: Joi.string().max(255).email({ minDomainSegments: 2 }).required(),
@@ -10,5 +10,5 @@ exports.validateBloodCamp = (bloodCamp) => {
     location: pointSchema
   });
 
-  return schema.validate(bloodCamp);
+  return schema.validate(bloodTestCenter);
 };

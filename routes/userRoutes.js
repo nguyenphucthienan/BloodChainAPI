@@ -9,7 +9,14 @@ const { requireJwtAuth } = require('../middlewares/passportAuth');
 
 router.get('/',
   requireJwtAuth,
-  hasRoles([RoleNames.ADMIN]),
+  hasRoles([
+    RoleNames.ADMIN,
+    RoleNames.BLOOD_CAMP,
+    RoleNames.BLOOD_TEST_CENTER,
+    RoleNames.BLOOD_SEPARATION_CENTER,
+    RoleNames.BLOOD_BANK,
+    RoleNames.HOSPITAL
+  ]),
   catchErrors(userController.getUsers)
 );
 
@@ -19,7 +26,14 @@ router.get('/:id',
 
 router.post('/',
   requireJwtAuth,
-  hasRoles([RoleNames.ADMIN]),
+  hasRoles([
+    RoleNames.ADMIN,
+    RoleNames.BLOOD_CAMP,
+    RoleNames.BLOOD_TEST_CENTER,
+    RoleNames.BLOOD_SEPARATION_CENTER,
+    RoleNames.BLOOD_BANK,
+    RoleNames.HOSPITAL
+  ]),
   catchErrors(userController.createUser)
 );
 

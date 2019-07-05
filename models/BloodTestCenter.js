@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 const pointSchema = require('./schemas/pointSchema');
 
-const bloodCampSchema = new Schema({
+const bloodTestCenterSchema = new Schema({
   name: {
     type: String,
     required: 'Name is required',
@@ -31,4 +31,4 @@ const bloodCampSchema = new Schema({
   }
 }, { timestamps: true });
 
-mongoose.model('BloodCamp', bloodCampSchema);
+mongoose.model('BloodTestCenter', bloodTestCenterSchema);

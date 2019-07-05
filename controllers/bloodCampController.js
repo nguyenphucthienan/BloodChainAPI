@@ -69,7 +69,7 @@ exports.deleteBloodCamp = async (req, res) => {
   return res.send(bloodCamp);
 };
 
-exports.getStaffsOfBloodCamps = async (req, res) => {
+exports.getStaffsOfBloodCamp = async (req, res) => {
   const { id } = req.params;
   const bloodCamp = await bloodCampService.getBloodCampById(id);
 

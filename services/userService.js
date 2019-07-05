@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const User = mongoose.model('User');
 const Role = mongoose.model('Role');
 const BloodCamp = mongoose.model('BloodCamp');
+const BloodTestCenter = mongoose.model('BloodTestCenter');
 const generator = require('generate-password');
 const RoleNames = require('../constants/RoleNames');
 const OrganizationFieldNames = require('../constants/OrganizationFieldNames');
@@ -20,6 +21,20 @@ exports.getUsers = (paginationObj, filterObj, sortObj) => (
     {
       $unwind: {
         path: '$bloodCamp',
+        preserveNullAndEmptyArrays: true
+      }
+    },
+    {
+      $lookup: {
+        from: 'bloodtestcenters',
+        localField: 'bloodTestCenter',
+        foreignField: '_id',
+        as: 'bloodTestCenter'
+      }
+    },
+    {
+      $unwind: {
+        path: '$bloodTestCenter',
         preserveNullAndEmptyArrays: true
       }
     },
@@ -47,7 +62,9 @@ exports.getUsers = (paginationObj, filterObj, sortObj) => (
         'roles._id': 1,
         'roles.name': 1,
         'bloodCamp._id': 1,
-        'bloodCamp.name': 1
+        'bloodCamp.name': 1,
+        'bloodTestCenter._id': 1,
+        'bloodTestCenter.name': 1
       }
     },
     { $sort: sortObj },
@@ -74,7 +91,8 @@ exports.getUserById = (id) => {
         location: 1,
         photoUrl: 1,
         roles: 1,
-        bloodCamp: 1
+        bloodCamp: 1,
+        bloodTestCenter: 1
       }
     )
     .exec();
@@ -98,7 +116,8 @@ exports.getUserByUsername = username => (
         location: 1,
         photoUrl: 1,
         roles: 1,
-        bloodCamp: 1
+        bloodCamp: 1,
+        bloodTestCenter: 1
       }
     )
     .exec()
@@ -121,7 +140,8 @@ exports.getUserByEmail = email => (
         location: 1,
         photoUrl: 1,
         roles: 1,
-        bloodCamp: 1
+        bloodCamp: 1,
+        bloodTestCenter: 1
       }
     )
     .exec()
@@ -196,13 +216,19 @@ exports.assignOrganization = async (userIds, organizationRoleName, organizationI
       }
       break;
     }
-
+    case RoleNames.BLOOD_TEST_CENTER: {
+      const bloodTestCenter = await BloodTestCenter.findById(organizationId);
+      if (!bloodTestCenter) {
+        return { success: 0, errors: userIds.length };
+      }
+      break;
+    }
     default: {
       break;
     }
   }
 
-  const existingUsers = await this.getStaffsOfOrganization(RoleNames.BLOOD_CAMP, organizationId);
+  const existingUsers = await this.getStaffsOfOrganization(organizationRoleName, organizationId);
   const existingIds = existingUsers.map(user => user._id.toString());
 
   const allIds = Array.from(new Set([...existingIds, ...userIds]));

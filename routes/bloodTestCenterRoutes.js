@@ -1,42 +1,42 @@
 const express = require('express');
 const router = express.Router();
 
-const bloodCampController = require('../controllers/bloodCampController');
+const bloodTestCenterController = require('../controllers/bloodTestCenterController');
 const RoleNames = require('../constants/RoleNames');
 const hasRoles = require('../middlewares/hasRoles');
 const catchErrors = require('../middlewares/catchErrors');
 const { requireJwtAuth } = require('../middlewares/passportAuth');
 
 router.get('/',
-  catchErrors(bloodCampController.getBloodCamps)
+  catchErrors(bloodTestCenterController.getBloodTestCenters)
 );
 
 router.get('/:id',
-  catchErrors(bloodCampController.getBloodCamp)
+  catchErrors(bloodTestCenterController.getBloodTestCenter)
 );
 
 router.post('/',
   requireJwtAuth,
   hasRoles([RoleNames.ADMIN]),
-  catchErrors(bloodCampController.createBloodCamp)
+  catchErrors(bloodTestCenterController.createBloodTestCenter)
 );
 
 router.put('/:id',
   requireJwtAuth,
   hasRoles([RoleNames.ADMIN]),
-  catchErrors(bloodCampController.updateBloodCamp)
+  catchErrors(bloodTestCenterController.updateBloodTestCenter)
 );
 
 router.delete('/:id',
   requireJwtAuth,
   hasRoles([RoleNames.ADMIN]),
-  catchErrors(bloodCampController.deleteBloodCamp)
+  catchErrors(bloodTestCenterController.deleteBloodTestCenter)
 );
 
 router.get('/:id/staffs',
   requireJwtAuth,
   hasRoles([RoleNames.ADMIN]),
-  catchErrors(bloodCampController.getStaffsOfBloodCamp)
+  catchErrors(bloodTestCenterController.getStaffsOfBloodTestCenter)
 )
 
 module.exports = router;
