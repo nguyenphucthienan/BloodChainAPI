@@ -5,6 +5,7 @@ const BloodCamp = mongoose.model('BloodCamp');
 const BloodTestCenter = mongoose.model('BloodTestCenter');
 const BloodSeparationCenter = mongoose.model('BloodSeparationCenter');
 const BloodBank = mongoose.model('BloodBank');
+const Hospital = mongoose.model('Hospital');
 const generator = require('generate-password');
 const RoleNames = require('../constants/RoleNames');
 const OrganizationFieldNames = require('../constants/OrganizationFieldNames');
@@ -70,6 +71,20 @@ exports.getUsers = (paginationObj, filterObj, sortObj) => (
     },
     {
       $lookup: {
+        from: 'hospitals',
+        localField: 'hospital',
+        foreignField: '_id',
+        as: 'hospital'
+      }
+    },
+    {
+      $unwind: {
+        path: '$hospital',
+        preserveNullAndEmptyArrays: true
+      }
+    },
+    {
+      $lookup: {
         from: 'roles',
         localField: 'roles',
         foreignField: '_id',
@@ -99,6 +114,8 @@ exports.getUsers = (paginationObj, filterObj, sortObj) => (
         'bloodSeparationCenter.name': 1,
         'bloodBank._id': 1,
         'bloodBank.name': 1,
+        'hospital._id': 1,
+        'hospital.name': 1
       }
     },
     { $sort: sortObj },
@@ -111,6 +128,10 @@ exports.getUserById = (id) => {
   return User.findById(id)
     .populate('roles', '_id name')
     .populate('bloodCamp', '_id name')
+    .populate('bloodTestCenter', '_id name')
+    .populate('bloodSeparationCenter', '_id name')
+    .populate('bloodBank', '_id name')
+    .populate('hospital', '_id name')
     .select(
       {
         _id: 1,
@@ -128,7 +149,8 @@ exports.getUserById = (id) => {
         bloodCamp: 1,
         bloodTestCenter: 1,
         bloodSeparationCenter: 1,
-        bloodBank: 1
+        bloodBank: 1,
+        hospital: 1
       }
     )
     .exec();
@@ -138,6 +160,10 @@ exports.getUserByUsername = username => (
   User.findOne({ username })
     .populate('roles', '_id name')
     .populate('bloodCamp', '_id name')
+    .populate('bloodTestCenter', '_id name')
+    .populate('bloodSeparationCenter', '_id name')
+    .populate('bloodBank', '_id name')
+    .populate('hospital', '_id name')
     .select(
       {
         _id: 1,
@@ -155,7 +181,8 @@ exports.getUserByUsername = username => (
         bloodCamp: 1,
         bloodTestCenter: 1,
         bloodSeparationCenter: 1,
-        bloodBank: 1
+        bloodBank: 1,
+        hospital: 1
       }
     )
     .exec()
@@ -165,6 +192,10 @@ exports.getUserByEmail = email => (
   User.findOne({ email })
     .populate('roles', '_id name')
     .populate('bloodCamp', '_id name')
+    .populate('bloodTestCenter', '_id name')
+    .populate('bloodSeparationCenter', '_id name')
+    .populate('bloodBank', '_id name')
+    .populate('hospital', '_id name')
     .select(
       {
         _id: 1,
@@ -181,7 +212,8 @@ exports.getUserByEmail = email => (
         bloodCamp: 1,
         bloodTestCenter: 1,
         bloodSeparationCenter: 1,
-        bloodBank: 1
+        bloodBank: 1,
+        hospital: 1
       }
     )
     .exec()
@@ -273,6 +305,13 @@ exports.assignOrganization = async (userIds, organizationRoleName, organizationI
     case RoleNames.BLOOD_BANK: {
       const bloodBank = await BloodBank.findById(organizationId);
       if (!bloodBank) {
+        return { success: 0, errors: userIds.length };
+      }
+      break;
+    }
+    case RoleNames.HOSPITAL: {
+      const hospital = await Hospital.findById(organizationId);
+      if (!hospital) {
         return { success: 0, errors: userIds.length };
       }
       break;
