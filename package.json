@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
   },
   "repository": {
     "type": "git",
@@ -16,6 +17,10 @@
     "url": "https://github.com/nguyenphucthienan/BloodChainAPI/issues"
   },
   "homepage": "https://github.com/nguyenphucthienan/BloodChainAPI#readme",
+  "engines": {
+    "node": "10.16.0",
+    "npm": "6.9.0"
+  },
   "dependencies": {
     "@hapi/joi": "^15.1.0",
     "bcrypt-nodejs": "0.0.3",
@@ -36,6 +41,7 @@
     "winston-mongodb": "^3.0.0"
   },
   "devDependencies": {
-    "eslint": "^6.0.1"
+    "eslint": "^6.0.1",
+    "nodemon": "^1.19.1"
   }
 }
