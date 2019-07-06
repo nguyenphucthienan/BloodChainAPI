@@ -23,4 +23,14 @@ router.get('/me',
   catchErrors(authController.currentUser)
 );
 
+router.put('/me',
+  requireJwtAuth,
+  catchErrors(authController.editInfo)
+);
+
+router.put('/me/password',
+  requireJwtAuth,
+  catchErrors(authController.changePassword)
+);
+
 module.exports = router;

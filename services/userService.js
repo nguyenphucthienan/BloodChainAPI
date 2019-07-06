@@ -8,6 +8,7 @@ const BloodBank = mongoose.model('BloodBank');
 const Hospital = mongoose.model('Hospital');
 const generator = require('generate-password');
 const RoleNames = require('../constants/RoleNames');
+const BcryptUtils = require('../utils/BcryptUtils');
 const OrganizationFieldNames = require('../constants/OrganizationFieldNames');
 
 exports.getUsers = (paginationObj, filterObj, sortObj) => (
@@ -146,7 +147,7 @@ exports.getUserById = (id) => {
         birthdate: 1,
         email: 1,
         phone: 1,
-        adddress: 1,
+        address: 1,
         location: 1,
         photoUrl: 1,
         roles: 1,
@@ -180,7 +181,7 @@ exports.getUserByUsername = username => (
         birthdate: 1,
         email: 1,
         phone: 1,
-        adddress: 1,
+        address: 1,
         location: 1,
         photoUrl: 1,
         roles: 1,
@@ -213,7 +214,7 @@ exports.getUserByEmail = email => (
         lastName: 1,
         gender: 1,
         birthdate: 1,
-        adddress: 1,
+        address: 1,
         location: 1,
         photoUrl: 1,
         roles: 1,
@@ -243,13 +244,26 @@ exports.createUser = async (user) => {
   return { ...returnUser.toObject(), rawPassword };
 };
 
-exports.updateUserById = (id, user) => (
-  User
+exports.updateUserById = async (id, user) => {
+  const password = user.password;
+  if (password) {
+    const hashedPassword = await BcryptUtils.hashPassword(password);
+    if (hashedPassword) {
+      // eslint-disable-next-line require-atomic-updates
+      user.password = hashedPassword;
+    } else {
+      throw Error('Hash password failed');
+    }
+  }
+
+  const updatedUser = await User
     .findByIdAndUpdate(id,
       { $set: user },
       { new: true })
-    .exec()
-);
+    .exec();
+
+  return updatedUser;
+};
 
 exports.countUsers = filterObj => (
   User.find(filterObj)

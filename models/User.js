@@ -88,7 +88,7 @@ const userSchema = new Schema({
   },
   hospital: {
     type: Schema.Types.ObjectId,
-    ref: 'BloodBank'
+    ref: 'Hospital'
   }
 }, { timestamps: true });
 
