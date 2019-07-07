@@ -6,4 +6,5 @@ module.exports = () => {
   require('../models/BloodSeparationCenter');
   require('../models/BloodBank');
   require('../models/Hospital');
+  require('../models/BloodPack');
 };
