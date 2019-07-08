@@ -33,6 +33,10 @@ const bloodPackSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'BloodSeparationCenter'
   },
+  currentLocation: {
+    type: Schema.Types.ObjectId,
+    require: 'Current location is required'
+  },
   histories: [
     { type: historySchema }
   ]

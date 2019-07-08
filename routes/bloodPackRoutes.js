@@ -4,12 +4,21 @@ const router = express.Router();
 const bloodPackController = require('../controllers/bloodPackController');
 const RoleNames = require('../constants/RoleNames');
 const hasRoles = require('../middlewares/hasRoles');
+const filterBloodPacks = require('../middlewares/filterBloodPacks');
 const catchErrors = require('../middlewares/catchErrors');
 const { requireJwtAuth } = require('../middlewares/passportAuth');
 
 router.get('/',
   requireJwtAuth,
-  hasRoles([RoleNames.ADMIN, RoleNames.BLOOD_CAMP]),
+  hasRoles([
+    RoleNames.ADMIN,
+    RoleNames.BLOOD_CAMP,
+    RoleNames.BLOOD_TEST_CENTER,
+    RoleNames.BLOOD_SEPARATION_CENTER,
+    RoleNames.BLOOD_BANK,
+    RoleNames.HOSPITAL
+  ]),
+  filterBloodPacks,
   catchErrors(bloodPackController.getBloodPacks)
 );
 

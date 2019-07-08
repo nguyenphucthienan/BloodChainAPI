@@ -5,7 +5,7 @@ const { validateCreateBloodPack } = require('../validations/bloodPackValidations
 
 exports.getBloodPacks = async (req, res) => {
   const paginationObj = UrlUtils.createPaginationObject(req.query);
-  const filterObj = UrlUtils.createFilterObject(req.query);
+  const filterObj = UrlUtils.createBloodPackFilterObject(req.query);
   const sortObj = UrlUtils.createSortObject(req.query);
 
   const bloodPacks = await bloodPackService.getBloodPacks(paginationObj, filterObj, sortObj);
@@ -39,7 +39,8 @@ exports.createBloodPack = async (req, res) => {
   const bloodCampId = req.user.bloodCamp;
   const bloodPack = await bloodPackService.createBloodPack({
     ...req.body,
-    bloodCamp: bloodCampId
+    bloodCamp: bloodCampId,
+    currentLocation: bloodCampId
   });
 
   return res.send(bloodPack);

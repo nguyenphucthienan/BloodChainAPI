@@ -3,7 +3,7 @@ module.exports = {
   mongoUri: process.env.MONGO_URI,
   secretKey: process.env.SECRET_KEY,
   token: {
-    expirationTime: process.env.TOKEN_EXPIRATION_TIME
+    expirationTime: parseInt(process.env.TOKEN_EXPIRATION_TIME)
   },
   corsWhitelist: process.env.CORS_WHITELIST.split(' ')
 };
