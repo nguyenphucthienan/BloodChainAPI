@@ -92,20 +92,20 @@ exports.countBloodPacks = filterObj => (
 exports.transferBloodPacksToBloodTestCenter = async (bloodCampId, bloodPackIds, bloodTestCenterId, description) => {
   const bloodCamp = await BloodCamp.findById(bloodCampId);
   if (!bloodCamp) {
-    return { success: 0, errors: bloodPackIds.length };
+    return { success: [], errors: bloodPackIds };
   }
 
   const bloodTestCenter = await BloodTestCenter.findById(bloodTestCenterId);
   if (!bloodTestCenter) {
-    return { success: 0, errors: bloodPackIds.length };
+    return { success: [], errors: bloodPackIds };
   }
 
-  let success = 0, errors = 0;
+  let success = [], errors = [];
 
   for (let bloodPackId of bloodPackIds) {
     const bloodPack = await BloodPack.findById(bloodPackId);
     if (bloodPack.currentLocation.toString() !== bloodCampId.toString()) {
-      errors += 1;
+      errors.push(bloodPackId);
       continue;
     }
 
@@ -130,9 +130,9 @@ exports.transferBloodPacksToBloodTestCenter = async (bloodCampId, bloodPackIds, 
       { new: true });
 
     if (!updatedBloodPack) {
-      errors += 1;
+      errors.push(bloodPackId);
     } else {
-      success += 1;
+      success.push(bloodPackId);
     }
   }
 

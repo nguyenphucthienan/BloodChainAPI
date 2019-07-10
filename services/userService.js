@@ -292,14 +292,12 @@ exports.getStaffsOfOrganization = async (organizationRoleName, organizationId) =
 exports.assignOrganization = async (userIds, organizationRoleName, organizationId) => {
   const role = await Role.findOne({ name: organizationRoleName });
   if (!role) {
-    return { success: 0, errors: userIds.length };
+    return { success: [], errors: userIds };
   }
-
-  let success = 0, errors = 0;
 
   const organizationRoleFieldName = OrganizationFieldNames[organizationRoleName];
   if (!organizationRoleFieldName) {
-    return { success: 0, errors: userIds.length };
+    return { success: [], errors: userIds };
   }
 
   let organization;
@@ -330,7 +328,7 @@ exports.assignOrganization = async (userIds, organizationRoleName, organizationI
   }
 
   if (!organization) {
-    return { success: 0, errors: userIds.length };
+    return { success: [], errors: userIds };
   }
 
   const existingUsers = await this.getStaffsOfOrganization(organizationRoleName, organizationId);
@@ -339,6 +337,8 @@ exports.assignOrganization = async (userIds, organizationRoleName, organizationI
   const allIds = Array.from(new Set([...existingIds, ...userIds]));
   const commonIds = existingIds.filter(id => userIds.includes(id));
   const uncommonIds = allIds.filter(id => !commonIds.includes(id));
+
+  let success = [], errors = [];
 
   for (let userId of uncommonIds) {
     let user;
@@ -367,9 +367,9 @@ exports.assignOrganization = async (userIds, organizationRoleName, organizationI
     }
 
     if (!user) {
-      errors += 1;
+      errors.push(userId);
     } else {
-      success += 1;
+      success.push(userId);
     }
   }
 
