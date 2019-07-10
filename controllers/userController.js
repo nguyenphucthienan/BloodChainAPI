@@ -2,7 +2,7 @@ const _ = require('lodash');
 const userService = require('../services/userService');
 const UrlUtils = require('../utils/UrlUtils');
 const Pagination = require('../helpers/Pagination');
-const { validateCreateUser } = require('../validations/userValidation');
+const { validateCreateUser } = require('../validations/userValidations');
 
 exports.getUsers = async (req, res) => {
   const paginationObj = UrlUtils.createPaginationObject(req.query);

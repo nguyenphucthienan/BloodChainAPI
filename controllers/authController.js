@@ -1,6 +1,6 @@
 const _ = require('lodash');
 const userService = require('../services/userService');
-const { validateRegisterUser, validateEditUserInfo, validateChangeUserPassword } = require('../validations/userValidation');
+const { validateRegisterUser, validateEditUserInfo, validateChangeUserPassword } = require('../validations/userValidations');
 
 exports.register = async (req, res) => {
   const { error } = validateRegisterUser(req.body);

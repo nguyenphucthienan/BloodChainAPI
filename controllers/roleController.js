@@ -1,7 +1,7 @@
 const roleService = require('../services/roleService');
 const UrlUtils = require('../utils/UrlUtils');
 const Pagination = require('../helpers/Pagination');
-const { validateRole } = require('../validations/roleValidation');
+const { validateRole } = require('../validations/roleValidations');
 
 exports.getRoles = async (req, res) => {
   const paginationObj = UrlUtils.createPaginationObject(req.query);

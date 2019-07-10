@@ -2,6 +2,7 @@ const infoRoutes = require('../routes/infoRoutes');
 const authRoutes = require('../routes/authRoutes');
 const userRoutes = require('../routes/userRoutes');
 const roleRoutes = require('../routes/roleRoutes');
+const testTypeRoutes = require('../routes/testTypeRoutes');
 const bloodCampRoutes = require('../routes/bloodCampRoutes');
 const bloodTestCenterRoutes = require('../routes/bloodTestCenterRoutes');
 const bloodSeparationCenterRoutes = require('../routes/bloodSeparationCenterRoutes');
@@ -14,6 +15,7 @@ module.exports = (app) => {
   app.use('/api/auth', authRoutes);
   app.use('/api/users', userRoutes);
   app.use('/api/roles', roleRoutes);
+  app.use('/api/test-types', testTypeRoutes);
   app.use('/api/blood-camps', bloodCampRoutes);
   app.use('/api/blood-test-centers', bloodTestCenterRoutes);
   app.use('/api/blood-separation-centers', bloodSeparationCenterRoutes);

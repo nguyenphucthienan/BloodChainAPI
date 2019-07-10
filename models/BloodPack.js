@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
+const testDetailSchema = require('./schemas/testDetailSchema');
 const historySchema = require('./schemas/historySchema');
 
 const bloodPackSchema = new Schema({
@@ -17,14 +18,20 @@ const bloodPackSchema = new Schema({
     ref: 'BloodCamp',
     required: 'Blood camp is required',
   },
-  tested: {
-    type: Boolean,
-    default: false
-  },
   bloodTestCenter: {
     type: Schema.Types.ObjectId,
     ref: 'BloodTestCenter'
   },
+  tested: {
+    type: Boolean,
+    default: false
+  },
+  testPassed: {
+    type: Boolean
+  },
+  testDetail: [
+    { type: testDetailSchema }
+  ],
   separated: {
     type: Boolean,
     default: false

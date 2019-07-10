@@ -40,6 +40,8 @@ exports.getBloodPacks = (paginationObj, filterObj, sortObj) => (
         createdAt: 1,
         updatedAt: 1,
         volume: 1,
+        tested: 1,
+        separated: 1,
         history: 1,
         'donor._id': 1,
         'donor.username': 1,
