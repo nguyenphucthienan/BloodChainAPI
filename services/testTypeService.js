@@ -23,6 +23,14 @@ exports.createTestType = (testType) => {
   return newTestType.save();
 };
 
+exports.updateTestTypeById = (id, testType) => (
+  TestType
+    .findByIdAndUpdate(id,
+      { $set: testType },
+      { new: true })
+    .exec()
+);
+
 exports.deleteTestTypeById = id => (
   TestType
     .findByIdAndDelete(id)

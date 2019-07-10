@@ -49,6 +49,8 @@ exports.getBloodPacks = (paginationObj, filterObj, sortObj) => (
         'donor.lastName': 1,
         'bloodCamp._id': 1,
         'bloodCamp.name': 1,
+        'bloodTestCenter._id': 1,
+        'bloodTestCenter.name': 1
       }
     },
     { $sort: sortObj },
@@ -62,6 +64,7 @@ exports.getBloodPackById = id => (
     .findById(id)
     .populate('donor', '_id username firstName lastName')
     .populate('bloodCamp', '_id name')
+    .populate('bloodTestCenter', '_id name')
     .exec()
 );
 

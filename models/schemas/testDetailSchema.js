@@ -8,7 +8,7 @@ const testDetailSchema = new Schema({
     required: 'Test type is required',
     description: String
   },
-  result: {
+  passed: {
     type: Boolean,
     required: 'Result is required'
   }

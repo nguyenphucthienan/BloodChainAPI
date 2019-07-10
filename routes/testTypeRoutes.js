@@ -31,6 +31,12 @@ router.post('/',
   catchErrors(testTypeController.createTestType)
 );
 
+router.put('/:id',
+  requireJwtAuth,
+  hasRoles([RoleNames.BLOOD_CAMP]),
+  catchErrors(testTypeController.updateTestType)
+);
+
 router.delete('/:id',
   requireJwtAuth,
   hasRoles([RoleNames.ADMIN]),

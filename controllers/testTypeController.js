@@ -45,6 +45,22 @@ exports.createTestType = async (req, res) => {
   return res.send(testType);
 };
 
+exports.updateTestType = async (req, res) => {
+  const { error } = validateTestType(req.body);
+  if (error) {
+    return res.status(400).send({ message: error.toString() });
+  }
+
+  const { id } = req.params;
+  const testType = await testTypeService.updateTestTypeById(id, req.body);
+
+  if (!testType) {
+    return res.status(404).send();
+  }
+
+  return res.send(testType);
+};
+
 exports.deleteTestType = async (req, res) => {
   const { id } = req.params;
   const testType = await testTypeService.deleteTestTypeById(id);
