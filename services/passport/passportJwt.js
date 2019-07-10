@@ -1,7 +1,6 @@
 const JwtStrategy = require('passport-jwt').Strategy;
 const { ExtractJwt } = require('passport-jwt');
-const mongoose = require('mongoose');
-const User = mongoose.model('User');
+const userService = require('../userService');
 const config = require('../../config');
 
 const jwtOptions = {
@@ -11,10 +10,7 @@ const jwtOptions = {
 
 const passportJwt = new JwtStrategy(jwtOptions, async (payload, done) => {
   try {
-    const user = await User
-      .findById(payload.id)
-      .populate('roles');
-
+    const user = await userService.getUserById(payload.id);
     if (!user) {
       return done(null, false);
     }

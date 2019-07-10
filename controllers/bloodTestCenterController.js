@@ -7,7 +7,7 @@ const { validateBloodTestCenter } = require('../validations/bloodTestCenterValid
 
 exports.getBloodTestCenters = async (req, res) => {
   const paginationObj = UrlUtils.createPaginationObject(req.query);
-  const filterObj = UrlUtils.createFilterObject(req.query);
+  const filterObj = UrlUtils.createBloodTestCenterFilterObject(req.query);
   const sortObj = UrlUtils.createSortObject(req.query);
 
   const bloodTestCenters = await bloodTestCenterService.getBloodTestCenters(paginationObj, filterObj, sortObj);

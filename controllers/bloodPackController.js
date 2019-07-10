@@ -67,3 +67,17 @@ exports.deleteBloodPack = async (req, res) => {
 
   return res.send(bloodPack);
 };
+
+exports.transferBloodPacksToBloodTestCenter = async (req, res) => {
+  const bloodCampId = req.user.bloodCamp._id;
+  const { bloodPackIds, bloodTestCenterId, description } = req.body;
+
+  const results = await bloodPackService.transferBloodPacksToBloodTestCenter(
+    bloodCampId,
+    bloodPackIds,
+    bloodTestCenterId,
+    description
+  );
+
+  return res.send(results);
+};

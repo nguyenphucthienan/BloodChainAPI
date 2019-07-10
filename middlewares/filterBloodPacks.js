@@ -22,23 +22,23 @@ module.exports = (req, res, next) => {
 
   switch (organization) {
     case RoleNames.BLOOD_CAMP: {
-      req.query.currentLocation = req.user.bloodCamp;
+      req.query.currentLocation = req.user.bloodCamp._id;
       break;
     }
     case RoleNames.BLOOD_TEST_CENTER: {
-      req.query.currentLocation = req.user.bloodTestCenter;
+      req.query.currentLocation = req.user.bloodTestCenter._id;
       break;
     }
     case RoleNames.BLOOD_SEPARATION_CENTER: {
-      req.query.currentLocation = req.user.bloodSeparationCenter;
+      req.query.currentLocation = req.user.bloodSeparationCenter._id;
       break;
     }
     case RoleNames.BLOOD_BANK: {
-      req.query.currentLocation = req.user.bloodBank;
+      req.query.currentLocation = req.user.bloodBank._id;
       break;
     }
     case RoleNames.HOSPITAL: {
-      req.query.currentLocation = req.user.bloodTestCenter;
+      req.query.currentLocation = req.user.bloodTestCenter._id;
       break;
     }
     default: {

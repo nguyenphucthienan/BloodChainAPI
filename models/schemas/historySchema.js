@@ -21,7 +21,8 @@ const historySchema = new Schema({
       type: String,
       required: 'Name (to) is required'
     }
-  }
+  },
+  description: String
 }, { timestamps: true });
 
 module.exports = historySchema;

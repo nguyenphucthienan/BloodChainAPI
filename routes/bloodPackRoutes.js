@@ -45,4 +45,10 @@ router.delete('/:id',
   catchErrors(bloodPackController.deleteBloodPack)
 );
 
+router.post('/transfer/blood-test-center',
+  requireJwtAuth,
+  hasRoles([RoleNames.BLOOD_CAMP]),
+  catchErrors(bloodPackController.transferBloodPacksToBloodTestCenter)
+);
+
 module.exports = router;

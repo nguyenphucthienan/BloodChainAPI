@@ -37,7 +37,7 @@ const bloodPackSchema = new Schema({
     type: Schema.Types.ObjectId,
     require: 'Current location is required'
   },
-  histories: [
+  history: [
     { type: historySchema }
   ]
 }, { timestamps: true });
