@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const BloodPack = mongoose.model('BloodPack');
 const BloodCamp = mongoose.model('BloodCamp');
 const BloodTestCenter = mongoose.model('BloodTestCenter');
+const TestType = mongoose.model('TestType');
 
 exports.getBloodPacks = (paginationObj, filterObj, sortObj) => (
   BloodPack.aggregate([
@@ -40,7 +41,9 @@ exports.getBloodPacks = (paginationObj, filterObj, sortObj) => (
         createdAt: 1,
         updatedAt: 1,
         volume: 1,
+        bloodType: 1,
         tested: 1,
+        testPassed: 1,
         separated: 1,
         history: 1,
         'donor._id': 1,
@@ -93,6 +96,32 @@ exports.countBloodPacks = filterObj => (
     .countDocuments()
     .exec()
 );
+
+exports.updateTestResultsById = async (id, bloodType, testResults, testDescription) => {
+  const validTestResults = [];
+  for (let testResult of testResults) {
+    const testType = await TestType.findById(testResult.testType);
+    if (testType) {
+      validTestResults.push(testResult);
+    }
+  }
+
+  const testPassed = validTestResults.every(result => result.passed);
+  const bloodPack = await BloodPack.findOneAndUpdate(
+    { _id: mongoose.Types.ObjectId(id) },
+    {
+      $set: {
+        bloodType,
+        tested: true,
+        testPassed,
+        testResults: validTestResults,
+        testDescription
+      }
+    },
+    { new: true });
+
+  return bloodPack;
+};
 
 exports.transferBloodPacksToBloodTestCenter = async (bloodCampId, bloodPackIds, bloodTestCenterId, description) => {
   const bloodCamp = await BloodCamp.findById(bloodCampId);

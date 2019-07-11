@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
-const testDetailSchema = require('./schemas/testDetailSchema');
+const BloodTypes = require('../constants/BloodTypes');
+const testResultSchema = require('./schemas/testResultSchema');
 const historySchema = require('./schemas/historySchema');
 
 const bloodPackSchema = new Schema({
@@ -22,6 +23,19 @@ const bloodPackSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'BloodTestCenter'
   },
+  bloodType: {
+    type: String,
+    enum: [
+      BloodTypes.A_POSITIVE,
+      BloodTypes.A_NEGATIVE,
+      BloodTypes.B_POSITIVE,
+      BloodTypes.B_NEGATIVE,
+      BloodTypes.O_POSITIVE,
+      BloodTypes.O_NEGATIVE,
+      BloodTypes.AB_POSITIVE,
+      BloodTypes.AB_NEGATIVE
+    ]
+  },
   tested: {
     type: Boolean,
     default: false
@@ -29,9 +43,12 @@ const bloodPackSchema = new Schema({
   testPassed: {
     type: Boolean
   },
-  testDetail: [
-    { type: testDetailSchema }
+  testResults: [
+    { type: testResultSchema }
   ],
+  testDescription: {
+    type: String
+  },
   separated: {
     type: Boolean,
     default: false

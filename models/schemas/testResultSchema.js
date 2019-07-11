@@ -1,12 +1,11 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
-const testDetailSchema = new Schema({
+const testResultSchema = new Schema({
   testType: {
     type: mongoose.Types.ObjectId,
     ref: 'TestType',
-    required: 'Test type is required',
-    description: String
+    required: 'Test type is required'
   },
   passed: {
     type: Boolean,
@@ -14,4 +13,4 @@ const testDetailSchema = new Schema({
   }
 }, { timestamps: true });
 
-module.exports = testDetailSchema;
+module.exports = testResultSchema;

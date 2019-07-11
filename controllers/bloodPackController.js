@@ -1,7 +1,7 @@
 const bloodPackService = require('../services/bloodPackService');
 const UrlUtils = require('../utils/UrlUtils');
 const Pagination = require('../helpers/Pagination');
-const { validateCreateBloodPack } = require('../validations/bloodPackValidations');
+const { validateCreateBloodPack, validateUpdateTestResults } = require('../validations/bloodPackValidations');
 
 exports.getBloodPacks = async (req, res) => {
   const paginationObj = UrlUtils.createPaginationObject(req.query);
@@ -66,6 +66,34 @@ exports.deleteBloodPack = async (req, res) => {
   }
 
   return res.send(bloodPack);
+};
+
+exports.updateTestResults = async (req, res) => {
+  const { error } = validateUpdateTestResults(req.body);
+  if (error) {
+    return res.status(400).send({ message: error.toString() });
+  }
+
+  const { id } = req.params;
+  const { bloodType, testResults, testDescription } = req.body;
+  const bloodTestCenterId = req.user.bloodTestCenter._id;
+
+  const bloodPack = await bloodPackService.getBloodPackById(id);
+  if (!bloodPack) {
+    return res.status(404).send();
+  }
+
+  if (!bloodPack.currentLocation.equals(bloodTestCenterId)) {
+    return res.status(403).send('You do not have permission to update blood test result');
+  }
+
+  const updatedBloodPack = await bloodPackService
+    .updateTestResultsById(id, bloodType, testResults, testDescription);
+
+  if (!updatedBloodPack) {
+    return res.status(404).send();
+  }
+  return res.send(updatedBloodPack);
 };
 
 exports.transferBloodPacksToBloodTestCenter = async (req, res) => {
