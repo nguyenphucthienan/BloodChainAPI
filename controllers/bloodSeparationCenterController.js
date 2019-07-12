@@ -7,7 +7,7 @@ const { validateBloodSeparationCenter } = require('../validations/bloodSeparatio
 
 exports.getBloodSeparationCenters = async (req, res) => {
   const paginationObj = UrlUtils.createPaginationObject(req.query);
-  const filterObj = UrlUtils.createFilterObject(req.query);
+  const filterObj = UrlUtils.createBloodSeparationCenterFilterObject(req.query);
   const sortObj = UrlUtils.createSortObject(req.query);
 
   const bloodSeparationCenters = await bloodSeparationCenterService.getBloodSeparationCenters(paginationObj, filterObj, sortObj);

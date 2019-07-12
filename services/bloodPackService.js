@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const BloodPack = mongoose.model('BloodPack');
 const BloodCamp = mongoose.model('BloodCamp');
 const BloodTestCenter = mongoose.model('BloodTestCenter');
+const BloodSeparationCenter = mongoose.model('BloodSeparationCenter');
 const TestType = mongoose.model('TestType');
 
 exports.getBloodPacks = (paginationObj, filterObj, sortObj) => (
@@ -36,6 +37,34 @@ exports.getBloodPacks = (paginationObj, filterObj, sortObj) => (
       }
     },
     {
+      $lookup: {
+        from: 'bloodtestcenters',
+        localField: 'bloodTestCenter',
+        foreignField: '_id',
+        as: 'bloodTestCenter'
+      }
+    },
+    {
+      $unwind: {
+        path: '$bloodTestCenter',
+        preserveNullAndEmptyArrays: true
+      }
+    },
+    {
+      $lookup: {
+        from: 'bloodseparationcenters',
+        localField: 'bloodSeparationCenter',
+        foreignField: '_id',
+        as: 'bloodSeparationCenter'
+      }
+    },
+    {
+      $unwind: {
+        path: '$bloodSeparationCenter',
+        preserveNullAndEmptyArrays: true
+      }
+    },
+    {
       $project: {
         _id: 1,
         createdAt: 1,
@@ -44,6 +73,7 @@ exports.getBloodPacks = (paginationObj, filterObj, sortObj) => (
         bloodType: 1,
         tested: 1,
         testPassed: 1,
+        testDescription: 1,
         separated: 1,
         history: 1,
         'donor._id': 1,
@@ -53,7 +83,9 @@ exports.getBloodPacks = (paginationObj, filterObj, sortObj) => (
         'bloodCamp._id': 1,
         'bloodCamp.name': 1,
         'bloodTestCenter._id': 1,
-        'bloodTestCenter.name': 1
+        'bloodTestCenter.name': 1,
+        'bloodSeparationCenter._id': 1,
+        'bloodSeparationCenter.name': 1
       }
     },
     { $sort: sortObj },
@@ -68,6 +100,7 @@ exports.getBloodPackById = id => (
     .populate('donor', '_id username firstName lastName')
     .populate('bloodCamp', '_id name')
     .populate('bloodTestCenter', '_id name')
+    .populate('bloodSeparationCenter', '_id name')
     .exec()
 );
 
@@ -123,7 +156,11 @@ exports.updateTestResultsById = async (id, bloodType, testResults, testDescripti
   return bloodPack;
 };
 
-exports.transferBloodPacksToBloodTestCenter = async (bloodCampId, bloodPackIds, bloodTestCenterId, description) => {
+exports.transferBloodPacksToBloodTestCenter = async (
+  bloodCampId,
+  bloodPackIds,
+  bloodTestCenterId,
+  description) => {
   const bloodCamp = await BloodCamp.findById(bloodCampId);
   if (!bloodCamp) {
     return { success: [], errors: bloodPackIds };
@@ -135,7 +172,6 @@ exports.transferBloodPacksToBloodTestCenter = async (bloodCampId, bloodPackIds, 
   }
 
   let success = [], errors = [];
-
   for (let bloodPackId of bloodPackIds) {
     const bloodPack = await BloodPack.findById(bloodPackId);
     if (bloodPack.currentLocation.toString() !== bloodCampId.toString()) {
@@ -157,6 +193,63 @@ exports.transferBloodPacksToBloodTestCenter = async (bloodCampId, bloodPackIds, 
           history: {
             from: { _id: bloodCampId, name: bloodCamp.name },
             to: { _id: bloodTestCenterId, name: bloodTestCenter.name },
+            description
+          }
+        }
+      },
+      { new: true });
+
+    if (!updatedBloodPack) {
+      errors.push(bloodPackId);
+    } else {
+      success.push(bloodPackId);
+    }
+  }
+
+  return { success, errors };
+};
+
+
+exports.transferBloodPacksToBloodSeparationCenter = async (
+  bloodTestCenterId,
+  bloodPackIds,
+  bloodSeparationCenterId,
+  description) => {
+
+  const bloodTestCenter = await BloodTestCenter.findById(bloodTestCenterId);
+  if (!bloodTestCenter) {
+    return { success: [], errors: bloodPackIds };
+  }
+
+  const bloodSeparationCenter = await BloodSeparationCenter.findById(bloodSeparationCenterId);
+  if (!bloodSeparationCenter) {
+    return { success: [], errors: bloodPackIds };
+  }
+
+  let success = [], errors = [];
+  for (let bloodPackId of bloodPackIds) {
+    const bloodPack = await BloodPack.findById(bloodPackId);
+    if (bloodPack.currentLocation.toString() !== bloodTestCenterId.toString()) {
+      errors.push(bloodPackId);
+      continue;
+    }
+
+    const updatedBloodPack = await BloodPack.findOneAndUpdate(
+      {
+        _id: bloodPackId,
+        tested: true,
+        testPassed: true,
+        currentLocation: mongoose.Types.ObjectId(bloodTestCenterId)
+      },
+      {
+        $set: {
+          bloodSeparationCenter: bloodSeparationCenterId,
+          currentLocation: bloodSeparationCenterId
+        },
+        $push: {
+          history: {
+            from: { _id: bloodTestCenterId, name: bloodTestCenter.name },
+            to: { _id: bloodSeparationCenterId, name: bloodSeparationCenter.name },
             description
           }
         }

@@ -26,7 +26,30 @@ class UrlUtils {
   }
 
   static createBloodTestCenterFilterObject(query) {
-    const filters = _.omit(query, ['page', 'size', 'sort', 'organization']);
+    const filters = _.omit(query, ['page', 'size', 'sort']);
+    if (_.isEmpty(filters)) {
+      return {};
+    }
+
+    const objectIdFields = ['_id'];
+    const textFields = ['name', 'address', 'email', 'phone'];
+
+    const filterObject = {};
+    for (const key in filters) {
+      if (objectIdFields.includes(key)) {
+        filterObject[key] = mongoose.Types.ObjectId(filters[key]);
+      } else if (textFields.includes(key)) {
+        filterObject[key] = new RegExp(filters[key], 'i');
+      } else {
+        filterObject[key] = filters[key];
+      }
+    }
+
+    return filterObject;
+  }
+
+  static createBloodSeparationCenterFilterObject(query) {
+    const filters = _.omit(query, ['page', 'size', 'sort']);
     if (_.isEmpty(filters)) {
       return {};
     }

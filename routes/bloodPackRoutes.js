@@ -57,5 +57,10 @@ router.post('/transfer/blood-test-center',
   catchErrors(bloodPackController.transferBloodPacksToBloodTestCenter)
 );
 
+router.post('/transfer/blood-separation-center',
+  requireJwtAuth,
+  hasRoles([RoleNames.BLOOD_TEST_CENTER]),
+  catchErrors(bloodPackController.transferBloodPacksToBloodSeparationCenter)
+);
 
 module.exports = router;

@@ -109,3 +109,17 @@ exports.transferBloodPacksToBloodTestCenter = async (req, res) => {
 
   return res.send(results);
 };
+
+exports.transferBloodPacksToBloodSeparationCenter = async (req, res) => {
+  const bloodTestCenterId = req.user.bloodTestCenter._id;
+  const { bloodPackIds, bloodSeparationCenterId, description } = req.body;
+
+  const results = await bloodPackService.transferBloodPacksToBloodSeparationCenter(
+    bloodTestCenterId,
+    bloodPackIds,
+    bloodSeparationCenterId,
+    description
+  );
+
+  return res.send(results);
+};
