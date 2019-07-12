@@ -98,11 +98,14 @@ class UrlUtils {
     }
 
     const objectIdFields = ['_id'];
+    const textFields = ['name'];
 
     const filterObject = {};
     for (const key in filters) {
       if (objectIdFields.includes(key)) {
         filterObject[key] = mongoose.Types.ObjectId(filters[key]);
+      } else if (textFields.includes(key)) {
+        filterObject[key] = new RegExp(filters[key], 'i');
       } else {
         filterObject[key] = filters[key];
       }
