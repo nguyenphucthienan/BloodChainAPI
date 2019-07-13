@@ -19,6 +19,11 @@ const bloodProductSchema = new Schema({
     ref: 'BloodSeparationCenter',
     required: 'Blood separation center is required',
   },
+  bloodProductType: {
+    type: Schema.Types.ObjectId,
+    ref: 'BloodProductType',
+    required: 'Blood product type is required',
+  },
   volume: {
     type: Number,
     required: 'Volume is required'

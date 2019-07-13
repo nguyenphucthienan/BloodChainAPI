@@ -10,6 +10,7 @@ const bloodSeparationCenterRoutes = require('../routes/bloodSeparationCenterRout
 const bloodBankRoutes = require('../routes/bloodBankRoutes');
 const hospitalRoutes = require('../routes/hospitalRoutes');
 const bloodPackRoutes = require('../routes/bloodPackRoutes');
+const bloodProductRoutes = require('../routes/bloodProductRoutes');
 const errorHandlers = require('../handlers/errorHandlers');
 
 module.exports = (app) => {
@@ -24,6 +25,7 @@ module.exports = (app) => {
   app.use('/api/blood-banks', bloodBankRoutes);
   app.use('/api/hospitals', hospitalRoutes);
   app.use('/api/blood-packs', bloodPackRoutes);
+  app.use('/api/blood-products', bloodProductRoutes);
   app.use('/api', infoRoutes);
 
   // eslint-disable-next-line no-undef

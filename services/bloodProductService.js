@@ -33,12 +33,28 @@ exports.getBloodProducts = (paginationObj, filterObj, sortObj) => (
       }
     },
     {
+      $lookup: {
+        from: 'bloodproducttypes',
+        localField: 'bloodProductType',
+        foreignField: '_id',
+        as: 'bloodProductType'
+      }
+    },
+    {
+      $unwind: {
+        path: '$bloodProductType',
+        preserveNullAndEmptyArrays: true
+      }
+    },
+    {
       $project: {
         _id: 1,
         createdAt: 1,
         updatedAt: 1,
         volume: 1,
+        bloodPack: 1,
         bloodType: 1,
+        expirationDate: 1,
         description: 1,
         currentLocation: 1,
         history: 1,
@@ -47,7 +63,9 @@ exports.getBloodProducts = (paginationObj, filterObj, sortObj) => (
         'donor.firstName': 1,
         'donor.lastName': 1,
         'bloodSeparationCenter._id': 1,
-        'bloodSeparationCenter.name': 1
+        'bloodSeparationCenter.name': 1,
+        'bloodProductType._id': 1,
+        'bloodProductType.name': 1
       }
     },
     { $sort: sortObj },
@@ -62,6 +80,7 @@ exports.getBloodProductById = id => (
     .populate('donor', '_id username firstName lastName')
     .populate('bloodPack', '_id bloodType')
     .populate('bloodSeparationCenter', '_id name')
+    .populate('bloodProductType', '_id name')
     .exec()
 );
 

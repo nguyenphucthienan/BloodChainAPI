@@ -77,7 +77,40 @@ class UrlUtils {
       return {};
     }
 
-    const objectIdFields = ['_id', 'donor', 'bloodCamp', 'currentLocation'];
+    const objectIdFields = [
+      '_id',
+      'donor',
+      'bloodCamp',
+      'bloodTestCenter',
+      'bloodSeparationCenter',
+      'currentLocation'
+    ];
+
+    const filterObject = {};
+    for (const key in filters) {
+      if (objectIdFields.includes(key)) {
+        filterObject[key] = mongoose.Types.ObjectId(filters[key]);
+      } else {
+        filterObject[key] = filters[key];
+      }
+    }
+
+    return filterObject;
+  }
+
+  static createBloodProductFilterObject(query) {
+    const filters = _.omit(query, ['page', 'size', 'sort', 'organization']);
+    if (_.isEmpty(filters)) {
+      return {};
+    }
+
+    const objectIdFields = [
+      '_id',
+      'donor',
+      'bloodPack',
+      'bloodSeparationCenter',
+      'currentLocation'
+    ];
 
     const filterObject = {};
     for (const key in filters) {

@@ -182,6 +182,7 @@ exports.updateSeparationResultsById = async (id, separationResults, separationDe
           donor: bloodPack.donor,
           bloodPack: bloodPack._id,
           bloodSeparationCenter: bloodPack.bloodSeparationCenter,
+          bloodProductType: separationResult.bloodProductType,
           volume: separationResult.volume,
           bloodType: bloodPack.bloodType,
           expirationDate: separationResult.expirationDate,
@@ -189,7 +190,6 @@ exports.updateSeparationResultsById = async (id, separationResults, separationDe
         };
 
         const bloodProduct = await bloodProductService.createBloodProduct(newBloodProduct);
-
         if (bloodProduct) {
           success.push(bloodProduct._id);
         }
