@@ -172,39 +172,79 @@ exports.updateSeparationResultsById = async (id, separationResults, separationDe
     { new: true }
   );
 
+  if (!bloodPack) {
+    return null;
+  }
+
+  const newResults = separationResults.filter(result => !result._id);
+  const oldResults = separationResults.filter(result => result._id);
+  const oldResultsIds = oldResults.map(result => result._id);
+
+  const existingBloodProducts = await bloodProductService.getBloodProductsByBloodPackId(id);
+  const existingProductIds = existingBloodProducts.map(bloodProduct => bloodProduct._id.toString());
+
+  const allIds = Array.from(new Set([...oldResultsIds, ...existingProductIds]));
+  const commonIds = existingProductIds.filter(id => oldResultsIds.includes(id));
+  const uncommonIds = allIds.filter(id => !commonIds.includes(id));
+
   const success = [];
-  if (bloodPack) {
-    for (let separationResult of separationResults) {
-      const bloodProductType = await BloodProductType.findById(separationResult.bloodProductType);
 
-      if (bloodProductType) {
-        const newBloodProduct = {
-          donor: bloodPack.donor,
-          bloodPack: bloodPack._id,
-          bloodSeparationCenter: bloodPack.bloodSeparationCenter,
-          bloodProductType: separationResult.bloodProductType,
-          volume: separationResult.volume,
-          bloodType: bloodPack.bloodType,
-          expirationDate: separationResult.expirationDate,
-          currentLocation: bloodPack.bloodSeparationCenter
-        };
+  for (let result of newResults) {
+    // Add new blood product
+    const bloodProductType = await BloodProductType.findById(result.bloodProductType);
+    if (!bloodProductType) {
+      continue;
+    }
 
-        const bloodProduct = await bloodProductService.createBloodProduct(newBloodProduct);
-        if (bloodProduct) {
-          success.push(bloodProduct._id);
-        }
+    const bloodProduct = await bloodProductService.createBloodProduct({
+      donor: bloodPack.donor,
+      bloodPack: bloodPack._id,
+      bloodSeparationCenter: bloodPack.bloodSeparationCenter,
+      bloodProductType: result.bloodProductType,
+      volume: result.volume,
+      bloodType: bloodPack.bloodType,
+      expirationDate: result.expirationDate,
+      currentLocation: bloodPack.bloodSeparationCenter
+    });
+
+    if (bloodProduct) {
+      success.push(bloodProduct._id);
+    }
+  }
+
+  // Update blood product
+  for (const result of oldResults) {
+    if (commonIds.includes(result._id)) {
+      const bloodProductType = await BloodProductType.findById(result.bloodProductType);
+      if (!bloodProductType) {
+        continue;
       }
+
+      const bloodProductId = result._id;
+      const bloodProduct = await bloodProductService.updateBloodProductById(bloodProductId, {
+        bloodProductType: result.bloodProductType,
+        volume: result.volume,
+        expirationDate: result.expirationDate
+      });
+
+      if (bloodProduct) {
+        success.push(bloodProduct._id);
+      }
+    }
+  }
+
+  // Delete blood product
+  for (const id of uncommonIds) {
+    const bloodProduct = await bloodProductService.deleteBloodProductById(id);
+    if (bloodProduct) {
+      success.push(bloodProduct._id);
     }
   }
 
   return bloodPack;
 };
 
-exports.transferBloodPacksToBloodTestCenter = async (
-  bloodCampId,
-  bloodPackIds,
-  bloodTestCenterId,
-  description) => {
+exports.transferBloodPacksToBloodTestCenter = async (bloodCampId, bloodPackIds, bloodTestCenterId, description) => {
   const bloodCamp = await BloodCamp.findById(bloodCampId);
   if (!bloodCamp) {
     return { success: [], errors: bloodPackIds };
@@ -254,12 +294,7 @@ exports.transferBloodPacksToBloodTestCenter = async (
   return { success, errors };
 };
 
-exports.transferBloodPacksToBloodSeparationCenter = async (
-  bloodTestCenterId,
-  bloodPackIds,
-  bloodSeparationCenterId,
-  description) => {
-
+exports.transferBloodPacksToBloodSeparationCenter = async (bloodTestCenterId, bloodPackIds, bloodSeparationCenterId, description) => {
   const bloodTestCenter = await BloodTestCenter.findById(bloodTestCenterId);
   if (!bloodTestCenter) {
     return { success: [], errors: bloodPackIds };

@@ -74,6 +74,16 @@ exports.getBloodProducts = (paginationObj, filterObj, sortObj) => (
   ])
 );
 
+exports.getBloodProductsByBloodPackId = (bloodPackId) => (
+  BloodProduct
+    .find({ bloodPack: mongoose.Types.ObjectId(bloodPackId) })
+    .populate('donor', '_id username firstName lastName')
+    .populate('bloodPack', '_id bloodType')
+    .populate('bloodSeparationCenter', '_id name')
+    .populate('bloodProductType', '_id name')
+    .exec()
+);
+
 exports.getBloodProductById = id => (
   BloodProduct
     .findById(id)
