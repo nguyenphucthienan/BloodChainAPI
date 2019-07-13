@@ -9,4 +9,5 @@ module.exports = () => {
   require('../models/BloodBank');
   require('../models/Hospital');
   require('../models/BloodPack');
+  require('../models/BloodProduct');
 };

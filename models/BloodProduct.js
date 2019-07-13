@@ -1,27 +1,27 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 const BloodTypes = require('../constants/BloodTypes');
-const testResultSchema = require('./schemas/testResultSchema');
 const historySchema = require('./schemas/historySchema');
 
-const bloodPackSchema = new Schema({
+const bloodProductSchema = new Schema({
   donor: {
     type: Schema.Types.ObjectId,
     ref: 'User',
     required: 'Donor is required',
   },
+  bloodPack: {
+    type: Schema.Types.ObjectId,
+    ref: 'BloodPack',
+    required: 'Blood pack is required',
+  },
+  bloodSeparationCenter: {
+    type: Schema.Types.ObjectId,
+    ref: 'BloodSeparationCenter',
+    required: 'Blood separation center is required',
+  },
   volume: {
     type: Number,
     required: 'Volume is required'
-  },
-  bloodCamp: {
-    type: Schema.Types.ObjectId,
-    ref: 'BloodCamp',
-    required: 'Blood camp is required',
-  },
-  bloodTestCenter: {
-    type: Schema.Types.ObjectId,
-    ref: 'BloodTestCenter'
   },
   bloodType: {
     type: String,
@@ -36,31 +36,13 @@ const bloodPackSchema = new Schema({
       BloodTypes.AB_NEGATIVE
     ]
   },
-  tested: {
-    type: Boolean,
-    default: false
+  expirationDate: {
+    type: Date,
+    require: 'Expiration date is required'
   },
-  testPassed: {
-    type: Boolean
-  },
-  testResults: [
-    { type: testResultSchema }
-  ],
-  testDescription: {
+  description: {
     type: String,
     trim: true
-  },
-  separated: {
-    type: Boolean,
-    default: false
-  },
-  separationDescription: {
-    type: String,
-    trim: true
-  },
-  bloodSeparationCenter: {
-    type: Schema.Types.ObjectId,
-    ref: 'BloodSeparationCenter'
   },
   currentLocation: {
     type: Schema.Types.ObjectId,
@@ -71,4 +53,4 @@ const bloodPackSchema = new Schema({
   ]
 }, { timestamps: true });
 
-mongoose.model('BloodPack', bloodPackSchema);
+mongoose.model('BloodProduct', bloodProductSchema);

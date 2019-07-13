@@ -1,6 +1,7 @@
 const Joi = require('@hapi/joi');
 const BloodTypes = require('../constants/BloodTypes');
 const testResultSchema = require('./schemas/testResultSchema');
+const separationResultSchema = require('./schemas/separationResultSchema');
 
 exports.validateCreateBloodPack = (bloodPack) => {
   const schema = Joi.object().keys({
@@ -11,7 +12,7 @@ exports.validateCreateBloodPack = (bloodPack) => {
   return schema.validate(bloodPack);
 };
 
-exports.validateUpdateTestResults = (bloodPack) => {
+exports.validateUpdateTestResults = (updateObject) => {
   const schema = Joi.object().keys({
     testResults: Joi.array().items(testResultSchema).unique('testType').required(),
     bloodType: Joi.string().required().valid([
@@ -27,5 +28,14 @@ exports.validateUpdateTestResults = (bloodPack) => {
     testDescription: Joi.string().required()
   });
 
-  return schema.validate(bloodPack);
+  return schema.validate(updateObject);
+};
+
+exports.validateUpdateSeparationResults = (updateObject) => {
+  const schema = Joi.object().keys({
+    separationResults: Joi.array().items(separationResultSchema).required(),
+    separationDescription: Joi.string().required()
+  });
+
+  return schema.validate(updateObject);
 };

@@ -1,7 +1,11 @@
 const bloodPackService = require('../services/bloodPackService');
 const UrlUtils = require('../utils/UrlUtils');
 const Pagination = require('../helpers/Pagination');
-const { validateCreateBloodPack, validateUpdateTestResults } = require('../validations/bloodPackValidations');
+const {
+  validateCreateBloodPack,
+  validateUpdateTestResults,
+  validateUpdateSeparationResults
+} = require('../validations/bloodPackValidations');
 
 exports.getBloodPacks = async (req, res) => {
   const paginationObj = UrlUtils.createPaginationObject(req.query);
@@ -89,6 +93,34 @@ exports.updateTestResults = async (req, res) => {
 
   const updatedBloodPack = await bloodPackService
     .updateTestResultsById(id, bloodType, testResults, testDescription);
+
+  if (!updatedBloodPack) {
+    return res.status(404).send();
+  }
+  return res.send(updatedBloodPack);
+};
+
+exports.updateSeparationResults = async (req, res) => {
+  const { error } = validateUpdateSeparationResults(req.body);
+  if (error) {
+    return res.status(400).send({ message: error.toString() });
+  }
+
+  const { id } = req.params;
+  const { separationResults, separationDescription } = req.body;
+  const bloodSeparationCenterId = req.user.bloodSeparationCenter._id;
+
+  const bloodPack = await bloodPackService.getBloodPackById(id);
+  if (!bloodPack) {
+    return res.status(404).send();
+  }
+
+  if (!bloodPack.currentLocation.equals(bloodSeparationCenterId)) {
+    return res.status(403).send('You do not have permission to update blood separation result');
+  }
+
+  const updatedBloodPack = await bloodPackService
+    .updateSeparationResultsById(id, separationResults, separationDescription);
 
   if (!updatedBloodPack) {
     return res.status(404).send();

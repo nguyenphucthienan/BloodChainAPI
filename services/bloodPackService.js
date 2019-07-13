@@ -4,6 +4,8 @@ const BloodCamp = mongoose.model('BloodCamp');
 const BloodTestCenter = mongoose.model('BloodTestCenter');
 const BloodSeparationCenter = mongoose.model('BloodSeparationCenter');
 const TestType = mongoose.model('TestType');
+const BloodProductType = mongoose.model('BloodProductType');
+const bloodProductService = require('./bloodProductService');
 
 exports.getBloodPacks = (paginationObj, filterObj, sortObj) => (
   BloodPack.aggregate([
@@ -75,6 +77,7 @@ exports.getBloodPacks = (paginationObj, filterObj, sortObj) => (
         testPassed: 1,
         testDescription: 1,
         separated: 1,
+        currentLocation: 1,
         history: 1,
         'donor._id': 1,
         'donor.username': 1,
@@ -151,7 +154,48 @@ exports.updateTestResultsById = async (id, bloodType, testResults, testDescripti
         testDescription
       }
     },
-    { new: true });
+    { new: true }
+  );
+
+  return bloodPack;
+};
+
+exports.updateSeparationResultsById = async (id, separationResults, separationDescription) => {
+  const bloodPack = await BloodPack.findOneAndUpdate(
+    { _id: mongoose.Types.ObjectId(id) },
+    {
+      $set: {
+        separated: true,
+        separationDescription
+      }
+    },
+    { new: true }
+  );
+
+  const success = [];
+  if (bloodPack) {
+    for (let separationResult of separationResults) {
+      const bloodProductType = await BloodProductType.findById(separationResult.bloodProductType);
+
+      if (bloodProductType) {
+        const newBloodProduct = {
+          donor: bloodPack.donor,
+          bloodPack: bloodPack._id,
+          bloodSeparationCenter: bloodPack.bloodSeparationCenter,
+          volume: separationResult.volume,
+          bloodType: bloodPack.bloodType,
+          expirationDate: separationResult.expirationDate,
+          currentLocation: bloodPack.bloodSeparationCenter
+        };
+
+        const bloodProduct = await bloodProductService.createBloodProduct(newBloodProduct);
+
+        if (bloodProduct) {
+          success.push(bloodProduct._id);
+        }
+      }
+    }
+  }
 
   return bloodPack;
 };
@@ -171,7 +215,7 @@ exports.transferBloodPacksToBloodTestCenter = async (
     return { success: [], errors: bloodPackIds };
   }
 
-  let success = [], errors = [];
+  const success = [], errors = [];
   for (let bloodPackId of bloodPackIds) {
     const bloodPack = await BloodPack.findById(bloodPackId);
     if (bloodPack.currentLocation.toString() !== bloodCampId.toString()) {
@@ -197,7 +241,8 @@ exports.transferBloodPacksToBloodTestCenter = async (
           }
         }
       },
-      { new: true });
+      { new: true }
+    );
 
     if (!updatedBloodPack) {
       errors.push(bloodPackId);
@@ -208,7 +253,6 @@ exports.transferBloodPacksToBloodTestCenter = async (
 
   return { success, errors };
 };
-
 
 exports.transferBloodPacksToBloodSeparationCenter = async (
   bloodTestCenterId,
@@ -226,7 +270,7 @@ exports.transferBloodPacksToBloodSeparationCenter = async (
     return { success: [], errors: bloodPackIds };
   }
 
-  let success = [], errors = [];
+  const success = [], errors = [];
   for (let bloodPackId of bloodPackIds) {
     const bloodPack = await BloodPack.findById(bloodPackId);
     if (bloodPack.currentLocation.toString() !== bloodTestCenterId.toString()) {
@@ -254,7 +298,8 @@ exports.transferBloodPacksToBloodSeparationCenter = async (
           }
         }
       },
-      { new: true });
+      { new: true }
+    );
 
     if (!updatedBloodPack) {
       errors.push(bloodPackId);

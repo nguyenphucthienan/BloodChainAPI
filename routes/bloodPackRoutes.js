@@ -51,6 +51,12 @@ router.put('/:id/test-results',
   catchErrors(bloodPackController.updateTestResults)
 );
 
+router.put('/:id/separation-results',
+  requireJwtAuth,
+  hasRoles([RoleNames.BLOOD_SEPARATION_CENTER]),
+  catchErrors(bloodPackController.updateSeparationResults)
+);
+
 router.post('/transfer/blood-test-center',
   requireJwtAuth,
   hasRoles([RoleNames.BLOOD_CAMP]),
