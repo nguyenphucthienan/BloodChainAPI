@@ -1,6 +1,7 @@
 const bloodProductService = require('../services/bloodProductService');
 const UrlUtils = require('../utils/UrlUtils');
 const Pagination = require('../helpers/Pagination');
+const RoleNames = require('../constants/RoleNames');
 
 exports.getBloodProducts = async (req, res) => {
   const paginationObj = UrlUtils.createPaginationObject(req.query);
@@ -49,4 +50,42 @@ exports.deleteBloodProduct = async (req, res) => {
   }
 
   return res.send(bloodProduct);
+};
+
+exports.transferBloodProducts = async (req, res) => {
+  const {
+    fromOrganizationType,
+    toOrganizationType,
+    toOrganizationId,
+    bloodProductIds,
+    description
+  } = req.body;
+
+  let fromOrganization;
+  switch (fromOrganizationType) {
+    case RoleNames.BLOOD_SEPARATION_CENTER:
+      fromOrganization = req.user.bloodSeparationCenter;
+      break;
+    case RoleNames.BLOOD_BANK:
+      fromOrganization = req.user.bloodBank;
+      break;
+    case RoleNames.HOSPITAL:
+      fromOrganization = req.user.hospital;
+      break;
+  }
+
+  if (!fromOrganization) {
+    return res.status(400).send();
+  }
+
+  const results = await bloodProductService.transferBloodProducts(
+    fromOrganizationType,
+    fromOrganization._id,
+    toOrganizationType,
+    toOrganizationId,
+    bloodProductIds,
+    description
+  );
+
+  return res.send(results);
 };

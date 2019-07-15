@@ -39,4 +39,14 @@ router.delete('/:id',
   catchErrors(bloodProductController.deleteBloodProduct)
 );
 
+router.post('/transfer',
+  requireJwtAuth,
+  hasRoles([
+    RoleNames.BLOOD_SEPARATION_CENTER,
+    RoleNames.BLOOD_BANK,
+    RoleNames.HOSPITAL
+  ]),
+  catchErrors(bloodProductController.transferBloodProducts)
+);
+
 module.exports = router;

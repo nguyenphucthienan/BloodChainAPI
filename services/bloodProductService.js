@@ -1,5 +1,9 @@
 const mongoose = require('mongoose');
 const BloodProduct = mongoose.model('BloodProduct');
+const BloodSeparationCenter = mongoose.model('BloodSeparationCenter');
+const BloodBank = mongoose.model('BloodBank');
+const Hospital = mongoose.model('Hospital');
+const RoleNames = require('../constants/RoleNames');
 
 exports.getBloodProducts = (paginationObj, filterObj, sortObj) => (
   BloodProduct.aggregate([
@@ -119,3 +123,77 @@ exports.countBloodProducts = filterObj => (
     .countDocuments()
     .exec()
 );
+
+exports.transferBloodProducts = async (
+  fromOrganizationType, fromOrganizationId,
+  toOrganizationType, toOrganizationId,
+  bloodProductIds, description
+) => {
+  let fromOrganization;
+  switch (fromOrganizationType) {
+    case RoleNames.BLOOD_SEPARATION_CENTER:
+      fromOrganization = await BloodSeparationCenter.findById(fromOrganizationId);
+      break;
+    case RoleNames.BLOOD_BANK:
+      fromOrganization = await BloodBank.findById(fromOrganizationId);
+      break;
+    case RoleNames.HOSPITAL:
+      fromOrganization = await Hospital.findById(fromOrganizationId);
+      break;
+  }
+
+  if (!fromOrganization) {
+    return { success: [], errors: bloodProductIds };
+  }
+
+  let toOrganization;
+  switch (toOrganizationType) {
+    case RoleNames.BLOOD_BANK:
+      toOrganization = await BloodBank.findById(toOrganizationId);
+      break;
+    case RoleNames.HOSPITAL:
+      toOrganization = await Hospital.findById(toOrganizationId);
+      break;
+  }
+
+  if (!toOrganization) {
+    return { success: [], errors: bloodProductIds };
+  }
+
+  const success = [], errors = [];
+  for (let bloodProductId of bloodProductIds) {
+    const bloodProduct = await BloodProduct.findById(bloodProductId);
+    if (bloodProduct.currentLocation.toString() !== fromOrganizationId.toString()) {
+      errors.push(bloodProductId);
+      continue;
+    }
+
+    const updatedBloodProduct = await BloodProduct.findOneAndUpdate(
+      {
+        _id: bloodProductId,
+        currentLocation: mongoose.Types.ObjectId(fromOrganizationId)
+      },
+      {
+        $set: {
+          currentLocation: toOrganizationId
+        },
+        $push: {
+          history: {
+            from: { _id: fromOrganizationId, name: fromOrganization.name },
+            to: { _id: toOrganizationId, name: toOrganization.name },
+            description
+          }
+        }
+      },
+      { new: true }
+    );
+
+    if (!updatedBloodProduct) {
+      errors.push(bloodProductId);
+    } else {
+      success.push(bloodProductId);
+    }
+  }
+
+  return { success, errors };
+};

@@ -4,7 +4,7 @@ module.exports = (req, res, next) => {
   const { organization } = req.query;
   const roleNames = req.user.roles.map(role => role.name);
 
-  if (!organization && roleNames.includes(RoleNames.ADMIN)) {
+  if (!organization) {
     return next();
   } else if (!organization) {
     return res.status(400).send({ message: 'Organization type is required' });
@@ -24,7 +24,7 @@ module.exports = (req, res, next) => {
       break;
     }
     case RoleNames.HOSPITAL: {
-      req.query.currentLocation = req.user.bloodTestCenter._id;
+      req.query.currentLocation = req.user.hospital._id;
       break;
     }
     default: {
