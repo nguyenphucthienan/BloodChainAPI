@@ -2,7 +2,7 @@ const _ = require('lodash');
 const userService = require('../services/userService');
 const UrlUtils = require('../utils/UrlUtils');
 const Pagination = require('../helpers/Pagination');
-const { validateCreateUser } = require('../validations/userValidations');
+const { validateCreateUser, validateUpdateUser } = require('../validations/userValidations');
 
 exports.getUsers = async (req, res) => {
   const paginationObj = UrlUtils.createPaginationObject(req.query);
@@ -53,6 +53,11 @@ exports.createUser = async (req, res) => {
 };
 
 exports.updateUser = async (req, res) => {
+  const { error } = validateUpdateUser(req.body);
+  if (error) {
+    return res.status(400).send({ message: error.toString() });
+  }
+
   const { id } = req.params;
   const updatedUser = await userService.updateUserById(id, req.body);
 

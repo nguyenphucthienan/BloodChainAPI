@@ -37,7 +37,7 @@ router.post('/',
   catchErrors(userController.createUser)
 );
 
-router.put('/',
+router.put('/:id',
   requireJwtAuth,
   hasRoles([RoleNames.ADMIN]),
   catchErrors(userController.updateUser)

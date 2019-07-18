@@ -9,8 +9,12 @@ router.post('/register',
   catchErrors(authController.register)
 );
 
-router.post('/check-username',
+router.get('/check-username',
   catchErrors(authController.checkUsername)
+);
+
+router.get('/check-email',
+  catchErrors(authController.checkEmail)
 );
 
 router.post('/login',

@@ -1,6 +1,10 @@
 const _ = require('lodash');
 const userService = require('../services/userService');
-const { validateRegisterUser, validateEditUserInfo, validateChangeUserPassword } = require('../validations/userValidations');
+const {
+  validateRegisterUser,
+  validateUpdateUser,
+  validateChangeUserPassword
+} = require('../validations/userValidations');
 
 exports.register = async (req, res) => {
   const { error } = validateRegisterUser(req.body);
@@ -25,14 +29,25 @@ exports.register = async (req, res) => {
 };
 
 exports.checkUsername = async (req, res) => {
-  const { username } = req.body;
+  const { username } = req.query;
   const user = await userService.getUserByUsername(username);
 
-  if (!user) {
-    return res.json({ result: true });
+  if (user) {
+    return res.json({ exists: true });
   }
 
-  return res.json({ result: false });
+  return res.json({ exists: false });
+};
+
+exports.checkEmail = async (req, res) => {
+  const { email } = req.query;
+  const user = await userService.getUserByEmail(email);
+
+  if (user) {
+    return res.json({ exists: true });
+  }
+
+  return res.json({ exists: false });
 };
 
 exports.logIn = async (req, res) => {
@@ -48,7 +63,7 @@ exports.currentUser = async (req, res) => {
 };
 
 exports.editInfo = async (req, res) => {
-  const { error } = validateEditUserInfo(req.body);
+  const { error } = validateUpdateUser(req.body);
   if (error) {
     return res.status(400).send({ message: error.toString() });
   }
