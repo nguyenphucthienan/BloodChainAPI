@@ -40,7 +40,7 @@ exports.createBloodPack = async (req, res) => {
     return res.status(400).send({ message: error.toString() });
   }
 
-  const bloodCampId = req.user.bloodCamp;
+  const bloodCampId = req.user.bloodCamp._id;
   const bloodPack = await bloodPackService.createBloodPack({
     ...req.body,
     bloodCamp: bloodCampId,

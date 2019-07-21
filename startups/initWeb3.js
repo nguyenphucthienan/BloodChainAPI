@@ -9,7 +9,7 @@ module.exports = async () => {
     } else {
       throw new Error();
     }
-  } catch (err) {
-    winston.error('Cannot connect to Ethereum blockchain');
+  } catch (error) {
+    winston.error('Cannot connect to Ethereum blockchain', error);
   }
 };

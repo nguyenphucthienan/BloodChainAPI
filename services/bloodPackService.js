@@ -6,6 +6,7 @@ const BloodSeparationCenter = mongoose.model('BloodSeparationCenter');
 const TestType = mongoose.model('TestType');
 const BloodProductType = mongoose.model('BloodProductType');
 const bloodProductService = require('./bloodProductService');
+const bloodChainService = require('./web3/bloodChainService');
 
 exports.getBloodPacks = (paginationObj, filterObj, sortObj) => (
   BloodPack.aggregate([
@@ -107,9 +108,11 @@ exports.getBloodPackById = id => (
     .exec()
 );
 
-exports.createBloodPack = (bloodPack) => {
+exports.createBloodPack = async (bloodPack) => {
   const newBloodPack = new BloodPack(bloodPack);
-  return newBloodPack.save();
+  await newBloodPack.save();
+  await bloodChainService.createBloodPack(newBloodPack._id.toString());
+  return newBloodPack;
 };
 
 exports.updateBloodPackById = (id, bloodPack) => (
