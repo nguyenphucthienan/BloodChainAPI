@@ -36,6 +36,13 @@ exports.getBloodPack = async (bloodPackId) => {
     .call();
 };
 
+exports.getBloodPackAddress = async (bloodPackId) => {
+  const BloodChain = this.getContract();
+  return await BloodChain.methods
+    .getBloodPackAddress(bloodPackId)
+    .call();
+}
+
 exports.createBloodPack = async (bloodPackId) => {
   const accounts = await this.getAccounts();
   const BloodChain = this.getContract();

@@ -6,7 +6,8 @@ const BloodSeparationCenter = mongoose.model('BloodSeparationCenter');
 const TestType = mongoose.model('TestType');
 const BloodProductType = mongoose.model('BloodProductType');
 const bloodProductService = require('./bloodProductService');
-const bloodChainService = require('./web3/bloodChainService');
+const web3BloodChainService = require('./web3/web3BloodChainService');
+const web3BloodPackService = require('./web3/web3BloodPackService');
 
 exports.getBloodPacks = (paginationObj, filterObj, sortObj) => (
   BloodPack.aggregate([
@@ -111,7 +112,7 @@ exports.getBloodPackById = id => (
 exports.createBloodPack = async (bloodPack) => {
   const newBloodPack = new BloodPack(bloodPack);
   await newBloodPack.save();
-  await bloodChainService.createBloodPack(newBloodPack._id.toString());
+  await web3BloodChainService.createBloodPack(newBloodPack._id.toString());
   return newBloodPack;
 };
 
@@ -287,10 +288,22 @@ exports.transferBloodPacksToBloodTestCenter = async (bloodCampId, bloodPackIds, 
       { new: true }
     );
 
-    if (!updatedBloodPack) {
-      errors.push(bloodPackId);
+    if (updatedBloodPack) {
+      try {
+        const bloodPackAddress = await web3BloodChainService.getBloodPackAddress(bloodPackId);
+        await web3BloodPackService.transfer(
+          bloodPackAddress,
+          bloodCampId.toString(), bloodCamp.name,
+          bloodTestCenterId.toString(), bloodTestCenter.name,
+          description
+        );
+
+        success.push(bloodPackId);
+      } catch (error) {
+        errors.push(bloodPackId);
+      }
     } else {
-      success.push(bloodPackId);
+      errors.push(bloodPackId);
     }
   }
 
@@ -339,10 +352,22 @@ exports.transferBloodPacksToBloodSeparationCenter = async (bloodTestCenterId, bl
       { new: true }
     );
 
-    if (!updatedBloodPack) {
-      errors.push(bloodPackId);
+    if (updatedBloodPack) {
+      try {
+        const bloodPackAddress = await web3BloodChainService.getBloodPackAddress(bloodPackId);
+        await web3BloodPackService.transfer(
+          bloodPackAddress,
+          bloodTestCenterId.toString(), bloodTestCenter.name,
+          bloodSeparationCenterId.toString(), bloodSeparationCenter.name,
+          description
+        );
+
+        success.push(bloodPackId);
+      } catch (error) {
+        errors.push(bloodPackId);
+      }
     } else {
-      success.push(bloodPackId);
+      errors.push(bloodPackId);
     }
   }
 

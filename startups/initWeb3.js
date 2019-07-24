@@ -1,9 +1,9 @@
 const winston = require('winston');
-const bloodChainService = require('../services/web3/bloodChainService');
+const web3BloodChainService = require('../services/web3/web3BloodChainService');
 
 module.exports = async () => {
   try {
-    const info = await bloodChainService.getInfo();
+    const info = await web3BloodChainService.getInfo();
     if (info) {
       winston.info(`Connect to ${info} successfully`);
     } else {
