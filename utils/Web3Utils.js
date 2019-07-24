@@ -1,5 +1,6 @@
-const web3 = require('../web3');
+const Utils = require('web3-utils');
 const CommonUtils = require('./CommonUtils');
+const web3 = require('../web3');
 
 class Web3Utils {
   static async getTransactionReceipt(hash) {
@@ -23,6 +24,22 @@ class Web3Utils {
         }
       });
     }));
+  }
+
+  static fromWei(value, unit) {
+    return Utils.fromWei(value, unit);
+  }
+
+  static toWei(value, unit) {
+    return Utils.toWei(value, unit);
+  }
+
+  static toHex(value) {
+    return Utils.toHex(value);
+  }
+
+  static fromHexToDate(hexTimestamp) {
+    return new Date(hexTimestamp.toNumber());
   }
 }
 

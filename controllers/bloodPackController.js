@@ -1,4 +1,7 @@
 const bloodPackService = require('../services/bloodPackService');
+const web3BloodChainService = require('../services/web3/web3BloodChainService');
+const web3BloodPackService = require('../services/web3/web3BloodPackService');
+const BloodChainUtils = require('../utils/BloodChainUtils');
 const UrlUtils = require('../utils/UrlUtils');
 const Pagination = require('../helpers/Pagination');
 const {
@@ -154,4 +157,24 @@ exports.transferBloodPacksToBloodSeparationCenter = async (req, res) => {
   );
 
   return res.send(results);
+};
+
+exports.getTransferHistories = async (req, res) => {
+  const { id } = req.params;
+  const bloodPack = await bloodPackService.getBloodPackById(id);
+  if (!bloodPack) {
+    return res.status(404).send();
+  }
+
+  const address = await web3BloodChainService.getBloodPackAddress(id);
+  const historiesLength = await web3BloodPackService.getHistoriesLength(address);
+
+  const histories = [];
+  for (let i = 0; i < historiesLength; i++) {
+    const historyData = await web3BloodPackService.getHistory(address, i);
+    const history = BloodChainUtils.extractHistoryInfo(historyData);
+    histories.push(history);
+  }
+
+  return res.send(histories);
 };
