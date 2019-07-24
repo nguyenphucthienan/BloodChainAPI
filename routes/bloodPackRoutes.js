@@ -5,6 +5,7 @@ const bloodPackController = require('../controllers/bloodPackController');
 const RoleNames = require('../constants/RoleNames');
 const hasRoles = require('../middlewares/hasRoles');
 const filterBloodPacks = require('../middlewares/filterBloodPacks');
+const checkBloodPackOwner = require('../middlewares/checkBloodPackOwner');
 const catchErrors = require('../middlewares/catchErrors');
 const { requireJwtAuth } = require('../middlewares/passportAuth');
 
@@ -47,6 +48,7 @@ router.delete('/:id',
 
 router.get('/:id/transfer-histories',
   requireJwtAuth,
+  checkBloodPackOwner,
   hasRoles([
     RoleNames.ADMIN,
     RoleNames.BLOOD_CAMP,

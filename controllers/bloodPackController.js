@@ -169,12 +169,14 @@ exports.getTransferHistories = async (req, res) => {
   const address = await web3BloodChainService.getBloodPackAddress(id);
   const historiesLength = await web3BloodPackService.getHistoriesLength(address);
 
-  const histories = [];
+  const historyPromises = [];
   for (let i = 0; i < historiesLength; i++) {
-    const historyData = await web3BloodPackService.getHistory(address, i);
-    const history = BloodChainUtils.extractHistoryInfo(historyData);
-    histories.push(history);
+    historyPromises.push(web3BloodPackService.getHistory(address, i));
   }
+
+  const histories = [];
+  const historyData = await Promise.all(historyPromises);
+  histories.push(...historyData.map(historyData => BloodChainUtils.extractHistoryInfo(historyData)));
 
   return res.send(histories);
 };
