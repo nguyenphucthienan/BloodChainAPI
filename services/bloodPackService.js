@@ -5,6 +5,7 @@ const BloodTestCenter = mongoose.model('BloodTestCenter');
 const BloodSeparationCenter = mongoose.model('BloodSeparationCenter');
 const TestType = mongoose.model('TestType');
 const BloodProductType = mongoose.model('BloodProductType');
+const RoleNames = require('../constants/RoleNames');
 const bloodProductService = require('./bloodProductService');
 const web3BloodChainService = require('./web3/web3BloodChainService');
 const web3BloodPackService = require('./web3/web3BloodPackService');
@@ -293,8 +294,8 @@ exports.transferBloodPacksToBloodTestCenter = async (bloodCampId, bloodPackIds, 
         const bloodPackAddress = await web3BloodChainService.getBloodPackAddress(bloodPackId);
         await web3BloodPackService.transfer(
           bloodPackAddress,
-          bloodCampId.toString(), bloodCamp.name,
-          bloodTestCenterId.toString(), bloodTestCenter.name,
+          RoleNames.BLOOD_CAMP, bloodCampId.toString(), bloodCamp.name,
+          RoleNames.BLOOD_TEST_CENTER, bloodTestCenterId.toString(), bloodTestCenter.name,
           description
         );
 
@@ -357,8 +358,8 @@ exports.transferBloodPacksToBloodSeparationCenter = async (bloodTestCenterId, bl
         const bloodPackAddress = await web3BloodChainService.getBloodPackAddress(bloodPackId);
         await web3BloodPackService.transfer(
           bloodPackAddress,
-          bloodTestCenterId.toString(), bloodTestCenter.name,
-          bloodSeparationCenterId.toString(), bloodSeparationCenter.name,
+          RoleNames.BLOOD_TEST_CENTER, bloodTestCenterId.toString(), bloodTestCenter.name,
+          RoleNames.BLOOD_SEPARATION_CENTER, bloodSeparationCenterId.toString(), bloodSeparationCenter.name,
           description
         );
 

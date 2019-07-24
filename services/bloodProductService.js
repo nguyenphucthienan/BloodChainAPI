@@ -4,6 +4,8 @@ const BloodSeparationCenter = mongoose.model('BloodSeparationCenter');
 const BloodBank = mongoose.model('BloodBank');
 const Hospital = mongoose.model('Hospital');
 const RoleNames = require('../constants/RoleNames');
+const web3BloodChainService = require('./web3/web3BloodChainService');
+const web3BloodPackService = require('./web3/web3BloodPackService');
 
 exports.getBloodProducts = (paginationObj, filterObj, sortObj) => (
   BloodProduct.aggregate([
@@ -188,10 +190,23 @@ exports.transferBloodProducts = async (
       { new: true }
     );
 
-    if (!updatedBloodProduct) {
-      errors.push(bloodProductId);
+    if (updatedBloodProduct) {
+      try {
+        const bloodPackId = updatedBloodProduct.bloodPack.toString()
+        const bloodPackAddress = await web3BloodChainService.getBloodPackAddress(bloodPackId);
+        await web3BloodPackService.transfer(
+          bloodPackAddress,
+          fromOrganizationType, fromOrganizationId.toString(), fromOrganization.name,
+          toOrganizationType, toOrganizationId.toString(), toOrganization.name,
+          description
+        );
+
+        success.push(bloodProductId);
+      } catch (error) {
+        errors.push(bloodProductId);
+      }
     } else {
-      success.push(bloodProductId);
+      errors.push(bloodProductId);
     }
   }
 

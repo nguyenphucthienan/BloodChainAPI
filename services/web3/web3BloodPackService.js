@@ -13,13 +13,21 @@ exports.getAccounts = async () => {
   return await web3.eth.getAccounts();
 };
 
-exports.transfer = async (contractAddress, fromId, fromName, toId, toName, description) => {
+exports.transfer = async (
+  contractAddress,
+  fromType, fromId, fromName,
+  toType, toId, toName,
+  description
+) => {
   const accounts = await this.getAccounts();
   const BloodPack = this.getContract(contractAddress);
 
+  const from = `${fromType}|;|${fromId}|;|${fromName}`;
+  const to = `${toType}|;|${toId}|;|${toName}`;
+
   return new Promise((resolve, reject) => {
     return BloodPack.methods
-      .transfer(fromId, fromName, toId, toName, description)
+      .transfer(from, to, description)
       .send({ from: accounts[0] })
       .on('transactionHash', async hash => {
         await Web3Utils.getTransactionReceipt(hash);
