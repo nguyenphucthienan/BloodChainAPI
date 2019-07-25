@@ -4,6 +4,7 @@ const BloodSeparationCenter = mongoose.model('BloodSeparationCenter');
 const BloodBank = mongoose.model('BloodBank');
 const Hospital = mongoose.model('Hospital');
 const RoleNames = require('../constants/RoleNames');
+const TransferTypes = require('../constants/TransferTypes');
 const web3BloodChainService = require('./web3/web3BloodChainService');
 const web3BloodPackService = require('./web3/web3BloodPackService');
 
@@ -196,6 +197,7 @@ exports.transferBloodProducts = async (
         const bloodPackAddress = await web3BloodChainService.getBloodPackAddress(bloodPackId);
         await web3BloodPackService.transfer(
           bloodPackAddress,
+          TransferTypes.TRANSFER_BLOOD_PRODUCT,
           fromOrganizationType, fromOrganizationId.toString(), fromOrganization.name,
           toOrganizationType, toOrganizationId.toString(), toOrganization.name,
           description
