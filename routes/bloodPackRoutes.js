@@ -23,8 +23,23 @@ router.get('/',
   catchErrors(bloodPackController.getBloodPacks)
 );
 
+router.get('/my-blood-packs',
+  requireJwtAuth,
+  hasRoles([RoleNames.DONOR]),
+  catchErrors(bloodPackController.getMyBloodPacks)
+);
+
 router.get('/:id',
   requireJwtAuth,
+  checkBloodPackOwner,
+  hasRoles([
+    RoleNames.ADMIN,
+    RoleNames.BLOOD_CAMP,
+    RoleNames.BLOOD_TEST_CENTER,
+    RoleNames.BLOOD_SEPARATION_CENTER,
+    RoleNames.BLOOD_BANK,
+    RoleNames.HOSPITAL
+  ]),
   catchErrors(bloodPackController.getBloodPack)
 );
 

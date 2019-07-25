@@ -10,6 +10,7 @@ const TransferTypes = require('../constants/TransferTypes');
 const bloodProductService = require('./bloodProductService');
 const web3BloodChainService = require('./web3/web3BloodChainService');
 const web3BloodPackService = require('./web3/web3BloodPackService');
+const BloodChainUtils = require('../utils/BloodChainUtils');
 
 exports.getBloodPacks = (paginationObj, filterObj, sortObj) => (
   BloodPack.aggregate([
@@ -138,6 +139,21 @@ exports.countBloodPacks = filterObj => (
     .countDocuments()
     .exec()
 );
+
+exports.getTransferHistories = async (id) => {
+  const address = await web3BloodChainService.getBloodPackAddress(id);
+  const historiesLength = await web3BloodPackService.getHistoriesLength(address);
+
+  const historyPromises = [];
+  for (let i = 0; i < historiesLength; i++) {
+    historyPromises.push(web3BloodPackService.getHistory(address, i));
+  }
+
+  const histories = [];
+  const historyData = await Promise.all(historyPromises);
+  histories.push(...historyData.map(historyData => BloodChainUtils.extractHistoryInfo(historyData)));
+  return histories;
+};
 
 exports.updateTestResultsById = async (id, bloodType, testResults, testDescription) => {
   const validTestResults = [];

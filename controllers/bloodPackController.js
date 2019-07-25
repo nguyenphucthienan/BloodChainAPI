@@ -1,7 +1,4 @@
 const bloodPackService = require('../services/bloodPackService');
-const web3BloodChainService = require('../services/web3/web3BloodChainService');
-const web3BloodPackService = require('../services/web3/web3BloodPackService');
-const BloodChainUtils = require('../utils/BloodChainUtils');
 const UrlUtils = require('../utils/UrlUtils');
 const Pagination = require('../helpers/Pagination');
 const {
@@ -11,6 +8,24 @@ const {
 } = require('../validations/bloodPackValidations');
 
 exports.getBloodPacks = async (req, res) => {
+  const paginationObj = UrlUtils.createPaginationObject(req.query);
+  const filterObj = UrlUtils.createBloodPackFilterObject(req.query);
+  const sortObj = UrlUtils.createSortObject(req.query);
+
+  const bloodPacks = await bloodPackService.getBloodPacks(paginationObj, filterObj, sortObj);
+  const totalItems = await bloodPackService.countBloodPacks(filterObj);
+
+  const data = {
+    items: bloodPacks,
+    pagination: new Pagination(paginationObj.page, paginationObj.size, totalItems)
+  };
+
+  return res.send(data);
+};
+
+exports.getMyBloodPacks = async (req, res) => {
+  req.query.donor = req.user.id;
+
   const paginationObj = UrlUtils.createPaginationObject(req.query);
   const filterObj = UrlUtils.createBloodPackFilterObject(req.query);
   const sortObj = UrlUtils.createSortObject(req.query);
@@ -73,6 +88,17 @@ exports.deleteBloodPack = async (req, res) => {
   }
 
   return res.send(bloodPack);
+};
+
+exports.getTransferHistories = async (req, res) => {
+  const { id } = req.params;
+  const bloodPack = await bloodPackService.getBloodPackById(id);
+  if (!bloodPack) {
+    return res.status(404).send();
+  }
+
+  const histories = await bloodPackService.getTransferHistories(id);
+  return res.send(histories);
 };
 
 exports.updateTestResults = async (req, res) => {
@@ -157,26 +183,4 @@ exports.transferBloodPacksToBloodSeparationCenter = async (req, res) => {
   );
 
   return res.send(results);
-};
-
-exports.getTransferHistories = async (req, res) => {
-  const { id } = req.params;
-  const bloodPack = await bloodPackService.getBloodPackById(id);
-  if (!bloodPack) {
-    return res.status(404).send();
-  }
-
-  const address = await web3BloodChainService.getBloodPackAddress(id);
-  const historiesLength = await web3BloodPackService.getHistoriesLength(address);
-
-  const historyPromises = [];
-  for (let i = 0; i < historiesLength; i++) {
-    historyPromises.push(web3BloodPackService.getHistory(address, i));
-  }
-
-  const histories = [];
-  const historyData = await Promise.all(historyPromises);
-  histories.push(...historyData.map(historyData => BloodChainUtils.extractHistoryInfo(historyData)));
-
-  return res.send(histories);
 };
