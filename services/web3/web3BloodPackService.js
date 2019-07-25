@@ -15,7 +15,7 @@ exports.getAccounts = async () => {
 
 exports.transfer = async (
   contractAddress,
-  transferType,
+  transferType, id,
   fromType, fromId, fromName,
   toType, toId, toName,
   description
@@ -28,7 +28,7 @@ exports.transfer = async (
 
   return new Promise((resolve, reject) => {
     return BloodPack.methods
-      .transfer(transferType, from, to, description)
+      .transfer(transferType, id, from, to, description)
       .send({ from: accounts[0] })
       .on('transactionHash', async hash => {
         await Web3Utils.getTransactionReceipt(hash);

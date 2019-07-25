@@ -197,7 +197,7 @@ exports.transferBloodProducts = async (
         const bloodPackAddress = await web3BloodChainService.getBloodPackAddress(bloodPackId);
         await web3BloodPackService.transfer(
           bloodPackAddress,
-          TransferTypes.TRANSFER_BLOOD_PRODUCT,
+          TransferTypes.TRANSFER_BLOOD_PRODUCT, bloodProductId,
           fromOrganizationType, fromOrganizationId.toString(), fromOrganization.name,
           toOrganizationType, toOrganizationId.toString(), toOrganization.name,
           description

@@ -295,7 +295,7 @@ exports.transferBloodPacksToBloodTestCenter = async (bloodCampId, bloodPackIds, 
         const bloodPackAddress = await web3BloodChainService.getBloodPackAddress(bloodPackId);
         await web3BloodPackService.transfer(
           bloodPackAddress,
-          TransferTypes.TRANSFER_BLOOD_PACK,
+          TransferTypes.TRANSFER_BLOOD_PACK, bloodPackId,
           RoleNames.BLOOD_CAMP, bloodCampId.toString(), bloodCamp.name,
           RoleNames.BLOOD_TEST_CENTER, bloodTestCenterId.toString(), bloodTestCenter.name,
           description
@@ -360,7 +360,7 @@ exports.transferBloodPacksToBloodSeparationCenter = async (bloodTestCenterId, bl
         const bloodPackAddress = await web3BloodChainService.getBloodPackAddress(bloodPackId);
         await web3BloodPackService.transfer(
           bloodPackAddress,
-          TransferTypes.TRANSFER_BLOOD_PACK,
+          TransferTypes.TRANSFER_BLOOD_PACK, bloodPackId,
           RoleNames.BLOOD_TEST_CENTER, bloodTestCenterId.toString(), bloodTestCenter.name,
           RoleNames.BLOOD_SEPARATION_CENTER, bloodSeparationCenterId.toString(), bloodSeparationCenter.name,
           description
