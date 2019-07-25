@@ -5,7 +5,7 @@ const bloodPackController = require('../controllers/bloodPackController');
 const RoleNames = require('../constants/RoleNames');
 const hasRoles = require('../middlewares/hasRoles');
 const filterBloodPacks = require('../middlewares/filterBloodPacks');
-const checkBloodPackOwner = require('../middlewares/checkBloodPackOwner');
+const checkBloodPackPermission = require('../middlewares/checkBloodPackPermission');
 const catchErrors = require('../middlewares/catchErrors');
 const { requireJwtAuth } = require('../middlewares/passportAuth');
 
@@ -31,15 +31,7 @@ router.get('/my-blood-packs',
 
 router.get('/:id',
   requireJwtAuth,
-  checkBloodPackOwner,
-  hasRoles([
-    RoleNames.ADMIN,
-    RoleNames.BLOOD_CAMP,
-    RoleNames.BLOOD_TEST_CENTER,
-    RoleNames.BLOOD_SEPARATION_CENTER,
-    RoleNames.BLOOD_BANK,
-    RoleNames.HOSPITAL
-  ]),
+  checkBloodPackPermission,
   catchErrors(bloodPackController.getBloodPack)
 );
 
@@ -63,15 +55,7 @@ router.delete('/:id',
 
 router.get('/:id/transfer-histories',
   requireJwtAuth,
-  checkBloodPackOwner,
-  hasRoles([
-    RoleNames.ADMIN,
-    RoleNames.BLOOD_CAMP,
-    RoleNames.BLOOD_TEST_CENTER,
-    RoleNames.BLOOD_SEPARATION_CENTER,
-    RoleNames.BLOOD_BANK,
-    RoleNames.HOSPITAL
-  ]),
+  checkBloodPackPermission,
   catchErrors(bloodPackController.getTransferHistories)
 );
 

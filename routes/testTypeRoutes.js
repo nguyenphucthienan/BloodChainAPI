@@ -15,14 +15,6 @@ router.get('/',
 
 router.get('/all',
   requireJwtAuth,
-  hasRoles([
-    RoleNames.ADMIN,
-    RoleNames.BLOOD_CAMP,
-    RoleNames.BLOOD_TEST_CENTER,
-    RoleNames.BLOOD_SEPARATION_CENTER,
-    RoleNames.BLOOD_BANK,
-    RoleNames.HOSPITAL
-  ]),
   catchErrors(testTypeController.getAllTestTypes)
 );
 
