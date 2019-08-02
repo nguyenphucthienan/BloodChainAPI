@@ -89,3 +89,25 @@ exports.transferBloodProducts = async (req, res) => {
 
   return res.send(results);
 };
+
+exports.consumeBloodProducts = async (req, res) => {
+  const {
+    patientName,
+    bloodProductIds,
+    description
+  } = req.body;
+
+  const hospital = req.user.hospital;
+  if (!hospital) {
+    return res.status(400).send();
+  }
+
+  const results = await bloodProductService.consumeBloodProduct(
+    hospital._id,
+    patientName,
+    bloodProductIds,
+    description
+  );
+
+  return res.send(results);
+};

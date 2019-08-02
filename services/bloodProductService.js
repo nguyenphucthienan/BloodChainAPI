@@ -63,6 +63,7 @@ exports.getBloodProducts = (paginationObj, filterObj, sortObj) => (
         bloodType: 1,
         expirationDate: 1,
         description: 1,
+        consumed: 1,
         currentLocation: 1,
         history: 1,
         'donor._id': 1,
@@ -205,6 +206,67 @@ exports.transferBloodProducts = async (
 
         success.push(bloodProductId);
       } catch (error) {
+        errors.push(bloodProductId);
+      }
+    } else {
+      errors.push(bloodProductId);
+    }
+  }
+
+  return { success, errors };
+};
+
+exports.consumeBloodProduct = async (hospitalId, patientName, bloodProductIds, description) => {
+  const hospital = await Hospital.findById(hospitalId);
+  const success = [], errors = [];
+
+  for (let bloodProductId of bloodProductIds) {
+    const bloodProduct = await BloodProduct.findById(bloodProductId);
+    if (bloodProduct.currentLocation.toString() !== hospital._id.toString()) {
+      errors.push(bloodProductId);
+      continue;
+    }
+
+    const updatedBloodProduct = await BloodProduct.findOneAndUpdate(
+      {
+        _id: bloodProductId,
+        currentLocation: hospital._id,
+        consumed: false
+      },
+      {
+        $set: {
+          consumed: true
+        }
+      },
+      { new: true }
+    );
+
+    if (updatedBloodProduct) {
+      try {
+        const bloodPackId = updatedBloodProduct.bloodPack.toString()
+        const bloodPackAddress = await web3BloodChainService.getBloodPackAddress(bloodPackId);
+        await web3BloodPackService.transfer(
+          bloodPackAddress,
+          TransferTypes.CONSUME_BLOOD_PRODUCT, bloodProductId,
+          RoleNames.HOSPITAL, hospital._id, hospital.name,
+          '', '', patientName,
+          description
+        );
+
+        success.push(bloodProductId);
+      } catch (error) {
+        await BloodProduct.findOneAndUpdate(
+          {
+            _id: bloodProductId,
+            currentLocation: hospital.id
+          },
+          {
+            $set: {
+              consumed: false
+            }
+          }
+        );
+
         errors.push(bloodProductId);
       }
     } else {
