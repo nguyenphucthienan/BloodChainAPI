@@ -63,7 +63,7 @@ exports.getBloodProducts = (paginationObj, filterObj, sortObj) => (
         bloodType: 1,
         expirationDate: 1,
         description: 1,
-        consumed: 1,
+        used: 1,
         currentLocation: 1,
         history: 1,
         'donor._id': 1,
@@ -216,7 +216,7 @@ exports.transferBloodProducts = async (
   return { success, errors };
 };
 
-exports.consumeBloodProduct = async (hospitalId, patientName, bloodProductIds, description) => {
+exports.useBloodProducts = async (hospitalId, patientName, bloodProductIds, description) => {
   const hospital = await Hospital.findById(hospitalId);
   const success = [], errors = [];
 
@@ -231,11 +231,11 @@ exports.consumeBloodProduct = async (hospitalId, patientName, bloodProductIds, d
       {
         _id: bloodProductId,
         currentLocation: hospital._id,
-        consumed: false
+        used: false
       },
       {
         $set: {
-          consumed: true
+          used: true
         }
       },
       { new: true }
@@ -247,7 +247,7 @@ exports.consumeBloodProduct = async (hospitalId, patientName, bloodProductIds, d
         const bloodPackAddress = await web3BloodChainService.getBloodPackAddress(bloodPackId);
         await web3BloodPackService.transfer(
           bloodPackAddress,
-          TransferTypes.CONSUME_BLOOD_PRODUCT, bloodProductId,
+          TransferTypes.USE_BLOOD_PRODUCT, bloodProductId,
           RoleNames.HOSPITAL, hospital._id, hospital.name,
           '', '', patientName,
           description
@@ -262,7 +262,7 @@ exports.consumeBloodProduct = async (hospitalId, patientName, bloodProductIds, d
           },
           {
             $set: {
-              consumed: false
+              used: false
             }
           }
         );

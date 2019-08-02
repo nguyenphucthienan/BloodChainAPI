@@ -49,7 +49,7 @@ const bloodProductSchema = new Schema({
     type: String,
     trim: true
   },
-  consumed: {
+  used: {
     type: Boolean,
     default: false
   },

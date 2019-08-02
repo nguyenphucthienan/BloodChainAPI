@@ -90,7 +90,7 @@ exports.transferBloodProducts = async (req, res) => {
   return res.send(results);
 };
 
-exports.consumeBloodProducts = async (req, res) => {
+exports.useBloodProducts = async (req, res) => {
   const {
     patientName,
     bloodProductIds,
@@ -102,7 +102,7 @@ exports.consumeBloodProducts = async (req, res) => {
     return res.status(400).send();
   }
 
-  const results = await bloodProductService.consumeBloodProduct(
+  const results = await bloodProductService.useBloodProducts(
     hospital._id,
     patientName,
     bloodProductIds,

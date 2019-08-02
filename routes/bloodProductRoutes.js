@@ -57,10 +57,10 @@ router.post('/transfer',
   catchErrors(bloodProductController.transferBloodProducts)
 );
 
-router.post('/consume',
+router.post('/use',
   requireJwtAuth,
   hasRoles([RoleNames.HOSPITAL]),
-  catchErrors(bloodProductController.consumeBloodProducts)
+  catchErrors(bloodProductController.useBloodProducts)
 );
 
 module.exports = router;
