@@ -12,6 +12,4 @@ const fileFilter = (req, { mimetype }, cb) => (
 
 const storage = multer.memoryStorage();
 
-module.exports = (app) => {
-  app.use(multer({ storage, fileFilter }).single('image'));
-};
+module.exports = multer({ storage, fileFilter }).single('image');

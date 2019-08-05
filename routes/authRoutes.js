@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const authController = require('../controllers/authController');
+const photoUpload = require('../middlewares/photoUpload');
 const catchErrors = require('../middlewares/catchErrors');
 const { requireLocalAuth, requireJwtAuth } = require('../middlewares/passportAuth');
 
@@ -32,8 +33,9 @@ router.put('/me',
   catchErrors(authController.editInfo)
 );
 
-router.put('/me/photo',
+router.put('/me/photos',
   requireJwtAuth,
+  photoUpload,
   catchErrors(authController.changePhoto)
 );
 

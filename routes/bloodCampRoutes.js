@@ -4,6 +4,7 @@ const router = express.Router();
 const bloodCampController = require('../controllers/bloodCampController');
 const RoleNames = require('../constants/RoleNames');
 const hasRoles = require('../middlewares/hasRoles');
+const photoUpload = require('../middlewares/photoUpload');
 const catchErrors = require('../middlewares/catchErrors');
 const { requireJwtAuth } = require('../middlewares/passportAuth');
 
@@ -37,6 +38,13 @@ router.get('/:id/staffs',
   requireJwtAuth,
   hasRoles([RoleNames.ADMIN]),
   catchErrors(bloodCampController.getStaffsOfBloodCamp)
+)
+
+router.post('/:id/photos',
+  requireJwtAuth,
+  hasRoles([RoleNames.ADMIN]),
+  photoUpload,
+  catchErrors(bloodCampController.uploadBloodCampPhoto)
 )
 
 module.exports = router;

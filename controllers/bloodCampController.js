@@ -80,3 +80,24 @@ exports.getStaffsOfBloodCamp = async (req, res) => {
   const users = await userService.getStaffsOfOrganization(RoleNames.BLOOD_CAMP, id);
   return res.send(users);
 };
+
+exports.uploadBloodCampPhoto = async (req, res) => {
+  const { id } = req.params;
+  const bloodCamp = await bloodCampService.getBloodCampById(id);
+
+  if (!bloodCamp) {
+    return res.status(404).send();
+  }
+
+  const file = req.file;
+  if (!file) {
+    return res.status(400).send({ message: 'Photo is invalid' });
+  }
+
+  const updatedBloodCamp = await bloodCampService.uploadBloodCampPhotoById(id, file);
+  if (!updatedBloodCamp) {
+    return res.status(404).send();
+  }
+
+  return res.send(updatedBloodCamp);
+};
