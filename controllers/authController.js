@@ -79,6 +79,10 @@ exports.editInfo = async (req, res) => {
   return res.send(returnUser);
 };
 
+exports.changePhoto = async (req, res) => {
+  return res.send(req.file.originalname);
+};
+
 exports.changePassword = async (req, res) => {
   const { error } = validateChangeUserPassword(req.body);
   if (error) {

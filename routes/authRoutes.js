@@ -32,6 +32,11 @@ router.put('/me',
   catchErrors(authController.editInfo)
 );
 
+router.put('/me/photo',
+  requireJwtAuth,
+  catchErrors(authController.changePhoto)
+);
+
 router.put('/me/password',
   requireJwtAuth,
   catchErrors(authController.changePassword)
