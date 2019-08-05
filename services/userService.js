@@ -86,6 +86,20 @@ exports.getUsers = (paginationObj, filterObj, sortObj) => (
     },
     {
       $lookup: {
+        from: 'photos',
+        localField: 'photo',
+        foreignField: '_id',
+        as: 'photo'
+      }
+    },
+    {
+      $unwind: {
+        path: '$photo',
+        preserveNullAndEmptyArrays: true
+      }
+    },
+    {
+      $lookup: {
         from: 'roles',
         localField: 'roles',
         foreignField: '_id',
@@ -129,6 +143,7 @@ exports.getUsers = (paginationObj, filterObj, sortObj) => (
 
 exports.getUserById = (id) => {
   return User.findById(id)
+    .populate('photo', '_id url secureUrl')
     .populate('roles', '_id name')
     .populate('bloodCamp', '_id name')
     .populate('bloodTestCenter', '_id name')
@@ -149,7 +164,7 @@ exports.getUserById = (id) => {
         phone: 1,
         address: 1,
         location: 1,
-        photoUrl: 1,
+        photo: 1,
         roles: 1,
         bloodCamp: 1,
         bloodTestCenter: 1,
@@ -163,6 +178,7 @@ exports.getUserById = (id) => {
 
 exports.getUserByUsername = username => (
   User.findOne({ username })
+    .populate('photo', '_id url secureUrl')
     .populate('roles', '_id name')
     .populate('bloodCamp', '_id name')
     .populate('bloodTestCenter', '_id name')
@@ -197,6 +213,7 @@ exports.getUserByUsername = username => (
 
 exports.getUserByEmail = email => (
   User.findOne({ email })
+    .populate('photo', '_id url secureUrl')
     .populate('roles', '_id name')
     .populate('bloodCamp', '_id name')
     .populate('bloodTestCenter', '_id name')

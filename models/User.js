@@ -62,9 +62,9 @@ const userSchema = new Schema({
   location: {
     type: pointSchema
   },
-  photoUrl: {
-    type: String,
-    trim: true
+  photo: {
+    type: Schema.Types.ObjectId,
+    ref: 'Photo'
   },
   roles: [{
     type: Schema.Types.ObjectId,

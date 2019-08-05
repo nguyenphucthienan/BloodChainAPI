@@ -1,4 +1,5 @@
 module.exports = () => {
+  require('../models/Photo');
   require('../models/Role');
   require('../models/User');
   require('../models/TestType');

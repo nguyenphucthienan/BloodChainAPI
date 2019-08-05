@@ -1,5 +1,6 @@
 const _ = require('lodash');
 const userService = require('../services/userService');
+const photoService = require('../services/photoService');
 const {
   validateRegisterUser,
   validateUpdateUser,
@@ -80,7 +81,25 @@ exports.editInfo = async (req, res) => {
 };
 
 exports.changePhoto = async (req, res) => {
-  return res.send(req.file.originalname);
+  const file = req.file;
+  if (!file) {
+    return res.status(400).send({ message: 'Photo is invalid' });
+  }
+
+  const photo = await photoService.uploadPhoto(file);
+  if (!photo) {
+    return res.status(500).send({ message: 'Upload photo failed' });
+  }
+
+  const { id } = req.user;
+  const updatedUser = await userService.updateUserById(id, { photo: photo._id });
+
+  if (!updatedUser) {
+    return res.status(404).send();
+  }
+
+  const returnUser = _.omit(updatedUser.toObject(), ['password']);
+  return res.send(returnUser);
 };
 
 exports.changePassword = async (req, res) => {
