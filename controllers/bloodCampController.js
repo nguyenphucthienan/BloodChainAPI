@@ -101,3 +101,14 @@ exports.uploadBloodCampPhoto = async (req, res) => {
 
   return res.send(updatedBloodCamp);
 };
+
+exports.deleteBloodCampPhoto = async (req, res) => {
+  const { id, photoId } = req.params;
+  const bloodCamp = await bloodCampService.deleteBloodCampPhotoById(id, photoId);
+
+  if (!bloodCamp) {
+    return res.status(404).send();
+  }
+
+  return res.send(bloodCamp);
+};

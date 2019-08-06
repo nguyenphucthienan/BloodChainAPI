@@ -47,4 +47,10 @@ router.post('/:id/photos',
   catchErrors(bloodCampController.uploadBloodCampPhoto)
 )
 
+router.delete('/:id/photos/:photoId',
+  requireJwtAuth,
+  hasRoles([RoleNames.ADMIN]),
+  catchErrors(bloodCampController.deleteBloodCampPhoto)
+)
+
 module.exports = router;

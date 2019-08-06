@@ -75,3 +75,16 @@ exports.uploadBloodCampPhotoById = async (id, file) => {
       { new: true })
     .exec()
 };
+
+exports.deleteBloodCampPhotoById = async (id, photoId) => {
+  const photo = await photoService.deletePhotoById(photoId);
+  if (!photo) {
+    return null;
+  }
+
+  return await BloodCamp
+    .findByIdAndUpdate(id,
+      { $pull: { photos: photoId } },
+      { new: true })
+    .exec()
+};
