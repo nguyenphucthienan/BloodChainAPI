@@ -38,19 +38,19 @@ router.get('/:id/staffs',
   requireJwtAuth,
   hasRoles([RoleNames.ADMIN]),
   catchErrors(bloodCampController.getStaffsOfBloodCamp)
-)
+);
 
 router.post('/:id/photos',
   requireJwtAuth,
   hasRoles([RoleNames.ADMIN]),
   photoUpload,
   catchErrors(bloodCampController.uploadBloodCampPhoto)
-)
+);
 
 router.delete('/:id/photos/:photoId',
   requireJwtAuth,
   hasRoles([RoleNames.ADMIN]),
   catchErrors(bloodCampController.deleteBloodCampPhoto)
-)
+);
 
 module.exports = router;

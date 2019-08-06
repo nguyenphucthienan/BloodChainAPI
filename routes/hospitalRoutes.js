@@ -37,6 +37,6 @@ router.get('/:id/staffs',
   requireJwtAuth,
   hasRoles([RoleNames.ADMIN]),
   catchErrors(hospitalController.getStaffsOfHospital)
-)
+);
 
 module.exports = router;

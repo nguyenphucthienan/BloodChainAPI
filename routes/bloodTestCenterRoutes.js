@@ -38,19 +38,19 @@ router.get('/:id/staffs',
   requireJwtAuth,
   hasRoles([RoleNames.ADMIN]),
   catchErrors(bloodTestCenterController.getStaffsOfBloodTestCenter)
-)
+);
 
 router.post('/:id/photos',
   requireJwtAuth,
   hasRoles([RoleNames.ADMIN]),
   photoUpload,
   catchErrors(bloodTestCenterController.uploadBloodTestCenterPhoto)
-)
+);
 
 router.delete('/:id/photos/:photoId',
   requireJwtAuth,
   hasRoles([RoleNames.ADMIN]),
   catchErrors(bloodTestCenterController.deleteBloodTestCenterPhoto)
-)
+);
 
 module.exports = router;

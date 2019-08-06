@@ -80,3 +80,35 @@ exports.getStaffsOfBloodBank = async (req, res) => {
   const users = await userService.getStaffsOfOrganization(RoleNames.BLOOD_BANK, id);
   return res.send(users);
 };
+
+exports.uploadBloodBankPhoto = async (req, res) => {
+  const { id } = req.params;
+  const bloodBank = await bloodBankService.getBloodBankById(id);
+
+  if (!bloodBank) {
+    return res.status(404).send();
+  }
+
+  const file = req.file;
+  if (!file) {
+    return res.status(400).send({ message: 'Photo is invalid' });
+  }
+
+  const updatedBloodBank = await bloodBankService.uploadBloodBankPhotoById(id, file);
+  if (!updatedBloodBank) {
+    return res.status(404).send();
+  }
+
+  return res.send(updatedBloodBank);
+};
+
+exports.deleteBloodBankPhoto = async (req, res) => {
+  const { id, photoId } = req.params;
+  const bloodBank = await bloodBankService.deleteBloodBankPhotoById(id, photoId);
+
+  if (!bloodBank) {
+    return res.status(404).send();
+  }
+
+  return res.send(bloodBank);
+};
