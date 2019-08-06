@@ -28,7 +28,11 @@ const bloodTestCenterSchema = new Schema({
   location: {
     type: pointSchema,
     required: 'Location is required'
-  }
+  },
+  photos: [{
+    type: Schema.Types.ObjectId,
+    ref: 'Photo'
+  }]
 }, { timestamps: true });
 
 mongoose.model('BloodTestCenter', bloodTestCenterSchema);
