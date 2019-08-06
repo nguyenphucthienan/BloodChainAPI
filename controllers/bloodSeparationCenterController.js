@@ -80,3 +80,35 @@ exports.getStaffsOfBloodSeparationCenter = async (req, res) => {
   const users = await userService.getStaffsOfOrganization(RoleNames.BLOOD_SEPARATION_CENTER, id);
   return res.send(users);
 };
+
+exports.uploadBloodSeparationCenterPhoto = async (req, res) => {
+  const { id } = req.params;
+  const bloodSeparationCenter = await bloodSeparationCenterService.getBloodSeparationCenterById(id);
+
+  if (!bloodSeparationCenter) {
+    return res.status(404).send();
+  }
+
+  const file = req.file;
+  if (!file) {
+    return res.status(400).send({ message: 'Photo is invalid' });
+  }
+
+  const updatedBloodSeparationCenter = await bloodSeparationCenterService.uploadBloodSeparationCenterPhotoById(id, file);
+  if (!updatedBloodSeparationCenter) {
+    return res.status(404).send();
+  }
+
+  return res.send(updatedBloodSeparationCenter);
+};
+
+exports.deleteBloodSeparationCenterPhoto = async (req, res) => {
+  const { id, photoId } = req.params;
+  const bloodSeparationCenter = await bloodSeparationCenterService.deleteBloodSeparationCenterPhotoById(id, photoId);
+
+  if (!bloodSeparationCenter) {
+    return res.status(404).send();
+  }
+
+  return res.send(bloodSeparationCenter);
+};

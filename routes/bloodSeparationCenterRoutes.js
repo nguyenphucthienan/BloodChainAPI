@@ -4,6 +4,7 @@ const router = express.Router();
 const bloodSeparationCenterController = require('../controllers/bloodSeparationCenterController');
 const RoleNames = require('../constants/RoleNames');
 const hasRoles = require('../middlewares/hasRoles');
+const photoUpload = require('../middlewares/photoUpload');
 const catchErrors = require('../middlewares/catchErrors');
 const { requireJwtAuth } = require('../middlewares/passportAuth');
 
@@ -37,6 +38,19 @@ router.get('/:id/staffs',
   requireJwtAuth,
   hasRoles([RoleNames.ADMIN]),
   catchErrors(bloodSeparationCenterController.getStaffsOfBloodSeparationCenter)
+)
+
+router.post('/:id/photos',
+  requireJwtAuth,
+  hasRoles([RoleNames.ADMIN]),
+  photoUpload,
+  catchErrors(bloodSeparationCenterController.uploadBloodSeparationCenterPhoto)
+)
+
+router.delete('/:id/photos/:photoId',
+  requireJwtAuth,
+  hasRoles([RoleNames.ADMIN]),
+  catchErrors(bloodSeparationCenterController.deleteBloodSeparationCenterPhoto)
 )
 
 module.exports = router;
