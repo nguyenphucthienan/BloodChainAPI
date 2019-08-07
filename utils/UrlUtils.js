@@ -124,6 +124,29 @@ class UrlUtils {
     return filterObject;
   }
 
+  static createCampaignFilterObject(query) {
+    const filters = _.omit(query, ['page', 'size', 'sort']);
+    if (_.isEmpty(filters)) {
+      return {};
+    }
+
+    const objectIdFields = ['_id', 'bloodCamp'];
+    const textFields = ['name', 'description'];
+
+    const filterObject = {};
+    for (const key in filters) {
+      if (objectIdFields.includes(key)) {
+        filterObject[key] = mongoose.Types.ObjectId(filters[key]);
+      } else if (textFields.includes(key)) {
+        filterObject[key] = new RegExp(filters[key], 'i');
+      } else {
+        filterObject[key] = filters[key];
+      }
+    }
+
+    return filterObject;
+  }
+
   static createFilterObject(query) {
     const filters = _.omit(query, ['page', 'size', 'sort']);
     if (_.isEmpty(filters)) {

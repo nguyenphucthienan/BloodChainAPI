@@ -81,7 +81,6 @@ exports.getStaffsOfHospital = async (req, res) => {
   return res.send(users);
 };
 
-
 exports.uploadHospitalPhoto = async (req, res) => {
   const { id } = req.params;
   const hospital = await hospitalService.getHospitalById(id);

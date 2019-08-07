@@ -11,6 +11,7 @@ const bloodBankRoutes = require('../routes/bloodBankRoutes');
 const hospitalRoutes = require('../routes/hospitalRoutes');
 const bloodPackRoutes = require('../routes/bloodPackRoutes');
 const bloodProductRoutes = require('../routes/bloodProductRoutes');
+const campaignRoutes = require('../routes/campaignRoutes');
 const statisticRoutes = require('../routes/statisticRoutes');
 const errorHandlers = require('../handlers/errorHandlers');
 
@@ -27,6 +28,7 @@ module.exports = (app) => {
   app.use('/api/hospitals', hospitalRoutes);
   app.use('/api/blood-packs', bloodPackRoutes);
   app.use('/api/blood-products', bloodProductRoutes);
+  app.use('/api/campaigns', campaignRoutes);
   app.use('/api/statistics', statisticRoutes);
   app.use('/api', infoRoutes);
 

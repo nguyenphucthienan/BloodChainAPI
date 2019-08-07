@@ -11,4 +11,5 @@ module.exports = () => {
   require('../models/Hospital');
   require('../models/BloodPack');
   require('../models/BloodProduct');
+  require('../models/Campaign');
 };
