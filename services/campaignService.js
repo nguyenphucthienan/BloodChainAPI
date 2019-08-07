@@ -7,6 +7,20 @@ exports.getCampaigns = (paginationObj, filterObj, sortObj) => (
     { $match: filterObj },
     {
       $lookup: {
+        from: 'bloodcamps',
+        localField: 'bloodCamp',
+        foreignField: '_id',
+        as: 'bloodCamp'
+      }
+    },
+    {
+      $unwind: {
+        path: '$bloodCamp',
+        preserveNullAndEmptyArrays: true
+      }
+    },
+    {
+      $lookup: {
         from: 'photos',
         localField: 'photos',
         foreignField: '_id',
@@ -19,6 +33,7 @@ exports.getCampaigns = (paginationObj, filterObj, sortObj) => (
         createdAt: 1,
         updatedAt: 1,
         name: 1,
+        bloodCamp: 1,
         startDate: 1,
         endDate: 1,
         description: 1,
@@ -36,6 +51,7 @@ exports.getCampaigns = (paginationObj, filterObj, sortObj) => (
 exports.getCampaignById = id => (
   Campaign
     .findById(id)
+    .populate('bloodCamp', '_id name')
     .populate('photos', '_id url secureUrl')
     .exec()
 );
