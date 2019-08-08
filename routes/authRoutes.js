@@ -44,4 +44,9 @@ router.put('/me/password',
   catchErrors(authController.changePassword)
 );
 
+router.get('/me/user-info',
+  requireJwtAuth,
+  catchErrors(authController.getMyUserInfoOnBlockChain)
+);
+
 module.exports = router;

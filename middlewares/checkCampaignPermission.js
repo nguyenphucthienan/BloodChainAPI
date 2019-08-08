@@ -3,6 +3,7 @@ const RoleNames = require('../constants/RoleNames');
 
 module.exports = async (req, res, next) => {
   const { id } = req.params;
+
   const campaign = await campaignService.getCampaignById(id);
   if (!campaign) {
     return res.status(404).send();

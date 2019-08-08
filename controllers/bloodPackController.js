@@ -93,6 +93,7 @@ exports.deleteBloodPack = async (req, res) => {
 exports.getTransferHistories = async (req, res) => {
   const { id } = req.params;
   const bloodPack = await bloodPackService.getBloodPackById(id);
+
   if (!bloodPack) {
     return res.status(404).send();
   }

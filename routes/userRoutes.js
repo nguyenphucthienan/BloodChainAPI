@@ -4,6 +4,7 @@ const router = express.Router();
 const userController = require('../controllers/userController');
 const RoleNames = require('../constants/RoleNames');
 const hasRoles = require('../middlewares/hasRoles');
+const checkUserPermission = require('../middlewares/checkUserPermission');
 const catchErrors = require('../middlewares/catchErrors');
 const { requireJwtAuth } = require('../middlewares/passportAuth');
 
@@ -21,6 +22,8 @@ router.get('/',
 );
 
 router.get('/:id',
+  requireJwtAuth,
+  checkUserPermission,
   catchErrors(userController.getUser)
 );
 
@@ -47,6 +50,12 @@ router.delete('/:id',
   requireJwtAuth,
   hasRoles([RoleNames.ADMIN]),
   catchErrors(userController.deleteUser)
+);
+
+router.get('/:id/user-info',
+  requireJwtAuth,
+  checkUserPermission,
+  catchErrors(userController.getUserInfoOnBlockChain)
 );
 
 router.post('/organizations',

@@ -80,6 +80,18 @@ exports.deleteUser = async (req, res) => {
   return res.send(user);
 };
 
+exports.getUserInfoOnBlockChain = async (req, res) => {
+  const { id } = req.params;
+  const user = await userService.getUserById(id);
+
+  if (!user) {
+    return res.status(404).send();
+  }
+
+  const userInfo = await userService.getUserInfoOnBlockChainById(id);
+  return res.send(userInfo);
+};
+
 exports.assignOrganization = async (req, res) => {
   const { userIds, roleName, organizationId } = req.body;
   const results = await userService.assignOrganization(userIds, roleName, organizationId);
