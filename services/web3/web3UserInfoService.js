@@ -13,12 +13,12 @@ exports.getAccounts = async () => {
   return await web3.eth.getAccounts();
 };
 
-exports.addPoint = async (contractAddress, point, description) => {
+exports.updatePoint = async (contractAddress, updatePointType, point, description) => {
   const accounts = await this.getAccounts();
   const UserInfo = this.getContract(contractAddress);
   return new Promise((resolve, reject) => {
     return UserInfo.methods
-      .addPoint(point, description)
+      .updatePoint(updatePointType, point, description)
       .send({ from: accounts[0] })
       .on('transactionHash', async hash => {
         await Web3Utils.getTransactionReceipt(hash);

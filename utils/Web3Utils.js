@@ -38,6 +38,14 @@ class Web3Utils {
     return Utils.toHex(value);
   }
 
+  static fromHexToString(value) {
+    return Utils.hexToString(value);
+  }
+
+  static fromHexToNumber(value) {
+    return value.toNumber();
+  }
+
   static fromHexToDate(hexTimestamp) {
     return new Date(hexTimestamp.toNumber());
   }

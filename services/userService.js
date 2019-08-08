@@ -11,6 +11,8 @@ const RoleNames = require('../constants/RoleNames');
 const BcryptUtils = require('../utils/BcryptUtils');
 const OrganizationFieldNames = require('../constants/OrganizationFieldNames');
 const web3BloodChainService = require('./web3/web3BloodChainService');
+const web3UserInfoService = require('./web3/web3UserInfoService');
+const BloodChainUtils = require('../utils/BloodChainUtils');
 
 exports.getUsers = (paginationObj, filterObj, sortObj) => (
   User.aggregate([
@@ -303,6 +305,28 @@ exports.countUsers = filterObj => (
     .countDocuments()
     .exec()
 );
+
+exports.getUserInfoOnBlockChainById = async (id) => {
+  const userInfoData = await web3BloodChainService.getUserInfo(id);
+  const userInfo = BloodChainUtils.extractUserInfo(userInfoData);
+
+  const address = await web3BloodChainService.getUserInfoAddress(id);
+  const historiesLength = await web3UserInfoService.getHistoriesLength(address);
+
+  const historyPromises = [];
+  for (let i = 0; i < historiesLength; i++) {
+    historyPromises.push(web3UserInfoService.getHistory(address, i));
+  }
+
+  const histories = [];
+  const historyData = await Promise.all(historyPromises);
+  histories.push(...historyData.map(historyData => BloodChainUtils.extractPointHistoryInfo(historyData)));
+
+  return {
+    ...userInfo,
+    pointHistories: histories
+  };
+}
 
 exports.getStaffsOfOrganization = async (organizationRoleName, organizationId) => {
   const role = await Role.findOne({ name: organizationRoleName });

@@ -7,7 +7,8 @@ const TestType = mongoose.model('TestType');
 const BloodProductType = mongoose.model('BloodProductType');
 const RoleNames = require('../constants/RoleNames');
 const TransferTypes = require('../constants/TransferTypes');
-const AddPointDescriptions = require('../constants/AddPointDescriptions');
+const UpdatePointTypes = require('../constants/UpdatePointTypes');
+const UpdatePointDescriptions = require('../constants/UpdatePointDescriptions');
 const bloodProductService = require('./bloodProductService');
 const web3BloodChainService = require('./web3/web3BloodChainService');
 const web3UserInfoService = require('./web3/web3UserInfoService');
@@ -122,7 +123,13 @@ exports.createBloodPack = async (bloodPack) => {
   try {
     await web3BloodChainService.createBloodPack(newBloodPack._id.toString());
     const userInfoAddress = await web3BloodChainService.getUserInfoAddress(newBloodPack.donor.toString());
-    await web3UserInfoService.addPoint(userInfoAddress, config.bloodPackPoint, AddPointDescriptions.DONATE_BLOOD);
+    await web3UserInfoService.updatePoint(
+      userInfoAddress,
+      UpdatePointTypes.ADD,
+      config.bloodPackPoint,
+      UpdatePointDescriptions.DONATE_BLOOD
+    );
+
     return newBloodPack;
   } catch (error) {
     this.deleteBloodPackById(newBloodPack._id);
@@ -162,7 +169,7 @@ exports.getTransferHistories = async (id) => {
 
   const histories = [];
   const historyData = await Promise.all(historyPromises);
-  histories.push(...historyData.map(historyData => BloodChainUtils.extractHistoryInfo(historyData)));
+  histories.push(...historyData.map(historyData => BloodChainUtils.extractTransferHistoryInfo(historyData)));
   return histories;
 };
 
