@@ -29,6 +29,35 @@ exports.getAccounts = async () => {
   return await web3.eth.getAccounts();
 };
 
+exports.getUserInfo = async (userId) => {
+  const BloodChain = this.getContract();
+  return await BloodChain.methods
+    .getUserInfo(userId)
+    .call();
+};
+
+exports.getUserInfoAddress = async (userId) => {
+  const BloodChain = this.getContract();
+  return await BloodChain.methods
+    .getUserInfoAddress(userId)
+    .call();
+}
+
+exports.createUserInfo = async (userId) => {
+  const accounts = await this.getAccounts();
+  const BloodChain = this.getContract();
+  return new Promise((resolve, reject) => {
+    return BloodChain.methods
+      .createUserInfo(userId)
+      .send({ from: accounts[0] })
+      .on('transactionHash', async hash => {
+        await Web3Utils.getTransactionReceipt(hash);
+        resolve(hash);
+      })
+      .on('error', error => reject(error));
+  });
+};
+
 exports.getBloodPack = async (bloodPackId) => {
   const BloodChain = this.getContract();
   return await BloodChain.methods
@@ -46,7 +75,6 @@ exports.getBloodPackAddress = async (bloodPackId) => {
 exports.createBloodPack = async (bloodPackId) => {
   const accounts = await this.getAccounts();
   const BloodChain = this.getContract();
-
   return new Promise((resolve, reject) => {
     return BloodChain.methods
       .createBloodPack(bloodPackId)

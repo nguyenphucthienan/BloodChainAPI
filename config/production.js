@@ -15,5 +15,6 @@ module.exports = {
   infuraEndpoint: process.env.INFURA_ENDPOINT,
   contractAddress: {
     BloodChain: process.env.CONTRACT_ADDRESS_BLOODCHAIN
-  }
+  },
+  bloodPackPoint: process.env.BLOOD_PACK_POINT
 };

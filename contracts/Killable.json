@@ -82,22 +82,22 @@
   "metadata": "{\"compiler\":{\"version\":\"0.5.0+commit.1d4f565a\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"constant\":false,\"inputs\":[],\"name\":\"kill\",\"outputs\":[],\"payable\":true,\"stateMutability\":\"payable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[],\"name\":\"renounceOwnership\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"isOwner\",\"outputs\":[{\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"transferOwnership\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"name\":\"previousOwner\",\"type\":\"address\"},{\"indexed\":true,\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"OwnershipTransferred\",\"type\":\"event\"}],\"devdoc\":{\"methods\":{\"isOwner()\":{\"details\":\"Returns true if the caller is the current owner.\\r\"},\"owner()\":{\"details\":\"Returns the address of the current owner.\\r\"},\"renounceOwnership()\":{\"details\":\"Leaves the contract without owner. It will not be possible to call\\r `onlyOwner` functions anymore. Can only be called by the current owner.\\r      * NOTE: Renouncing ownership will leave the contract without an owner,\\r thereby removing any functionality that is only available to the owner.\\r\"},\"transferOwnership(address)\":{\"details\":\"Transfers ownership of the contract to a new account (`newOwner`).\\r Can only be called by the current owner.\\r\"}}},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/D/Workspace/GitHub/THESIS/BloodChainContracts/contracts/openzeppelin/lifecycle/Killable.sol\":\"Killable\"},\"evmVersion\":\"byzantium\",\"libraries\":{},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"/D/Workspace/GitHub/THESIS/BloodChainContracts/contracts/openzeppelin/lifecycle/Killable.sol\":{\"keccak256\":\"0x603f0d20e629a85d6b748fc3a8de080ac31196555b6fb838d653ecf7f4da6973\",\"urls\":[\"bzzr://ca2b65811616893e640e94be33da4345a9e446f8f5db634137d32742f1bd3759\"]},\"/D/Workspace/GitHub/THESIS/BloodChainContracts/contracts/openzeppelin/ownership/Ownable.sol\":{\"keccak256\":\"0xe01be1e32b863591832610e5a84b48c4f676e245fbefdffe5be0bb0e47fc7e26\",\"urls\":[\"bzzr://95933af9a0a6005ded67c38ec74903580f90a39f2ff9637c593e40ce5b912f31\"]}},\"version\":1}",
   "bytecode": "0x6080604081905260008054600160a060020a0319163317808255600160a060020a0316917f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0908290a36103e2806100576000396000f3fe60806040526004361061006c5763ffffffff7c010000000000000000000000000000000000000000000000000000000060003504166341c0e1b58114610071578063715018a61461007b5780638da5cb5b146100905780638f32d59b146100c1578063f2fde38b146100ea575b600080fd5b61007961011d565b005b34801561008757600080fd5b50610079610189565b34801561009c57600080fd5b506100a561023e565b60408051600160a060020a039092168252519081900360200190f35b3480156100cd57600080fd5b506100d661024d565b604080519115158252519081900360200190f35b3480156100f657600080fd5b506100796004803603602081101561010d57600080fd5b5035600160a060020a031661025e565b61012561024d565b151561017b576040805160e560020a62461bcd02815260206004820181905260248201527f4f776e61626c653a2063616c6c6572206973206e6f7420746865206f776e6572604482015290519081900360640190fd5b600054600160a060020a0316ff5b61019161024d565b15156101e7576040805160e560020a62461bcd02815260206004820181905260248201527f4f776e61626c653a2063616c6c6572206973206e6f7420746865206f776e6572604482015290519081900360640190fd5b60008054604051600160a060020a03909116907f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0908390a36000805473ffffffffffffffffffffffffffffffffffffffff19169055565b600054600160a060020a031690565b600054600160a060020a0316331490565b61026661024d565b15156102bc576040805160e560020a62461bcd02815260206004820181905260248201527f4f776e61626c653a2063616c6c6572206973206e6f7420746865206f776e6572604482015290519081900360640190fd5b6102c5816102c8565b50565b600160a060020a038116151561034e576040805160e560020a62461bcd02815260206004820152602660248201527f4f776e61626c653a206e6577206f776e657220697320746865207a65726f206160448201527f6464726573730000000000000000000000000000000000000000000000000000606482015290519081900360840190fd5b60008054604051600160a060020a03808516939216917f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e091a36000805473ffffffffffffffffffffffffffffffffffffffff1916600160a060020a039290921691909117905556fea165627a7a7230582074fc16b61af4022273297aa38eda18afa9a61ab8526cefb7280b969fda1238040029",
   "deployedBytecode": "0x60806040526004361061006c5763ffffffff7c010000000000000000000000000000000000000000000000000000000060003504166341c0e1b58114610071578063715018a61461007b5780638da5cb5b146100905780638f32d59b146100c1578063f2fde38b146100ea575b600080fd5b61007961011d565b005b34801561008757600080fd5b50610079610189565b34801561009c57600080fd5b506100a561023e565b60408051600160a060020a039092168252519081900360200190f35b3480156100cd57600080fd5b506100d661024d565b604080519115158252519081900360200190f35b3480156100f657600080fd5b506100796004803603602081101561010d57600080fd5b5035600160a060020a031661025e565b61012561024d565b151561017b576040805160e560020a62461bcd02815260206004820181905260248201527f4f776e61626c653a2063616c6c6572206973206e6f7420746865206f776e6572604482015290519081900360640190fd5b600054600160a060020a0316ff5b61019161024d565b15156101e7576040805160e560020a62461bcd02815260206004820181905260248201527f4f776e61626c653a2063616c6c6572206973206e6f7420746865206f776e6572604482015290519081900360640190fd5b60008054604051600160a060020a03909116907f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0908390a36000805473ffffffffffffffffffffffffffffffffffffffff19169055565b600054600160a060020a031690565b600054600160a060020a0316331490565b61026661024d565b15156102bc576040805160e560020a62461bcd02815260206004820181905260248201527f4f776e61626c653a2063616c6c6572206973206e6f7420746865206f776e6572604482015290519081900360640190fd5b6102c5816102c8565b50565b600160a060020a038116151561034e576040805160e560020a62461bcd02815260206004820152602660248201527f4f776e61626c653a206e6577206f776e657220697320746865207a65726f206160448201527f6464726573730000000000000000000000000000000000000000000000000000606482015290519081900360840190fd5b60008054604051600160a060020a03808516939216917f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e091a36000805473ffffffffffffffffffffffffffffffffffffffff1916600160a060020a039290921691909117905556fea165627a7a7230582074fc16b61af4022273297aa38eda18afa9a61ab8526cefb7280b969fda1238040029",
-  "sourceMap": "185:119:3:-;;;;;687:6:5;:19;;-1:-1:-1;;;;;;687:19:5;696:10;687:19;;;;-1:-1:-1;;;;;755:6:5;;722:40;;687:6;;722:40;185:119:3;;;;;;",
-  "deployedSourceMap": "185:119:3:-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;221:80;;;;;;1668:140:5;;8:9:-1;5:2;;;30:1;27;20:12;5:2;1668:140:5;;;;851:87;;8:9:-1;5:2;;;30:1;27;20:12;5:2;851:87:5;;;;;;;;-1:-1:-1;;;;;851:87:5;;;;;;;;;;;;;;1225:92;;8:9:-1;5:2;;;30:1;27;20:12;5:2;1225:92:5;;;;;;;;;;;;;;;;;;;;;;1963:117;;8:9:-1;5:2;;;30:1;27;20:12;5:2;1963:117:5;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;-1:-1;1963:117:5;-1:-1:-1;;;;;1963:117:5;;;221:80:3;1071:9:5;:7;:9::i;:::-;1063:54;;;;;;;-1:-1:-1;;;;;1063:54:5;;;;;;;;;;;;;;;;;;;;;;;;;;;;;286:6:3;;-1:-1:-1;;;;;286:6:3;273:20;1668:140:5;1071:9;:7;:9::i;:::-;1063:54;;;;;;;-1:-1:-1;;;;;1063:54:5;;;;;;;;;;;;;;;;;;;;;;;;;;;;;1767:1;1751:6;;1730:40;;-1:-1:-1;;;;;1751:6:5;;;;1730:40;;1767:1;;1730:40;1798:1;1781:19;;-1:-1:-1;;1781:19:5;;;1668:140::o;851:87::-;889:15;924:6;-1:-1:-1;;;;;924:6:5;851:87;:::o;1225:92::-;1265:4;1303:6;-1:-1:-1;;;;;1303:6:5;1289:10;:20;;1225:92::o;1963:117::-;1071:9;:7;:9::i;:::-;1063:54;;;;;;;-1:-1:-1;;;;;1063:54:5;;;;;;;;;;;;;;;;;;;;;;;;;;;;;2044:28;2063:8;2044:18;:28::i;:::-;1963:117;:::o;2186:237::-;-1:-1:-1;;;;;2268:22:5;;;;2260:73;;;;;-1:-1:-1;;;;;2260:73:5;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;2370:6;;;2349:38;;-1:-1:-1;;;;;2349:38:5;;;;2370:6;;;2349:38;;;2398:6;:17;;-1:-1:-1;;2398:17:5;-1:-1:-1;;;;;2398:17:5;;;;;;;;;;2186:237::o",
+  "sourceMap": "185:119:4:-;;;;;687:6:6;:19;;-1:-1:-1;;;;;;687:19:6;696:10;687:19;;;;-1:-1:-1;;;;;755:6:6;;722:40;;687:6;;722:40;185:119:4;;;;;;",
+  "deployedSourceMap": "185:119:4:-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;221:80;;;;;;1668:140:6;;8:9:-1;5:2;;;30:1;27;20:12;5:2;1668:140:6;;;;851:87;;8:9:-1;5:2;;;30:1;27;20:12;5:2;851:87:6;;;;;;;;-1:-1:-1;;;;;851:87:6;;;;;;;;;;;;;;1225:92;;8:9:-1;5:2;;;30:1;27;20:12;5:2;1225:92:6;;;;;;;;;;;;;;;;;;;;;;1963:117;;8:9:-1;5:2;;;30:1;27;20:12;5:2;1963:117:6;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;-1:-1;1963:117:6;-1:-1:-1;;;;;1963:117:6;;;221:80:4;1071:9:6;:7;:9::i;:::-;1063:54;;;;;;;-1:-1:-1;;;;;1063:54:6;;;;;;;;;;;;;;;;;;;;;;;;;;;;;286:6:4;;-1:-1:-1;;;;;286:6:4;273:20;1668:140:6;1071:9;:7;:9::i;:::-;1063:54;;;;;;;-1:-1:-1;;;;;1063:54:6;;;;;;;;;;;;;;;;;;;;;;;;;;;;;1767:1;1751:6;;1730:40;;-1:-1:-1;;;;;1751:6:6;;;;1730:40;;1767:1;;1730:40;1798:1;1781:19;;-1:-1:-1;;1781:19:6;;;1668:140::o;851:87::-;889:15;924:6;-1:-1:-1;;;;;924:6:6;851:87;:::o;1225:92::-;1265:4;1303:6;-1:-1:-1;;;;;1303:6:6;1289:10;:20;;1225:92::o;1963:117::-;1071:9;:7;:9::i;:::-;1063:54;;;;;;;-1:-1:-1;;;;;1063:54:6;;;;;;;;;;;;;;;;;;;;;;;;;;;;;2044:28;2063:8;2044:18;:28::i;:::-;1963:117;:::o;2186:237::-;-1:-1:-1;;;;;2268:22:6;;;;2260:73;;;;;-1:-1:-1;;;;;2260:73:6;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;2370:6;;;2349:38;;-1:-1:-1;;;;;2349:38:6;;;;2370:6;;;2349:38;;;2398:6;:17;;-1:-1:-1;;2398:17:6;-1:-1:-1;;;;;2398:17:6;;;;;;;;;;2186:237::o",
   "source": "pragma solidity ^0.5.0;\r\n\r\nimport \"./../ownership/Ownable.sol\";\r\n\r\n/*\r\n * Killable\r\n * Base contract that can be killed by owner. All funds in contract will be sent to the owner.\r\n */\r\ncontract Killable is Ownable {\r\n    function kill() public onlyOwner payable {\r\n        selfdestruct(_owner);\r\n    }\r\n}\r\n",
   "sourcePath": "D:\\Workspace\\GitHub\\THESIS\\BloodChainContracts\\contracts\\openzeppelin\\lifecycle\\Killable.sol",
   "ast": {
     "absolutePath": "/D/Workspace/GitHub/THESIS/BloodChainContracts/contracts/openzeppelin/lifecycle/Killable.sol",
     "exportedSymbols": {
       "Killable": [
-        363
+        590
       ]
     },
-    "id": 364,
+    "id": 591,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 349,
+        "id": 576,
         "literals": [
           "solidity",
           "^",
@@ -105,16 +105,16 @@
           ".0"
         ],
         "nodeType": "PragmaDirective",
-        "src": "0:23:3"
+        "src": "0:23:4"
       },
       {
         "absolutePath": "/D/Workspace/GitHub/THESIS/BloodChainContracts/contracts/openzeppelin/ownership/Ownable.sol",
         "file": "./../ownership/Ownable.sol",
-        "id": 350,
+        "id": 577,
         "nodeType": "ImportDirective",
-        "scope": 364,
-        "sourceUnit": 608,
-        "src": "27:36:3",
+        "scope": 591,
+        "sourceUnit": 835,
+        "src": "27:36:4",
         "symbolAliases": [],
         "unitAlias": ""
       },
@@ -124,40 +124,40 @@
             "arguments": null,
             "baseName": {
               "contractScope": null,
-              "id": 351,
+              "id": 578,
               "name": "Ownable",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 607,
-              "src": "206:7:3",
+              "referencedDeclaration": 834,
+              "src": "206:7:4",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_Ownable_$607",
+                "typeIdentifier": "t_contract$_Ownable_$834",
                 "typeString": "contract Ownable"
               }
             },
-            "id": 352,
+            "id": 579,
             "nodeType": "InheritanceSpecifier",
-            "src": "206:7:3"
+            "src": "206:7:4"
           }
         ],
         "contractDependencies": [
-          607
+          834
         ],
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": true,
-        "id": 363,
+        "id": 590,
         "linearizedBaseContracts": [
-          363,
-          607
+          590,
+          834
         ],
         "name": "Killable",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "body": {
-              "id": 361,
+              "id": 588,
               "nodeType": "Block",
-              "src": "262:39:3",
+              "src": "262:39:4",
               "statements": [
                 {
                   "expression": {
@@ -165,12 +165,12 @@
                     "arguments": [
                       {
                         "argumentTypes": null,
-                        "id": 358,
+                        "id": 585,
                         "name": "_owner",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 500,
-                        "src": "286:6:3",
+                        "referencedDeclaration": 727,
+                        "src": "286:6:4",
                         "typeDescriptions": {
                           "typeIdentifier": "t_address_payable",
                           "typeString": "address payable"
@@ -184,18 +184,18 @@
                           "typeString": "address payable"
                         }
                       ],
-                      "id": 357,
+                      "id": 584,
                       "name": "selfdestruct",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 630,
-                      "src": "273:12:3",
+                      "referencedDeclaration": 857,
+                      "src": "273:12:4",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_selfdestruct_nonpayable$_t_address_payable_$returns$__$",
                         "typeString": "function (address payable)"
                       }
                     },
-                    "id": 359,
+                    "id": 586,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -203,82 +203,82 @@
                     "lValueRequested": false,
                     "names": [],
                     "nodeType": "FunctionCall",
-                    "src": "273:20:3",
+                    "src": "273:20:4",
                     "typeDescriptions": {
                       "typeIdentifier": "t_tuple$__$",
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 360,
+                  "id": 587,
                   "nodeType": "ExpressionStatement",
-                  "src": "273:20:3"
+                  "src": "273:20:4"
                 }
               ]
             },
             "documentation": null,
-            "id": 362,
+            "id": 589,
             "implemented": true,
             "kind": "function",
             "modifiers": [
               {
                 "arguments": null,
-                "id": 355,
+                "id": 582,
                 "modifierName": {
                   "argumentTypes": null,
-                  "id": 354,
+                  "id": 581,
                   "name": "onlyOwner",
                   "nodeType": "Identifier",
                   "overloadedDeclarations": [],
-                  "referencedDeclaration": 540,
-                  "src": "244:9:3",
+                  "referencedDeclaration": 767,
+                  "src": "244:9:4",
                   "typeDescriptions": {
                     "typeIdentifier": "t_modifier$__$",
                     "typeString": "modifier ()"
                   }
                 },
                 "nodeType": "ModifierInvocation",
-                "src": "244:9:3"
+                "src": "244:9:4"
               }
             ],
             "name": "kill",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 353,
+              "id": 580,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "234:2:3"
+              "src": "234:2:4"
             },
             "returnParameters": {
-              "id": 356,
+              "id": 583,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "262:0:3"
+              "src": "262:0:4"
             },
-            "scope": 363,
-            "src": "221:80:3",
+            "scope": 590,
+            "src": "221:80:4",
             "stateMutability": "payable",
             "superFunction": null,
             "visibility": "public"
           }
         ],
-        "scope": 364,
-        "src": "185:119:3"
+        "scope": 591,
+        "src": "185:119:4"
       }
     ],
-    "src": "0:306:3"
+    "src": "0:306:4"
   },
   "legacyAST": {
     "absolutePath": "/D/Workspace/GitHub/THESIS/BloodChainContracts/contracts/openzeppelin/lifecycle/Killable.sol",
     "exportedSymbols": {
       "Killable": [
-        363
+        590
       ]
     },
-    "id": 364,
+    "id": 591,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 349,
+        "id": 576,
         "literals": [
           "solidity",
           "^",
@@ -286,16 +286,16 @@
           ".0"
         ],
         "nodeType": "PragmaDirective",
-        "src": "0:23:3"
+        "src": "0:23:4"
       },
       {
         "absolutePath": "/D/Workspace/GitHub/THESIS/BloodChainContracts/contracts/openzeppelin/ownership/Ownable.sol",
         "file": "./../ownership/Ownable.sol",
-        "id": 350,
+        "id": 577,
         "nodeType": "ImportDirective",
-        "scope": 364,
-        "sourceUnit": 608,
-        "src": "27:36:3",
+        "scope": 591,
+        "sourceUnit": 835,
+        "src": "27:36:4",
         "symbolAliases": [],
         "unitAlias": ""
       },
@@ -305,40 +305,40 @@
             "arguments": null,
             "baseName": {
               "contractScope": null,
-              "id": 351,
+              "id": 578,
               "name": "Ownable",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 607,
-              "src": "206:7:3",
+              "referencedDeclaration": 834,
+              "src": "206:7:4",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_Ownable_$607",
+                "typeIdentifier": "t_contract$_Ownable_$834",
                 "typeString": "contract Ownable"
               }
             },
-            "id": 352,
+            "id": 579,
             "nodeType": "InheritanceSpecifier",
-            "src": "206:7:3"
+            "src": "206:7:4"
           }
         ],
         "contractDependencies": [
-          607
+          834
         ],
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": true,
-        "id": 363,
+        "id": 590,
         "linearizedBaseContracts": [
-          363,
-          607
+          590,
+          834
         ],
         "name": "Killable",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "body": {
-              "id": 361,
+              "id": 588,
               "nodeType": "Block",
-              "src": "262:39:3",
+              "src": "262:39:4",
               "statements": [
                 {
                   "expression": {
@@ -346,12 +346,12 @@
                     "arguments": [
                       {
                         "argumentTypes": null,
-                        "id": 358,
+                        "id": 585,
                         "name": "_owner",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 500,
-                        "src": "286:6:3",
+                        "referencedDeclaration": 727,
+                        "src": "286:6:4",
                         "typeDescriptions": {
                           "typeIdentifier": "t_address_payable",
                           "typeString": "address payable"
@@ -365,18 +365,18 @@
                           "typeString": "address payable"
                         }
                       ],
-                      "id": 357,
+                      "id": 584,
                       "name": "selfdestruct",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 630,
-                      "src": "273:12:3",
+                      "referencedDeclaration": 857,
+                      "src": "273:12:4",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_selfdestruct_nonpayable$_t_address_payable_$returns$__$",
                         "typeString": "function (address payable)"
                       }
                     },
-                    "id": 359,
+                    "id": 586,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -384,69 +384,69 @@
                     "lValueRequested": false,
                     "names": [],
                     "nodeType": "FunctionCall",
-                    "src": "273:20:3",
+                    "src": "273:20:4",
                     "typeDescriptions": {
                       "typeIdentifier": "t_tuple$__$",
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 360,
+                  "id": 587,
                   "nodeType": "ExpressionStatement",
-                  "src": "273:20:3"
+                  "src": "273:20:4"
                 }
               ]
             },
             "documentation": null,
-            "id": 362,
+            "id": 589,
             "implemented": true,
             "kind": "function",
             "modifiers": [
               {
                 "arguments": null,
-                "id": 355,
+                "id": 582,
                 "modifierName": {
                   "argumentTypes": null,
-                  "id": 354,
+                  "id": 581,
                   "name": "onlyOwner",
                   "nodeType": "Identifier",
                   "overloadedDeclarations": [],
-                  "referencedDeclaration": 540,
-                  "src": "244:9:3",
+                  "referencedDeclaration": 767,
+                  "src": "244:9:4",
                   "typeDescriptions": {
                     "typeIdentifier": "t_modifier$__$",
                     "typeString": "modifier ()"
                   }
                 },
                 "nodeType": "ModifierInvocation",
-                "src": "244:9:3"
+                "src": "244:9:4"
               }
             ],
             "name": "kill",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 353,
+              "id": 580,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "234:2:3"
+              "src": "234:2:4"
             },
             "returnParameters": {
-              "id": 356,
+              "id": 583,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "262:0:3"
+              "src": "262:0:4"
             },
-            "scope": 363,
-            "src": "221:80:3",
+            "scope": 590,
+            "src": "221:80:4",
             "stateMutability": "payable",
             "superFunction": null,
             "visibility": "public"
           }
         ],
-        "scope": 364,
-        "src": "185:119:3"
+        "scope": 591,
+        "src": "185:119:4"
       }
     ],
-    "src": "0:306:3"
+    "src": "0:306:4"
   },
   "compiler": {
     "name": "solc",
@@ -454,7 +454,7 @@
   },
   "networks": {},
   "schemaVersion": "3.0.11",
-  "updatedAt": "2019-07-25T04:47:19.665Z",
+  "updatedAt": "2019-08-08T02:26:26.762Z",
   "devdoc": {
     "methods": {
       "isOwner()": {

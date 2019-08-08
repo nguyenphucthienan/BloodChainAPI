@@ -10,6 +10,7 @@ const generator = require('generate-password');
 const RoleNames = require('../constants/RoleNames');
 const BcryptUtils = require('../utils/BcryptUtils');
 const OrganizationFieldNames = require('../constants/OrganizationFieldNames');
+const web3BloodChainService = require('./web3/web3BloodChainService');
 
 exports.getUsers = (paginationObj, filterObj, sortObj) => (
   User.aggregate([
@@ -259,8 +260,15 @@ exports.createUser = async (user) => {
   });
 
   const newUser = new User({ ...user, password: rawPassword });
-  const returnUser = await newUser.save();
-  return { ...returnUser.toObject(), rawPassword };
+  await newUser.save();
+
+  try {
+    await web3BloodChainService.createUserInfo(newUser._id.toString());
+    return { ...newUser.toObject(), rawPassword };
+  } catch (error) {
+    await this.deleteUserById(newUser._id);
+    return null;
+  }
 };
 
 exports.updateUserById = async (id, user) => {
@@ -283,6 +291,12 @@ exports.updateUserById = async (id, user) => {
 
   return updatedUser;
 };
+
+exports.deleteUserById = id => (
+  User
+    .findByIdAndDelete(id)
+    .exec()
+);
 
 exports.countUsers = filterObj => (
   User.find(filterObj)

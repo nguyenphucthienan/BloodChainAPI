@@ -7,10 +7,13 @@ const TestType = mongoose.model('TestType');
 const BloodProductType = mongoose.model('BloodProductType');
 const RoleNames = require('../constants/RoleNames');
 const TransferTypes = require('../constants/TransferTypes');
+const AddPointDescriptions = require('../constants/AddPointDescriptions');
 const bloodProductService = require('./bloodProductService');
 const web3BloodChainService = require('./web3/web3BloodChainService');
+const web3UserInfoService = require('./web3/web3UserInfoService');
 const web3BloodPackService = require('./web3/web3BloodPackService');
 const BloodChainUtils = require('../utils/BloodChainUtils');
+const config = require('../config');
 
 exports.getBloodPacks = (paginationObj, filterObj, sortObj) => (
   BloodPack.aggregate([
@@ -115,8 +118,16 @@ exports.getBloodPackById = id => (
 exports.createBloodPack = async (bloodPack) => {
   const newBloodPack = new BloodPack(bloodPack);
   await newBloodPack.save();
-  await web3BloodChainService.createBloodPack(newBloodPack._id.toString());
-  return newBloodPack;
+
+  try {
+    await web3BloodChainService.createBloodPack(newBloodPack._id.toString());
+    const userInfoAddress = await web3BloodChainService.getUserInfoAddress(newBloodPack.donor.toString());
+    await web3UserInfoService.addPoint(userInfoAddress, config.bloodPackPoint, AddPointDescriptions.DONATE_BLOOD);
+    return newBloodPack;
+  } catch (error) {
+    this.deleteBloodPackById(newBloodPack._id);
+    return null;
+  }
 };
 
 exports.updateBloodPackById = (id, bloodPack) => (
