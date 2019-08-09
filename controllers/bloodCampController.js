@@ -7,7 +7,7 @@ const { validateBloodCamp } = require('../validations/bloodCampValidations');
 
 exports.getBloodCamps = async (req, res) => {
   const paginationObj = UrlUtils.createPaginationObject(req.query);
-  const filterObj = UrlUtils.createFilterObject(req.query);
+  const filterObj = UrlUtils.createBloodCampFilterObject(req.query);
   const sortObj = UrlUtils.createSortObject(req.query);
 
   const bloodCamps = await bloodCampService.getBloodCamps(paginationObj, filterObj, sortObj);

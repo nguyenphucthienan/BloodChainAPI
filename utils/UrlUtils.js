@@ -10,6 +10,7 @@ class UrlUtils {
 
     const objectIdFields = ['_id'];
     const textFields = ['username', 'email', 'firstName', 'lastName'];
+    const pointFields = ['location'];
 
     const filterObject = {};
     for (const key in filters) {
@@ -17,6 +18,34 @@ class UrlUtils {
         filterObject[key] = mongoose.Types.ObjectId(filters[key]);
       } else if (textFields.includes(key)) {
         filterObject[key] = new RegExp(filters[key], 'i');
+      } else if (pointFields.includes(key)) {
+        filterObject[key] = UrlUtils.createLocationQuery(filters[key]);
+      } else {
+        filterObject[key] = filters[key];
+      }
+    }
+
+    return filterObject;
+  }
+
+  static createBloodCampFilterObject(query) {
+    const filters = _.omit(query, ['page', 'size', 'sort']);
+    if (_.isEmpty(filters)) {
+      return {};
+    }
+
+    const objectIdFields = ['_id'];
+    const textFields = ['name', 'address', 'email', 'phone'];
+    const pointFields = ['location'];
+
+    const filterObject = {};
+    for (const key in filters) {
+      if (objectIdFields.includes(key)) {
+        filterObject[key] = mongoose.Types.ObjectId(filters[key]);
+      } else if (textFields.includes(key)) {
+        filterObject[key] = new RegExp(filters[key], 'i');
+      } else if (pointFields.includes(key)) {
+        filterObject[key] = UrlUtils.createLocationQuery(filters[key]);
       } else {
         filterObject[key] = filters[key];
       }
@@ -33,6 +62,7 @@ class UrlUtils {
 
     const objectIdFields = ['_id'];
     const textFields = ['name', 'address', 'email', 'phone'];
+    const pointFields = ['location'];
 
     const filterObject = {};
     for (const key in filters) {
@@ -40,6 +70,8 @@ class UrlUtils {
         filterObject[key] = mongoose.Types.ObjectId(filters[key]);
       } else if (textFields.includes(key)) {
         filterObject[key] = new RegExp(filters[key], 'i');
+      } else if (pointFields.includes(key)) {
+        filterObject[key] = UrlUtils.createLocationQuery(filters[key]);
       } else {
         filterObject[key] = filters[key];
       }
@@ -56,6 +88,7 @@ class UrlUtils {
 
     const objectIdFields = ['_id'];
     const textFields = ['name', 'address', 'email', 'phone'];
+    const pointFields = ['location'];
 
     const filterObject = {};
     for (const key in filters) {
@@ -63,6 +96,8 @@ class UrlUtils {
         filterObject[key] = mongoose.Types.ObjectId(filters[key]);
       } else if (textFields.includes(key)) {
         filterObject[key] = new RegExp(filters[key], 'i');
+      } else if (pointFields.includes(key)) {
+        filterObject[key] = UrlUtils.createLocationQuery(filters[key]);
       } else {
         filterObject[key] = filters[key];
       }
@@ -168,6 +203,20 @@ class UrlUtils {
     }
 
     return filterObject;
+  }
+
+  static createLocationQuery(locationString, radiusInKm = 10) {
+    const data = locationString.split(',');
+    const lng = parseFloat(data[0]);
+    const lat = parseFloat(data[1]);
+    return {
+      $geoWithin: {
+        $centerSphere: [
+          [lng, lat],
+          radiusInKm / 6378.1
+        ]
+      }
+    };
   }
 
   static createPaginationObject(query, defaultPageNumber = 1, defaultPageSize = 10) {
