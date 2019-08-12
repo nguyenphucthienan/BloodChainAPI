@@ -9,11 +9,9 @@ exports.getCampaigns = async (req, res) => {
   const sortObj = UrlUtils.createSortObject(req.query);
 
   const campaigns = await campaignService.getCampaigns(paginationObj, filterObj, sortObj);
-  const totalItems = await campaignService.countCampaigns(filterObj);
-
   const data = {
     items: campaigns,
-    pagination: new Pagination(paginationObj.page, paginationObj.size, totalItems)
+    pagination: new Pagination(paginationObj.page, paginationObj.size, campaigns.length)
   };
 
   return res.send(data);

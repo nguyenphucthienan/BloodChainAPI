@@ -158,6 +158,32 @@ class UrlUtils {
     return filterObject;
   }
 
+  static createCampaignFilterObject(query) {
+    const filters = _.omit(query, ['page', 'size', 'sort']);
+    if (_.isEmpty(filters)) {
+      return {};
+    }
+
+    const objectIdFields = ['_id', 'bloodCamp._id'];
+    const textFields = ['name', 'description'];
+    const pointFields = ['bloodCamp.location'];
+
+    const filterObject = {};
+    for (const key in filters) {
+      if (objectIdFields.includes(key)) {
+        filterObject[key] = mongoose.Types.ObjectId(filters[key]);
+      } else if (textFields.includes(key)) {
+        filterObject[key] = new RegExp(filters[key], 'i');
+      } else if (pointFields.includes(key)) {
+        filterObject[key] = UrlUtils.createLocationQuery(filters[key]);
+      } else {
+        filterObject[key] = filters[key];
+      }
+    }
+
+    return filterObject;
+  }
+
   static createBloodPackFilterObject(query) {
     const filters = _.omit(query, ['page', 'size', 'sort', 'organization']);
     if (_.isEmpty(filters)) {
@@ -203,29 +229,6 @@ class UrlUtils {
     for (const key in filters) {
       if (objectIdFields.includes(key)) {
         filterObject[key] = mongoose.Types.ObjectId(filters[key]);
-      } else {
-        filterObject[key] = filters[key];
-      }
-    }
-
-    return filterObject;
-  }
-
-  static createCampaignFilterObject(query) {
-    const filters = _.omit(query, ['page', 'size', 'sort']);
-    if (_.isEmpty(filters)) {
-      return {};
-    }
-
-    const objectIdFields = ['_id', 'bloodCamp'];
-    const textFields = ['name', 'description'];
-
-    const filterObject = {};
-    for (const key in filters) {
-      if (objectIdFields.includes(key)) {
-        filterObject[key] = mongoose.Types.ObjectId(filters[key]);
-      } else if (textFields.includes(key)) {
-        filterObject[key] = new RegExp(filters[key], 'i');
       } else {
         filterObject[key] = filters[key];
       }

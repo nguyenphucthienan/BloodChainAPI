@@ -4,7 +4,6 @@ const photoService = require('./photoService');
 
 exports.getCampaigns = (paginationObj, filterObj, sortObj) => (
   Campaign.aggregate([
-    { $match: filterObj },
     {
       $lookup: {
         from: 'bloodcamps',
@@ -27,6 +26,7 @@ exports.getCampaigns = (paginationObj, filterObj, sortObj) => (
         as: 'photos'
       }
     },
+    { $match: filterObj },
     {
       $project: {
         _id: 1,
@@ -51,7 +51,7 @@ exports.getCampaigns = (paginationObj, filterObj, sortObj) => (
 exports.getCampaignById = id => (
   Campaign
     .findById(id)
-    .populate('bloodCamp', '_id name')
+    .populate('bloodCamp')
     .populate('photos', '_id url secureUrl')
     .exec()
 );
