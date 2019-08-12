@@ -106,6 +106,58 @@ class UrlUtils {
     return filterObject;
   }
 
+  static createBloodBankFilterObject(query) {
+    const filters = _.omit(query, ['page', 'size', 'sort']);
+    if (_.isEmpty(filters)) {
+      return {};
+    }
+
+    const objectIdFields = ['_id'];
+    const textFields = ['name', 'address', 'email', 'phone'];
+    const pointFields = ['location'];
+
+    const filterObject = {};
+    for (const key in filters) {
+      if (objectIdFields.includes(key)) {
+        filterObject[key] = mongoose.Types.ObjectId(filters[key]);
+      } else if (textFields.includes(key)) {
+        filterObject[key] = new RegExp(filters[key], 'i');
+      } else if (pointFields.includes(key)) {
+        filterObject[key] = UrlUtils.createLocationQuery(filters[key]);
+      } else {
+        filterObject[key] = filters[key];
+      }
+    }
+
+    return filterObject;
+  }
+
+  static createHospitalFilterObject(query) {
+    const filters = _.omit(query, ['page', 'size', 'sort']);
+    if (_.isEmpty(filters)) {
+      return {};
+    }
+
+    const objectIdFields = ['_id'];
+    const textFields = ['name', 'address', 'email', 'phone'];
+    const pointFields = ['location'];
+
+    const filterObject = {};
+    for (const key in filters) {
+      if (objectIdFields.includes(key)) {
+        filterObject[key] = mongoose.Types.ObjectId(filters[key]);
+      } else if (textFields.includes(key)) {
+        filterObject[key] = new RegExp(filters[key], 'i');
+      } else if (pointFields.includes(key)) {
+        filterObject[key] = UrlUtils.createLocationQuery(filters[key]);
+      } else {
+        filterObject[key] = filters[key];
+      }
+    }
+
+    return filterObject;
+  }
+
   static createBloodPackFilterObject(query) {
     const filters = _.omit(query, ['page', 'size', 'sort', 'organization']);
     if (_.isEmpty(filters)) {

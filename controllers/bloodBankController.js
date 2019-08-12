@@ -7,7 +7,7 @@ const { validateBloodBank } = require('../validations/bloodBankValidations');
 
 exports.getBloodBanks = async (req, res) => {
   const paginationObj = UrlUtils.createPaginationObject(req.query);
-  const filterObj = UrlUtils.createFilterObject(req.query);
+  const filterObj = UrlUtils.createBloodBankFilterObject(req.query);
   const sortObj = UrlUtils.createSortObject(req.query);
 
   const bloodBanks = await bloodBankService.getBloodBanks(paginationObj, filterObj, sortObj);

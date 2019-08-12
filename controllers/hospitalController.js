@@ -7,7 +7,7 @@ const { validateHospital } = require('../validations/hospitalValidations');
 
 exports.getHospitals = async (req, res) => {
   const paginationObj = UrlUtils.createPaginationObject(req.query);
-  const filterObj = UrlUtils.createFilterObject(req.query);
+  const filterObj = UrlUtils.createHospitalFilterObject(req.query);
   const sortObj = UrlUtils.createSortObject(req.query);
 
   const hospitals = await hospitalService.getHospitals(paginationObj, filterObj, sortObj);
