@@ -58,6 +58,12 @@ router.get('/:id/user-info',
   catchErrors(userController.getUserInfoOnBlockChain)
 );
 
+router.get('/:id/point-histories',
+  requireJwtAuth,
+  checkUserPermission,
+  catchErrors(userController.getPointHistoriesOnBlockChain)
+);
+
 router.post('/organizations',
   requireJwtAuth,
   hasRoles([RoleNames.ADMIN]),

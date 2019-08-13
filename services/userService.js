@@ -309,7 +309,10 @@ exports.countUsers = filterObj => (
 exports.getUserInfoOnBlockChainById = async (id) => {
   const userInfoData = await web3BloodChainService.getUserInfo(id);
   const userInfo = BloodChainUtils.extractUserInfo(userInfoData);
+  return userInfo;
+}
 
+exports.getPointHistoriesOnBlockChainById = async (id) => {
   const address = await web3BloodChainService.getUserInfoAddress(id);
   const historiesLength = await web3UserInfoService.getHistoriesLength(address);
 
@@ -322,10 +325,7 @@ exports.getUserInfoOnBlockChainById = async (id) => {
   const historyData = await Promise.all(historyPromises);
   histories.push(...historyData.map(historyData => BloodChainUtils.extractPointHistoryInfo(historyData)));
 
-  return {
-    ...userInfo,
-    pointHistories: histories
-  };
+  return histories;
 }
 
 exports.getStaffsOfOrganization = async (organizationRoleName, organizationId) => {

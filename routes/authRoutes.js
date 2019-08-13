@@ -49,4 +49,9 @@ router.get('/me/user-info',
   catchErrors(authController.getMyUserInfoOnBlockChain)
 );
 
+router.get('/me/point-histories',
+  requireJwtAuth,
+  catchErrors(authController.getMyPointHistoriesOnBlockChain)
+);
+
 module.exports = router;

@@ -131,3 +131,15 @@ exports.getMyUserInfoOnBlockChain = async (req, res) => {
   const userInfo = await userService.getUserInfoOnBlockChainById(id);
   return res.send(userInfo);
 };
+
+exports.getMyPointHistoriesOnBlockChain = async (req, res) => {
+  const { id } = req.user;
+  const user = await userService.getUserById(id);
+
+  if (!user) {
+    return res.status(404).send();
+  }
+
+  const userInfo = await userService.getPointHistoriesOnBlockChainById(id);
+  return res.send(userInfo);
+};
