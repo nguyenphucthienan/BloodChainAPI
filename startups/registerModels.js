@@ -12,4 +12,5 @@ module.exports = () => {
   require('../models/BloodPack');
   require('../models/BloodProduct');
   require('../models/Campaign');
+  require('../models/Award');
 };
