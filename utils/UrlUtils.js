@@ -176,6 +176,10 @@ class UrlUtils {
         filterObject[key] = new RegExp(filters[key], 'i');
       } else if (pointFields.includes(key)) {
         filterObject[key] = UrlUtils.createLocationQuery(filters[key]);
+      } else if (key === 'fromDate') {
+        filterObject['startDate'] = { $gte: new Date(filters[key]) };
+      } else if (key === 'toDate') {
+        filterObject['endDate'] = { $lte: new Date(filters[key]) };
       } else {
         filterObject[key] = filters[key];
       }
