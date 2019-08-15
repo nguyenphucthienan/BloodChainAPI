@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
-const Award = mongoose.model('Award');
+const Reward = mongoose.model('Reward');
 const photoService = require('./photoService');
 
-exports.getAwards = (paginationObj, filterObj, sortObj) => (
-  Award.aggregate([
+exports.getRewards = (paginationObj, filterObj, sortObj) => (
+  Reward.aggregate([
     { $match: filterObj },
     {
       $lookup: {
@@ -39,8 +39,8 @@ exports.getAwards = (paginationObj, filterObj, sortObj) => (
   ])
 );
 
-exports.getPublicAwards = (paginationObj, filterObj, sortObj) => (
-  Award.aggregate([
+exports.getPublicRewards = (paginationObj, filterObj, sortObj) => (
+  Reward.aggregate([
     { $match: filterObj },
     {
       $lookup: {
@@ -75,55 +75,55 @@ exports.getPublicAwards = (paginationObj, filterObj, sortObj) => (
   ])
 );
 
-exports.getAwardById = id => (
-  Award
+exports.getRewardById = id => (
+  Reward
     .findById(id)
     .populate('photos', '_id url secureUrl')
     .select('-codes')
     .exec()
 );
 
-exports.createAward = (award) => {
-  const newAward = new Award(award);
-  return newAward.save();
+exports.createReward = (reward) => {
+  const newReward = new Reward(reward);
+  return newReward.save();
 };
 
-exports.updateAwardById = (id, award) => (
-  Award
+exports.updateRewardById = (id, reward) => (
+  Reward
     .findByIdAndUpdate(id,
-      { $set: award },
+      { $set: reward },
       { new: true })
     .exec()
 );
 
-exports.deleteAwardById = id => (
-  Award
+exports.deleteRewardById = id => (
+  Reward
     .findByIdAndDelete(id)
     .exec()
 );
 
-exports.countAwards = filterObj => (
-  Award.find(filterObj)
+exports.countRewards = filterObj => (
+  Reward.find(filterObj)
     .countDocuments()
     .exec()
 );
 
-exports.uploadAwardPhotoById = async (id, file) => {
+exports.uploadRewardPhotoById = async (id, file) => {
   const photo = await photoService.uploadPhoto(file);
-  return await Award
+  return await Reward
     .findByIdAndUpdate(id,
       { $addToSet: { photos: photo._id } },
       { new: true })
     .exec()
 };
 
-exports.deleteAwardPhotoById = async (id, photoId) => {
+exports.deleteRewardPhotoById = async (id, photoId) => {
   const photo = await photoService.deletePhotoById(photoId);
   if (!photo) {
     return null;
   }
 
-  return await Award
+  return await Reward
     .findByIdAndUpdate(id,
       { $pull: { photos: photoId } },
       { new: true })

@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
-const awardSchema = new Schema({
+const rewardSchema = new Schema({
   name: {
     type: String,
     required: 'Name is required',
@@ -26,4 +26,4 @@ const awardSchema = new Schema({
   }]
 }, { timestamps: true });
 
-mongoose.model('Award', awardSchema);
+mongoose.model('Reward', rewardSchema);
