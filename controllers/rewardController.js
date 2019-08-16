@@ -114,3 +114,15 @@ exports.deleteRewardPhoto = async (req, res) => {
 
   return res.send(reward);
 };
+
+exports.redeemReward = async (req, res) => {
+  const { id } = req.params;
+  const userId = req.user.id;
+
+  const code = await rewardService.redeemRewardById(id, userId);
+  if (!code) {
+    return res.status(404).send();
+  }
+
+  return res.send({ code });
+};

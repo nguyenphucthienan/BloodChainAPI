@@ -1,6 +1,11 @@
 const mongoose = require('mongoose');
 const Reward = mongoose.model('Reward');
 const photoService = require('./photoService');
+const web3BloodChainService = require('./web3/web3BloodChainService');
+const web3UserInfoService = require('./web3/web3UserInfoService');
+const BloodChainUtils = require('../utils/BloodChainUtils');
+const UpdatePointTypes = require('../constants/UpdatePointTypes');
+const UpdatePointDescriptions = require('../constants/UpdatePointDescriptions');
 
 exports.getRewards = (paginationObj, filterObj, sortObj) => (
   Reward.aggregate([
@@ -128,4 +133,43 @@ exports.deleteRewardPhotoById = async (id, photoId) => {
       { $pull: { photos: photoId } },
       { new: true })
     .exec()
+};
+
+exports.redeemRewardById = async (id, userId) => {
+  const reward = await Reward.findById(id);
+  if (!reward || reward.codes.length <= 0) {
+    return null;
+  }
+
+  const userInfoData = await web3BloodChainService.getUserInfo(userId);
+  const userInfo = BloodChainUtils.extractUserInfo(userInfoData);
+
+  if (!userInfo) {
+    return null;
+  }
+
+  if (userInfo.point < reward.point) {
+    return null;
+  }
+
+  const userInfoAddress = await web3BloodChainService.getUserInfoAddress(userId.toString());
+  await web3UserInfoService.updatePoint(
+    userInfoAddress,
+    UpdatePointTypes.SUBTRACT,
+    reward.point,
+    UpdatePointDescriptions.REDEEM_REWARD
+  );
+
+  const code = reward.codes[0];
+  const updatedReward = await Reward
+    .findByIdAndUpdate(id,
+      { $pull: { codes: code } },
+      { new: true })
+    .exec();
+
+  if (!updatedReward) {
+    return null;
+  }
+
+  return code;
 };

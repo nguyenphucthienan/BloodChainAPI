@@ -55,4 +55,9 @@ router.delete('/:id/photos/:photoId',
   catchErrors(rewardController.deleteRewardPhoto)
 );
 
+router.post('/:id/redeem',
+  requireJwtAuth,
+  catchErrors(rewardController.redeemReward)
+);
+
 module.exports = router;
