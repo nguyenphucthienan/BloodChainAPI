@@ -14,7 +14,7 @@ exports.getBalance = async (req, res) => {
 };
 
 exports.fund = async (req, res) => {
-  const amount = req.body;
+  const { amount } = req.body;
   const transactionId = await web3BloodChainService.fund(amount);
   return res.send({ transactionId });
 };

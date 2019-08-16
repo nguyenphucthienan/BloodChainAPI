@@ -37,11 +37,9 @@ exports.fund = async (amount) => {
   const accounts = await this.getAccounts();
   const hexAmount = Web3Utils.toHex(amount);
   return new Promise((resolve, reject) => {
-    return web3.eth
-      .sendTransaction({
-        from: accounts[0],
-        value: hexAmount
-      })
+    return BloodChain.methods
+      .fund()
+      .send({ from: accounts[0], value: hexAmount })
       .on('transactionHash', async hash => {
         await Web3Utils.getTransactionReceipt(hash);
         resolve(hash);
@@ -54,7 +52,6 @@ exports.transfer = async (address, amount) => {
   const accounts = await this.getAccounts();
   const BloodChain = this.getContract();
   const hexAmount = Web3Utils.toHex(amount);
-  console.log('hexAmount', hexAmount);
   return new Promise((resolve, reject) => {
     return BloodChain.methods
       .transfer(address, hexAmount)

@@ -133,8 +133,20 @@ exports.redeemReward = async (req, res) => {
 
   const code = await rewardService.redeemRewardById(id, userId);
   if (!code) {
-    return res.status(404).send();
+    return res.status(400).send();
   }
 
   return res.send({ code });
+};
+
+exports.redeemEthereum = async (req, res) => {
+  const userId = req.user.id;
+  const { address, amount } = req.body;
+
+  const transactionId = await rewardService.redeemEthereum(userId, address, amount);
+  if (!transactionId) {
+    return res.status(400).send();
+  }
+
+  return res.send({ transactionId });
 };

@@ -10,7 +10,7 @@ const { requireJwtAuth } = require('../middlewares/passportAuth');
 router.get('/',
   requireJwtAuth,
   hasRoles([RoleNames.ADMIN]),
-  catchErrors(blockchainController.getContractInfo)
+  catchErrors(blockchainController.getInfo)
 );
 
 router.get('/balance',

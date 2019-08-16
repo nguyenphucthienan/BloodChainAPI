@@ -66,4 +66,9 @@ router.post('/:id/redeem',
   catchErrors(rewardController.redeemReward)
 );
 
+router.post('/redeem-ethereum',
+  requireJwtAuth,
+  catchErrors(rewardController.redeemEthereum)
+);
+
 module.exports = router;

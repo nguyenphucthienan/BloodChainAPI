@@ -200,3 +200,31 @@ exports.redeemRewardById = async (id, userId) => {
 
   return code;
 };
+
+exports.redeemEthereum = async (userId, address, amount) => {
+  const userInfoData = await web3BloodChainService.getUserInfo(userId);
+  const userInfo = BloodChainUtils.extractUserInfo(userInfoData);
+
+  if (!userInfo) {
+    return null;
+  }
+
+  if (userInfo.point < 150) {
+    return null;
+  }
+
+  const transactionId = await web3BloodChainService.transfer(address, amount);
+  if (!transactionId) {
+    return null;
+  }
+
+  const userInfoAddress = await web3BloodChainService.getUserInfoAddress(userId);
+  await web3UserInfoService.updatePoint(
+    userInfoAddress,
+    UpdatePointTypes.SUBTRACT,
+    150,
+    `${UpdatePointDescriptions.REDEEM_ETHEREUM}|;|${address}|;|${amount}|;|${transactionId}`
+  );
+
+  return transactionId;
+};
