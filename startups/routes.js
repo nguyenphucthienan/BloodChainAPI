@@ -14,6 +14,7 @@ const bloodProductRoutes = require('../routes/bloodProductRoutes');
 const campaignRoutes = require('../routes/campaignRoutes');
 const rewardRoutes = require('../routes/rewardRoutes');
 const statisticRoutes = require('../routes/statisticRoutes');
+const blockchainRoutes = require('../routes/blockchainRoutes');
 const errorHandlers = require('../handlers/errorHandlers');
 
 module.exports = (app) => {
@@ -32,6 +33,7 @@ module.exports = (app) => {
   app.use('/api/campaigns', campaignRoutes);
   app.use('/api/rewards', rewardRoutes);
   app.use('/api/statistics', statisticRoutes);
+  app.use('/api/blockchain', blockchainRoutes);
   app.use('/api', infoRoutes);
 
   // eslint-disable-next-line no-undef

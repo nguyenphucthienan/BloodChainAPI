@@ -18,6 +18,14 @@ exports.getContract = () => {
   return BloodChain;
 };
 
+exports.getAccounts = async () => {
+  return await web3.eth.getAccounts();
+};
+
+exports.getBalance = async (address) => {
+  return await web3.eth.getBalance(address);
+};
+
 exports.getInfo = async () => {
   const BloodChain = this.getContract();
   return await BloodChain.methods
@@ -25,9 +33,39 @@ exports.getInfo = async () => {
     .call();
 };
 
-exports.getAccounts = async () => {
-  return await web3.eth.getAccounts();
-};
+exports.fund = async (amount) => {
+  const accounts = await this.getAccounts();
+  const hexAmount = Web3Utils.toHex(amount);
+  return new Promise((resolve, reject) => {
+    return web3.eth
+      .sendTransaction({
+        from: accounts[0],
+        value: hexAmount
+      })
+      .on('transactionHash', async hash => {
+        await Web3Utils.getTransactionReceipt(hash);
+        resolve(hash);
+      })
+      .on('error', error => reject(error));
+  });
+}
+
+exports.transfer = async (address, amount) => {
+  const accounts = await this.getAccounts();
+  const BloodChain = this.getContract();
+  const hexAmount = Web3Utils.toHex(amount);
+  console.log('hexAmount', hexAmount);
+  return new Promise((resolve, reject) => {
+    return BloodChain.methods
+      .transfer(address, hexAmount)
+      .send({ from: accounts[0] })
+      .on('transactionHash', async hash => {
+        await Web3Utils.getTransactionReceipt(hash);
+        resolve(hash);
+      })
+      .on('error', error => reject(error));
+  });
+}
 
 exports.getUserInfo = async (userId) => {
   const BloodChain = this.getContract();
