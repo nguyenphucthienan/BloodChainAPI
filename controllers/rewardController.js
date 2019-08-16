@@ -83,6 +83,18 @@ exports.deleteReward = async (req, res) => {
   return res.send(reward);
 };
 
+exports.updateRewardCodes = async (req, res) => {
+  const { id } = req.params;
+  const { codesToAdd, codesToRemove } = req.body;
+
+  const reward = await rewardService.updateRewardCodesById(id, codesToAdd, codesToRemove);
+  if (!reward) {
+    return res.status(404).send();
+  }
+
+  return res.send(reward);
+};
+
 exports.uploadRewardPhoto = async (req, res) => {
   const { id } = req.params;
   const reward = await rewardService.getRewardById(id);

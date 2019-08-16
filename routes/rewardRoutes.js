@@ -55,6 +55,12 @@ router.delete('/:id/photos/:photoId',
   catchErrors(rewardController.deleteRewardPhoto)
 );
 
+router.put('/:id/codes',
+  requireJwtAuth,
+  hasRoles([RoleNames.ADMIN]),
+  catchErrors(rewardController.updateRewardCodes)
+);
+
 router.post('/:id/redeem',
   requireJwtAuth,
   catchErrors(rewardController.redeemReward)

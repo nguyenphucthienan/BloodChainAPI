@@ -135,6 +135,33 @@ exports.deleteRewardPhotoById = async (id, photoId) => {
     .exec()
 };
 
+exports.updateRewardCodesById = async (id, codesToAdd, codesToRemove) => {
+  const reward = await Reward.findById(id);
+  if (!reward) {
+    return null;
+  }
+
+  let updatedReward;
+
+  if (codesToRemove) {
+    updatedReward = await Reward
+      .findByIdAndUpdate(id,
+        { $pull: { codes: { $in: codesToRemove } } },
+        { new: true })
+      .exec();
+  }
+
+  if (codesToAdd) {
+    updatedReward = await Reward
+      .findByIdAndUpdate(id,
+        { $addToSet: { codes: { $each: codesToAdd } } },
+        { new: true })
+      .exec();
+  }
+
+  return updatedReward;
+};
+
 exports.redeemRewardById = async (id, userId) => {
   const reward = await Reward.findById(id);
   if (!reward || reward.codes.length <= 0) {
