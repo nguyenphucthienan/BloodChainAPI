@@ -152,15 +152,15 @@ exports.redeemRewardById = async (id, userId) => {
     return null;
   }
 
+  const code = reward.codes[0];
   const userInfoAddress = await web3BloodChainService.getUserInfoAddress(userId.toString());
   await web3UserInfoService.updatePoint(
     userInfoAddress,
     UpdatePointTypes.SUBTRACT,
     reward.point,
-    UpdatePointDescriptions.REDEEM_REWARD
+    `${UpdatePointDescriptions.REDEEM_VOUCHER}|;|${id}|;|${reward.name}|;|${code}`
   );
 
-  const code = reward.codes[0];
   const updatedReward = await Reward
     .findByIdAndUpdate(id,
       { $pull: { codes: code } },

@@ -127,7 +127,7 @@ exports.createBloodPack = async (bloodPack) => {
       userInfoAddress,
       UpdatePointTypes.ADD,
       config.bloodPackPoint,
-      UpdatePointDescriptions.DONATE_BLOOD
+      `${UpdatePointDescriptions.DONATE_BLOOD}|;|${newBloodPack.id}`
     );
 
     return newBloodPack;

@@ -1,4 +1,5 @@
 const Web3Utils = require('./Web3Utils');
+const UpdatePointDescriptions = require('../constants/UpdatePointDescriptions');
 
 class BloodChainUtils {
   static extractTransferHistoryInfo(data) {
@@ -43,14 +44,39 @@ class BloodChainUtils {
   static extractPointHistoryInfo(data) {
     const updatePointType = data[0];
     const amount = Web3Utils.fromHexToNumber(data[1]);
+
     const description = data[2];
+    const descriptionData = description.split('|;|');
+
+    let info;
+    if (descriptionData[0] === UpdatePointDescriptions.DONATE_BLOOD) {
+      info = {
+        descriptionType: UpdatePointDescriptions.DONATE_BLOOD,
+        bloodPackId: descriptionData[1]
+      };
+    } else if (descriptionData[0] === UpdatePointDescriptions.REDEEM_VOUCHER) {
+      info = {
+        descriptionType: UpdatePointDescriptions.REDEEM_VOUCHER,
+        rewardId: descriptionData[1],
+        rewardName: descriptionData[2],
+        code: descriptionData[3]
+      };
+    } else if (descriptionData[0] === UpdatePointDescriptions.REDEEM_ETHEREUM) {
+      info = {
+        descriptionType: UpdatePointDescriptions.REDEEM_ETHEREUM,
+        ethAddress: descriptionData[1],
+        ethAmount: descriptionData[2],
+        transactionId: descriptionData[3]
+      };
+    }
+
     const updatedAt = Web3Utils.fromHexToDate(data[3]);
 
     return {
       updatePointType,
       amount,
-      description,
-      updatedAt
+      updatedAt,
+      ...info
     };
   }
 }
