@@ -13,4 +13,20 @@ router.get('/',
   catchErrors(blockchainController.getContractInfo)
 );
 
+router.get('/balance',
+  catchErrors(blockchainController.getBalance)
+);
+
+router.post('/fund',
+  requireJwtAuth,
+  hasRoles([RoleNames.ADMIN]),
+  catchErrors(blockchainController.fund)
+);
+
+router.post('/transfer',
+  requireJwtAuth,
+  hasRoles([RoleNames.ADMIN]),
+  catchErrors(blockchainController.transfer)
+);
+
 module.exports = router;
