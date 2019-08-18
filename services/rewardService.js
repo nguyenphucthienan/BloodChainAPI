@@ -6,6 +6,9 @@ const web3UserInfoService = require('./web3/web3UserInfoService');
 const BloodChainUtils = require('../utils/BloodChainUtils');
 const UpdatePointTypes = require('../constants/UpdatePointTypes');
 const UpdatePointDescriptions = require('../constants/UpdatePointDescriptions');
+const EthereumPlanNames = require('../constants/EthereumPlanNames');
+const Web3Utils = require('../utils/Web3Utils');
+const config = require('../config');
 
 exports.getRewards = (paginationObj, filterObj, sortObj) => (
   Reward.aggregate([
@@ -201,7 +204,27 @@ exports.redeemRewardById = async (id, userId) => {
   return code;
 };
 
-exports.redeemEthereum = async (userId, address, amount) => {
+exports.getEthereumPlans = () => (
+  Promise.resolve([
+    {
+      name: EthereumPlanNames.GOLD,
+      eth: config.ethAmount.goldPlan,
+      point: config.point.goldPlan
+    },
+    {
+      name: EthereumPlanNames.SILVER,
+      eth: config.ethAmount.silverPlan,
+      point: config.point.silverPlan
+    },
+    {
+      name: EthereumPlanNames.BRONZE,
+      eth: config.ethAmount.bronzePlan,
+      point: config.point.bronzePlan
+    }
+  ])
+);
+
+exports.redeemEthereum = async (userId, planName, address) => {
   const userInfoData = await web3BloodChainService.getUserInfo(userId);
   const userInfo = BloodChainUtils.extractUserInfo(userInfoData);
 
@@ -209,11 +232,28 @@ exports.redeemEthereum = async (userId, address, amount) => {
     return null;
   }
 
-  if (userInfo.point < 150) {
+  let point, amount;
+  switch (planName) {
+    case EthereumPlanNames.GOLD:
+      point = config.point.goldPlan;
+      amount = config.ethAmount.goldPlan;
+      break;
+    case EthereumPlanNames.SILVER:
+      point = config.point.silverPlan;
+      amount = config.ethAmount.silverPlan;
+      break;
+    case EthereumPlanNames.BRONZE:
+      point = config.point.bronzePlan;
+      amount = config.ethAmount.bronzePlan;
+      break;
+  }
+
+  if (userInfo.point < point) {
     return null;
   }
 
-  const transactionId = await web3BloodChainService.transfer(address, amount);
+  const amountInWei = Web3Utils.toWei(String(amount), 'ether');
+  const transactionId = await web3BloodChainService.transfer(address, amountInWei);
   if (!transactionId) {
     return null;
   }
@@ -222,7 +262,7 @@ exports.redeemEthereum = async (userId, address, amount) => {
   await web3UserInfoService.updatePoint(
     userInfoAddress,
     UpdatePointTypes.SUBTRACT,
-    150,
+    point,
     `${UpdatePointDescriptions.REDEEM_ETHEREUM}|;|${address}|;|${amount}|;|${transactionId}`
   );
 

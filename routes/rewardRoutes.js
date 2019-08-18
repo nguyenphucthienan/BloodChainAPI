@@ -61,14 +61,18 @@ router.put('/:id/codes',
   catchErrors(rewardController.updateRewardCodes)
 );
 
+router.get('/ethereum/plans',
+  catchErrors(rewardController.getEthereumPlans)
+);
+
+router.post('/ethereum/redeem',
+  requireJwtAuth,
+  catchErrors(rewardController.redeemEthereum)
+);
+
 router.post('/:id/redeem',
   requireJwtAuth,
   catchErrors(rewardController.redeemReward)
-);
-
-router.post('/redeem-ethereum',
-  requireJwtAuth,
-  catchErrors(rewardController.redeemEthereum)
 );
 
 module.exports = router;

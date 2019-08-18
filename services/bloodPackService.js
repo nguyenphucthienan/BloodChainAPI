@@ -126,7 +126,7 @@ exports.createBloodPack = async (bloodPack) => {
     await web3UserInfoService.updatePoint(
       userInfoAddress,
       UpdatePointTypes.ADD,
-      config.bloodPackPoint,
+      config.point.bloodPack,
       `${UpdatePointDescriptions.DONATE_BLOOD}|;|${newBloodPack.id}`
     );
 
