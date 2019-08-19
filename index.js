@@ -8,6 +8,7 @@ require('./startups/registerModels')();
 require('./startups/seeds')();
 require('./startups/validation')();
 require('./startups/cloudinary')();
+require('./startups/sendGrid')();
 require('./startups/initWeb3')();
 require('./startups/logging')();
 require('./services/passport')();

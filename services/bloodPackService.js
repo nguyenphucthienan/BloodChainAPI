@@ -9,7 +9,9 @@ const RoleNames = require('../constants/RoleNames');
 const TransferTypes = require('../constants/TransferTypes');
 const UpdatePointTypes = require('../constants/UpdatePointTypes');
 const UpdatePointDescriptions = require('../constants/UpdatePointDescriptions');
+const userService = require('./userService');
 const bloodProductService = require('./bloodProductService');
+const mailService = require('../services/mailService');
 const web3BloodChainService = require('./web3/web3BloodChainService');
 const web3UserInfoService = require('./web3/web3UserInfoService');
 const web3BloodPackService = require('./web3/web3BloodPackService');
@@ -128,6 +130,12 @@ exports.createBloodPack = async (bloodPack) => {
       UpdatePointTypes.ADD,
       config.point.bloodPack,
       `${UpdatePointDescriptions.DONATE_BLOOD}|;|${newBloodPack.id}`
+    );
+
+    const donor = await userService.getUserById(bloodPack.donor);
+    mailService.sendDonateMail(
+      donor.email, donor.firstName, donor.lastName,
+      newBloodPack.createdAt, newBloodPack._id
     );
 
     return newBloodPack;
