@@ -343,6 +343,13 @@ exports.transferBloodPacksToBloodTestCenter = async (bloodCampId, bloodPackIds, 
           description
         );
 
+        const donor = await userService.getUserById(updatedBloodPack.donor);
+        mailService.sendTransferBloodPackMail(
+          donor.email, donor.firstName, donor.lastName,
+          bloodCamp.name, bloodTestCenter.name,
+          new Date(), updatedBloodPack._id
+        );
+
         success.push(bloodPackId);
       } catch (error) {
         errors.push(bloodPackId);
@@ -406,6 +413,13 @@ exports.transferBloodPacksToBloodSeparationCenter = async (bloodTestCenterId, bl
           RoleNames.BLOOD_TEST_CENTER, bloodTestCenterId.toString(), bloodTestCenter.name,
           RoleNames.BLOOD_SEPARATION_CENTER, bloodSeparationCenterId.toString(), bloodSeparationCenter.name,
           description
+        );
+
+        const donor = await userService.getUserById(updatedBloodPack.donor);
+        mailService.sendTransferBloodPackMail(
+          donor.email, donor.firstName, donor.lastName,
+          bloodTestCenter.name, bloodSeparationCenter.name,
+          new Date(), updatedBloodPack._id
         );
 
         success.push(bloodPackId);

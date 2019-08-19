@@ -11,6 +11,10 @@ module.exports = {
     apiKey: process.env.CLOUDINARY_API_KEY,
     apiSecret: process.env.CLOUDINARY_API_SECRET
   },
+  sendGrid: {
+    email: process.env.SENDGRID_EMAIL,
+    apiKey: process.env.SENDGRID_API_KEY,
+  },
   mnemonic: process.env.MNEMONIC,
   infuraEndpoint: process.env.INFURA_ENDPOINT,
   contractAddress: {
