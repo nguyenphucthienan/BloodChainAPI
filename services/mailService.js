@@ -87,6 +87,33 @@ function getTransferBloodProductMailTemplate(
   `;
 }
 
+function getUseBloodProductMailTemplate(
+  donorFistName, donorLastName,
+  hospitalName, patientName,
+  useTime, bloodProductId
+) {
+  return `
+    Hi ${donorFistName} ${donorLastName},
+    <br>
+    <br>
+    One of your blood products (ID: <strong>${bloodProductId}</strong>) has been used 
+    to save <strong>${patientName}</strong>'s life at <strong>${hospitalName}</strong>
+    on <strong>${useTime.toDateString()}</strong>.
+    <br>
+    <br>
+    Thanks for giving someone you do not even know that opportunity.
+    <br>
+    <br>
+    Life is a gift. Give more of it. Keep on donating and believing in life. 
+    <br>
+    <br>
+    With gratitude,
+    <br>
+    <br>
+    BloodChain Team
+  `;
+}
+
 exports.sendDonateMail = (
   donorEmail, donorFistName, donorLastName,
   donateTime, bloodPackId
@@ -136,6 +163,25 @@ exports.sendTransferBloodProductMail = (
       donorFistName, donorLastName,
       fromOrganizationName, toOrganizationName,
       transferTime, bloodProductId
+    ),
+  };
+
+  sgMail.send(message);
+};
+
+exports.sendUseBloodProductMail = (
+  donorEmail, donorFistName, donorLastName,
+  hospitalName, patientName,
+  useTime, bloodProductId
+) => {
+  const message = {
+    from: getSenderInfo(),
+    to: donorEmail,
+    subject: 'BloodChain: Your blood has been used',
+    html: getUseBloodProductMailTemplate(
+      donorFistName, donorLastName,
+      hospitalName, patientName,
+      useTime, bloodProductId
     ),
   };
 

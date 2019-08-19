@@ -5,6 +5,8 @@ const BloodBank = mongoose.model('BloodBank');
 const Hospital = mongoose.model('Hospital');
 const RoleNames = require('../constants/RoleNames');
 const TransferTypes = require('../constants/TransferTypes');
+const userService = require('../services/userService');
+const mailService = require('../services/mailService');
 const web3BloodChainService = require('./web3/web3BloodChainService');
 const web3BloodPackService = require('./web3/web3BloodPackService');
 
@@ -204,11 +206,30 @@ exports.transferBloodProducts = async (
           description
         );
 
+        const donor = await userService.getUserById(updatedBloodProduct.donor);
+        mailService.sendTransferBloodProductMail(
+          donor.email, donor.firstName, donor.lastName,
+          fromOrganization.name, toOrganization.name,
+          new Date(), updatedBloodProduct._id
+        );
+
         success.push(bloodProductId);
       } catch (error) {
         errors.push(bloodProductId);
       }
     } else {
+      await BloodProduct.findOneAndUpdate(
+        {
+          _id: bloodProductId,
+          currentLocation: mongoose.Types.ObjectId(toOrganizationId)
+        },
+        {
+          $set: {
+            currentLocation: fromOrganizationId
+          }
+        }
+      );
+
       errors.push(bloodProductId);
     }
   }
@@ -253,12 +274,19 @@ exports.useBloodProducts = async (hospitalId, patientName, bloodProductIds, desc
           description
         );
 
+        const donor = await userService.getUserById(updatedBloodProduct.donor);
+        mailService.sendUseBloodProductMail(
+          donor.email, donor.firstName, donor.lastName,
+          hospital.name, patientName,
+          new Date(), updatedBloodProduct._id
+        );
+
         success.push(bloodProductId);
       } catch (error) {
         await BloodProduct.findOneAndUpdate(
           {
             _id: bloodProductId,
-            currentLocation: hospital.id
+            currentLocation: hospital._id
           },
           {
             $set: {
