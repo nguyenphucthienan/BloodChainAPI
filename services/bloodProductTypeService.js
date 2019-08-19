@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const BloodProductType = mongoose.model('BloodProductType');
+const bloodProductService = require('./bloodProductService');
 
 exports.getAllBloodProductTypes = () => BloodProductType.find().exec();
 
@@ -31,11 +32,19 @@ exports.updateBloodProductTypeById = (id, bloodProductType) => (
     .exec()
 );
 
-exports.deleteBloodProductTypeById = id => (
-  BloodProductType
+exports.deleteBloodProductTypeById = async id => {
+  const bloodProductCount = await bloodProductService.countBloodProducts({
+    'bloodProductType': mongoose.Types.ObjectId(id)
+  });
+
+  if (bloodProductCount > 0) {
+    throw new Error('Blood product type is in use');
+  }
+
+  return BloodProductType
     .findByIdAndDelete(id)
     .exec()
-);
+};
 
 exports.countBloodProductTypes = filterObj => (
   BloodProductType.find(filterObj)

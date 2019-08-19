@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const TestType = mongoose.model('TestType');
+const bloodPackService = require('./bloodPackService');
 
 exports.getAllTestTypes = () => TestType.find().exec();
 
@@ -31,11 +32,19 @@ exports.updateTestTypeById = (id, testType) => (
     .exec()
 );
 
-exports.deleteTestTypeById = id => (
-  TestType
+exports.deleteTestTypeById = async id => {
+  const bloodPackCount = await bloodPackService.countBloodPacks({
+    'testResults.testType': mongoose.Types.ObjectId(id)
+  });
+
+  if (bloodPackCount > 0) {
+    throw new Error('Test type is in use');
+  }
+
+  return TestType
     .findByIdAndDelete(id)
     .exec()
-);
+};
 
 exports.countTestTypes = filterObj => (
   TestType.find(filterObj)
