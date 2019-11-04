@@ -249,7 +249,7 @@ class UrlUtils {
 
     const objectIdFields = ['_id'];
     const textFields = ['name'];
-
+ 
     const filterObject = {};
     for (const key in filters) {
       if (objectIdFields.includes(key)) {

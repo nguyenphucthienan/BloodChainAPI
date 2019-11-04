@@ -250,9 +250,17 @@ exports.getUserByEmail = email => (
     .exec()
 );
 
-exports.registerUser = (user) => {
+exports.registerUser = async (user) => {
   const newUser = new User(user);
-  return newUser.save();
+  await newUser.save();
+
+  try {
+    await web3BloodChainService.createUserInfo(newUser._id.toString());
+    return newUser;
+  } catch (error) {
+    await this.deleteUserById(newUser._id);
+    return null;
+  }
 };
 
 exports.createUser = async (user) => {
