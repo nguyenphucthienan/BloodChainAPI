@@ -21,10 +21,10 @@ module.exports = {
     BloodChain: process.env.CONTRACT_ADDRESS_BLOODCHAIN
   },
   point: {
-    bloodPackPoint: parseInt(process.env.BLOOD_PACK_POINT),
-    goldPlanPoint: parseInt(process.env.GOLD_PLAN_POINT),
-    silverPlanPoint: parseInt(process.env.SILVER_PLAN_POINT),
-    bronzePlanPoint: parseInt(process.env.BRONZE_PLAN_POINT)
+    bloodPack: parseInt(process.env.BLOOD_PACK_POINT),
+    goldPlan: parseInt(process.env.GOLD_PLAN_POINT),
+    silverPlan: parseInt(process.env.SILVER_PLAN_POINT),
+    bronzePlan: parseInt(process.env.BRONZE_PLAN_POINT)
   },
   ethAmount: {
     goldPlan: parseFloat(process.env.GOLD_PLAN_ETH_AMOUNT),
