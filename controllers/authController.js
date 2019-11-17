@@ -13,10 +13,15 @@ exports.register = async (req, res) => {
     return res.status(400).send({ message: error.toString() });
   }
 
-  const { username, email } = req.body;
+  const { username, idCardNumber, email } = req.body;
   let user = await userService.getUserByUsername(username);
   if (user) {
     return res.status(409).send({ message: 'Username already exists' });
+  }
+
+  user = await userService.getUserByIdCardNumber(idCardNumber);
+  if (user) {
+    return res.status(409).send({ message: 'ID card number has been used' });
   }
 
   user = await userService.getUserByEmail(email);
@@ -32,6 +37,17 @@ exports.register = async (req, res) => {
 exports.checkUsername = async (req, res) => {
   const { username } = req.query;
   const user = await userService.getUserByUsername(username);
+
+  if (user) {
+    return res.json({ exists: true });
+  }
+
+  return res.json({ exists: false });
+};
+
+exports.checkIdCardNumber = async (req, res) => {
+  const { idCardNumber } = req.query;
+  const user = await userService.getUserByIdCardNumber(idCardNumber);
 
   if (user) {
     return res.json({ exists: true });

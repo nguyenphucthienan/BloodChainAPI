@@ -37,10 +37,15 @@ exports.createUser = async (req, res) => {
     return res.status(400).send({ message: error.toString() });
   }
 
-  const { username, email } = req.body;
+  const { username, idCardNumber, email } = req.body;
   let user = await userService.getUserByUsername(username);
   if (user) {
     return res.status(409).send({ message: 'Username already exists' });
+  }
+
+  user = await userService.getUserByIdCardNumber(idCardNumber);
+  if (user) {
+    return res.status(409).send({ message: 'ID card number has been used' });
   }
 
   user = await userService.getUserByEmail(email);

@@ -21,6 +21,13 @@ const userSchema = new Schema({
     type: String,
     required: 'Password is required'
   },
+  idCardNumber: {
+    type: String,
+    required: 'ID card number is required',
+    unique: true,
+    match: /[0-9]*$/,
+    trim: true
+  },
   email: {
     type: String,
     required: 'Email is required',

@@ -115,6 +115,7 @@ exports.getUsers = (paginationObj, filterObj, sortObj) => (
         createdAt: 1,
         updatedAt: 1,
         username: 1,
+        idCardNumber: 1,
         firstName: 1,
         lastName: 1,
         gender: 1,
@@ -161,6 +162,7 @@ exports.getUserById = (id) => {
         createdAt: 1,
         updatedAt: 1,
         username: 1,
+        idCardNumber: 1,
         firstName: 1,
         lastName: 1,
         gender: 1,
@@ -196,6 +198,7 @@ exports.getUserByUsername = username => (
         createdAt: 1,
         updatedAt: 1,
         username: 1,
+        idCardNumber: 1,
         firstName: 1,
         lastName: 1,
         gender: 1,
@@ -231,11 +234,47 @@ exports.getUserByEmail = email => (
         createdAt: 1,
         updatedAt: 1,
         username: 1,
-        email: 1,
+        idCardNumber: 1,
         firstName: 1,
         lastName: 1,
         gender: 1,
         birthdate: 1,
+        email: 1,
+        address: 1,
+        location: 1,
+        photoUrl: 1,
+        roles: 1,
+        bloodCamp: 1,
+        bloodTestCenter: 1,
+        bloodSeparationCenter: 1,
+        bloodBank: 1,
+        hospital: 1
+      }
+    )
+    .exec()
+);
+
+exports.getUserByIdCardNumber = idCardNumber => (
+  User.findOne({ idCardNumber })
+    .populate('photo', '_id url secureUrl')
+    .populate('roles', '_id name')
+    .populate('bloodCamp', '_id name')
+    .populate('bloodTestCenter', '_id name')
+    .populate('bloodSeparationCenter', '_id name')
+    .populate('bloodBank', '_id name')
+    .populate('hospital', '_id name')
+    .select(
+      {
+        _id: 1,
+        createdAt: 1,
+        updatedAt: 1,
+        username: 1,
+        idCardNumber: 1,
+        firstName: 1,
+        lastName: 1,
+        gender: 1,
+        birthdate: 1,
+        email: 1,
         address: 1,
         location: 1,
         photoUrl: 1,

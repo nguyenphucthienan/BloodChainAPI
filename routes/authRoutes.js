@@ -14,6 +14,10 @@ router.get('/check-username',
   catchErrors(authController.checkUsername)
 );
 
+router.get('/check-id-card-number',
+  catchErrors(authController.checkIdCardNumber)
+);
+
 router.get('/check-email',
   catchErrors(authController.checkEmail)
 );

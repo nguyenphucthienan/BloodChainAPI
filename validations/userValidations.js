@@ -7,6 +7,7 @@ exports.validateRegisterUser = (user) => {
     username: Joi.string().alphanum().min(3).max(50).required(),
     password: Joi.string().min(5).max(255).required(),
     confirmPassword: Joi.string().min(5).max(255),
+    idCardNumber: Joi.string().max(255).regex(/[0-9]*$/).required(),
     email: Joi.string().max(255).email({ minDomainSegments: 2 }).required(),
     firstName: Joi.string().max(255).required(),
     lastName: Joi.string().max(255).required(),
@@ -22,6 +23,7 @@ exports.validateRegisterUser = (user) => {
 exports.validateCreateUser = (user) => {
   const schema = Joi.object().keys({
     username: Joi.string().alphanum().min(3).max(50).required(),
+    idCardNumber: Joi.string().max(255).regex(/[0-9]*$/).required(),
     email: Joi.string().max(255).email({ minDomainSegments: 2 }).required(),
     firstName: Joi.string().max(255).required(),
     lastName: Joi.string().max(255).required(),
@@ -38,6 +40,7 @@ exports.validateCreateUser = (user) => {
 exports.validateUpdateUser = (user) => {
   const schema = Joi.object().keys({
     username: Joi.string().alphanum().min(3).max(50).allow(null),
+    idCardNumber: Joi.string().max(255).regex(/[0-9]*$/).required(),
     email: Joi.string().max(255).email({ minDomainSegments: 2 }).required(),
     firstName: Joi.string().max(255).required(),
     lastName: Joi.string().max(255).required(),
