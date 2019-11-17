@@ -347,6 +347,19 @@ exports.deleteUserById = id => (
     .exec()
 );
 
+exports.resetPasswordById = async (id) => {
+  const rawPassword = generator.generate({
+    length: 10,
+    numbers: true
+  });
+
+  const user = await this.getUserById(id);
+  user.password = rawPassword;
+
+  const updatedUser = await this.updateUserById(id, user);
+  return { ...updatedUser.toObject(), rawPassword };
+};
+
 exports.countUsers = filterObj => (
   User.find(filterObj)
     .countDocuments()

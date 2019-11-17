@@ -46,6 +46,12 @@ router.put('/:id',
   catchErrors(userController.updateUser)
 );
 
+router.put('/:id/reset-password',
+  requireJwtAuth,
+  hasRoles([RoleNames.ADMIN]),
+  catchErrors(userController.resetPassword)
+);
+
 router.delete('/:id',
   requireJwtAuth,
   hasRoles([RoleNames.ADMIN]),

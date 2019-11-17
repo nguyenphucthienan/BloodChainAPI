@@ -85,6 +85,17 @@ exports.deleteUser = async (req, res) => {
   return res.send(user);
 };
 
+exports.resetPassword = async (req, res) => {
+  const { id } = req.params;
+  const updatedUser = await userService.resetPasswordById(id);
+
+  if (!updatedUser) {
+    return res.status(404).send();
+  }
+
+  return res.send(updatedUser);
+};
+
 exports.getUserInfoOnBlockChain = async (req, res) => {
   const { id } = req.params;
   const user = await userService.getUserById(id);
