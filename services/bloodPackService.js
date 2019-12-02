@@ -6,7 +6,7 @@ const BloodSeparationCenter = mongoose.model('BloodSeparationCenter');
 const TestType = mongoose.model('TestType');
 const BloodProductType = mongoose.model('BloodProductType');
 const RoleNames = require('../constants/RoleNames');
-const TransferTypes = require('../constants/TransferTypes');
+const HistoryTypes = require('../constants/HistoryTypes');
 const UpdatePointTypes = require('../constants/UpdatePointTypes');
 const UpdatePointDescriptions = require('../constants/UpdatePointDescriptions');
 const userService = require('./userService');
@@ -292,7 +292,7 @@ exports.updateSeparationResultsById = async (id, separationResults, separationDe
   return bloodPack;
 };
 
-exports.transferBloodPacksToBloodTestCenter = async (bloodCampId, bloodPackIds, bloodTestCenterId, description) => {
+exports.transferBloodPacksToBloodTestCenter = async (username, bloodCampId, bloodPackIds, bloodTestCenterId, description) => {
   const bloodCamp = await BloodCamp.findById(bloodCampId);
   if (!bloodCamp) {
     return { success: [], errors: bloodPackIds };
@@ -337,7 +337,7 @@ exports.transferBloodPacksToBloodTestCenter = async (bloodCampId, bloodPackIds, 
         const bloodPackAddress = await web3BloodChainService.getBloodPackAddress(bloodPackId);
         await web3BloodPackService.transfer(
           bloodPackAddress,
-          TransferTypes.TRANSFER_BLOOD_PACK, bloodPackId,
+          HistoryTypes.TRANSFER_BLOOD_PACK, username, bloodPackId,
           RoleNames.BLOOD_CAMP, bloodCampId.toString(), bloodCamp.name,
           RoleNames.BLOOD_TEST_CENTER, bloodTestCenterId.toString(), bloodTestCenter.name,
           description
@@ -362,7 +362,7 @@ exports.transferBloodPacksToBloodTestCenter = async (bloodCampId, bloodPackIds, 
   return { success, errors };
 };
 
-exports.transferBloodPacksToBloodSeparationCenter = async (bloodTestCenterId, bloodPackIds, bloodSeparationCenterId, description) => {
+exports.transferBloodPacksToBloodSeparationCenter = async (username, bloodTestCenterId, bloodPackIds, bloodSeparationCenterId, description) => {
   const bloodTestCenter = await BloodTestCenter.findById(bloodTestCenterId);
   if (!bloodTestCenter) {
     return { success: [], errors: bloodPackIds };
@@ -409,7 +409,7 @@ exports.transferBloodPacksToBloodSeparationCenter = async (bloodTestCenterId, bl
         const bloodPackAddress = await web3BloodChainService.getBloodPackAddress(bloodPackId);
         await web3BloodPackService.transfer(
           bloodPackAddress,
-          TransferTypes.TRANSFER_BLOOD_PACK, bloodPackId,
+          HistoryTypes.TRANSFER_BLOOD_PACK, username, bloodPackId,
           RoleNames.BLOOD_TEST_CENTER, bloodTestCenterId.toString(), bloodTestCenter.name,
           RoleNames.BLOOD_SEPARATION_CENTER, bloodSeparationCenterId.toString(), bloodSeparationCenter.name,
           description

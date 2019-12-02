@@ -43,6 +43,9 @@ const bloodPackSchema = new Schema({
   testPassed: {
     type: Boolean
   },
+  disposed: {
+    type: Boolean
+  },
   testResults: [
     { type: testResultSchema }
   ],

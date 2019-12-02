@@ -4,7 +4,7 @@ const BloodSeparationCenter = mongoose.model('BloodSeparationCenter');
 const BloodBank = mongoose.model('BloodBank');
 const Hospital = mongoose.model('Hospital');
 const RoleNames = require('../constants/RoleNames');
-const TransferTypes = require('../constants/TransferTypes');
+const HistoryTypes = require('../constants/HistoryTypes');
 const userService = require('../services/userService');
 const mailService = require('../services/mailService');
 const web3BloodChainService = require('./web3/web3BloodChainService');
@@ -131,6 +131,7 @@ exports.countBloodProducts = filterObj => (
 );
 
 exports.transferBloodProducts = async (
+  username,
   fromOrganizationType, fromOrganizationId,
   toOrganizationType, toOrganizationId,
   bloodProductIds, description
@@ -200,7 +201,7 @@ exports.transferBloodProducts = async (
         const bloodPackAddress = await web3BloodChainService.getBloodPackAddress(bloodPackId);
         await web3BloodPackService.transfer(
           bloodPackAddress,
-          TransferTypes.TRANSFER_BLOOD_PRODUCT, bloodProductId,
+          HistoryTypes.TRANSFER_BLOOD_PRODUCT, username, bloodProductId,
           fromOrganizationType, fromOrganizationId.toString(), fromOrganization.name,
           toOrganizationType, toOrganizationId.toString(), toOrganization.name,
           description
@@ -237,7 +238,7 @@ exports.transferBloodProducts = async (
   return { success, errors };
 };
 
-exports.useBloodProducts = async (hospitalId, patientName, bloodProductIds, description) => {
+exports.useBloodProducts = async (username, hospitalId, patientName, bloodProductIds, description) => {
   const hospital = await Hospital.findById(hospitalId);
   const success = [], errors = [];
 
@@ -268,7 +269,7 @@ exports.useBloodProducts = async (hospitalId, patientName, bloodProductIds, desc
         const bloodPackAddress = await web3BloodChainService.getBloodPackAddress(bloodPackId);
         await web3BloodPackService.transfer(
           bloodPackAddress,
-          TransferTypes.USE_BLOOD_PRODUCT, bloodProductId,
+          HistoryTypes.USE_BLOOD_PRODUCT, username, bloodProductId,
           RoleNames.HOSPITAL, hospital._id, hospital.name,
           '', '', patientName,
           description

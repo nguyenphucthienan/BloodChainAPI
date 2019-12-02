@@ -160,9 +160,11 @@ exports.updateSeparationResults = async (req, res) => {
 
 exports.transferBloodPacksToBloodTestCenter = async (req, res) => {
   const bloodCampId = req.user.bloodCamp._id;
+  const { username } = req.user;
   const { bloodPackIds, bloodTestCenterId, description } = req.body;
 
   const results = await bloodPackService.transferBloodPacksToBloodTestCenter(
+    username,
     bloodCampId,
     bloodPackIds,
     bloodTestCenterId,
@@ -174,9 +176,11 @@ exports.transferBloodPacksToBloodTestCenter = async (req, res) => {
 
 exports.transferBloodPacksToBloodSeparationCenter = async (req, res) => {
   const bloodTestCenterId = req.user.bloodTestCenter._id;
+  const { username } = req.user;
   const { bloodPackIds, bloodSeparationCenterId, description } = req.body;
 
   const results = await bloodPackService.transferBloodPacksToBloodSeparationCenter(
+    username,
     bloodTestCenterId,
     bloodPackIds,
     bloodSeparationCenterId,

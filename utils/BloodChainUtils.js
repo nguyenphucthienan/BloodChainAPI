@@ -3,26 +3,27 @@ const UpdatePointDescriptions = require('../constants/UpdatePointDescriptions');
 
 class BloodChainUtils {
   static extractTransferHistoryInfo(data) {
-    const transferType = data[0];
-    const id = data[1];
+    const historyType = data[0];
+    const operatedBy = data[1];
+    const id = data[2];
 
-    const from = data[2];
+    const from = data[3];
     const fromData = from.split('|;|');
     const fromType = fromData[0];
     const fromId = fromData[1];
     const fromName = fromData[2];
 
-    const to = data[3];
+    const to = data[4];
     const toData = to.split('|;|');
     const toType = toData[0];
     const toId = toData[1];
     const toName = toData[2];
 
-    const description = data[4];
-    const transferedAt = Web3Utils.fromHexToDate(data[5]);
+    const description = data[5];
+    const transferedAt = Web3Utils.fromHexToDate(data[6]);
 
     return {
-      transferType, id,
+      historyType, operatedBy, id,
       fromType, fromId, fromName,
       toType, toId, toName,
       description, transferedAt
