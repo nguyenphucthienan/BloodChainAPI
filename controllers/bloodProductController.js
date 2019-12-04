@@ -53,6 +53,7 @@ exports.deleteBloodProduct = async (req, res) => {
 };
 
 exports.transferBloodProducts = async (req, res) => {
+  const { username } = req.user;
   const {
     fromOrganizationType,
     toOrganizationType,
@@ -79,6 +80,7 @@ exports.transferBloodProducts = async (req, res) => {
   }
 
   const results = await bloodProductService.transferBloodProducts(
+    username,
     fromOrganizationType,
     fromOrganization._id,
     toOrganizationType,
@@ -91,6 +93,7 @@ exports.transferBloodProducts = async (req, res) => {
 };
 
 exports.useBloodProducts = async (req, res) => {
+  const { username } = req.user;
   const {
     patientName,
     bloodProductIds,
@@ -103,6 +106,7 @@ exports.useBloodProducts = async (req, res) => {
   }
 
   const results = await bloodProductService.useBloodProducts(
+    username,
     hospital._id,
     patientName,
     bloodProductIds,
