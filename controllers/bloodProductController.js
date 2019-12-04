@@ -95,7 +95,7 @@ exports.transferBloodProducts = async (req, res) => {
 exports.useBloodProducts = async (req, res) => {
   const { username } = req.user;
   const {
-    patientName,
+    patientInfo,
     bloodProductIds,
     description
   } = req.body;
@@ -108,7 +108,7 @@ exports.useBloodProducts = async (req, res) => {
   const results = await bloodProductService.useBloodProducts(
     username,
     hospital._id,
-    patientName,
+    patientInfo,
     bloodProductIds,
     description
   );

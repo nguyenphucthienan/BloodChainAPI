@@ -238,7 +238,7 @@ exports.transferBloodProducts = async (
   return { success, errors };
 };
 
-exports.useBloodProducts = async (username, hospitalId, patientName, bloodProductIds, description) => {
+exports.useBloodProducts = async (username, hospitalId, patientInfo, bloodProductIds, description) => {
   const hospital = await Hospital.findById(hospitalId);
   const success = [], errors = [];
 
@@ -271,14 +271,14 @@ exports.useBloodProducts = async (username, hospitalId, patientName, bloodProduc
           bloodPackAddress,
           HistoryTypes.USE_BLOOD_PRODUCT, username, bloodProductId,
           RoleNames.HOSPITAL, hospital._id, hospital.name,
-          '', '', patientName,
+          '', '', patientInfo,
           description
         );
 
         const donor = await userService.getUserById(updatedBloodProduct.donor);
         mailService.sendUseBloodProductMail(
           donor.email, donor.firstName, donor.lastName,
-          hospital.name, patientName,
+          hospital.name, patientInfo,
           new Date(), updatedBloodProduct._id
         );
 
