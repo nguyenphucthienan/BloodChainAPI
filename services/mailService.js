@@ -87,18 +87,68 @@ function getTransferBloodProductMailTemplate(
   `;
 }
 
-function getUseBloodProductMailTemplate(
+function getDisposeBloodPackMailTemplate(
   donorFistName, donorLastName,
-  hospitalName, patientName,
-  useTime, bloodProductId
+  organizationName, useTime, bloodPackId
 ) {
   return `
     Hi ${donorFistName} ${donorLastName},
     <br>
     <br>
+    Your blood pack (ID: <strong>${bloodPackId}</strong>) has been disposed 
+    at <strong>${organizationName}</strong> on <strong>${useTime.toDateString()}</strong>.
+    <br>
+    <br>
+    Should you wish to get more information, please do not hesitate to contact us.
+    <br>
+    <br>
+    With gratitude,
+    <br>
+    <br>
+    BloodChain Team
+  `;
+}
+
+function getDisposeBloodProductMailTemplate(
+  donorFistName, donorLastName,
+  organizationName, useTime, bloodProductId
+) {
+  return `
+    Hi ${donorFistName} ${donorLastName},
+    <br>
+    <br>
+    One of your blood products (ID: <strong>${bloodProductId}</strong>) has been disposed 
+    at <strong>${organizationName}</strong> on <strong>${useTime.toDateString()}</strong>.
+    <br>
+    <br>
+    Should you wish to get more information, please do not hesitate to contact us.
+    <br>
+    <br>
+    With gratitude,
+    <br>
+    <br>
+    BloodChain Team
+  `;
+}
+
+function getUseBloodProductMailTemplate(
+  donorFistName, donorLastName,
+  hospitalName, patientInfo,
+  useTime, bloodProductId
+) {
+  const patientData = patientInfo.split(';;;');
+  return `
+    Hi ${donorFistName} ${donorLastName},
+    <br>
+    <br>
     One of your blood products (ID: <strong>${bloodProductId}</strong>) has been used 
-    to save <strong>${patientName}</strong>'s life at <strong>${hospitalName}</strong>
+    to save a life at <strong>${hospitalName}</strong>
     on <strong>${useTime.toDateString()}</strong>.
+    <br>
+    <br>
+    <strong>Patient's name: </strong>${patientData[0]}
+    <br>
+    <strong>Patient's phone number:</strong> ${patientData[2]}
     <br>
     <br>
     Thanks for giving someone you do not even know that opportunity.
@@ -169,9 +219,43 @@ exports.sendTransferBloodProductMail = (
   sgMail.send(message);
 };
 
+exports.sendDisposeBloodPackMail = (
+  donorEmail, donorFistName, donorLastName,
+  organizationName, disposeTime, bloodPackId
+) => {
+  const message = {
+    from: getSenderInfo(),
+    to: donorEmail,
+    subject: 'BloodChain: Your blood has been disposed',
+    html: getDisposeBloodPackMailTemplate(
+      donorFistName, donorLastName,
+      organizationName, disposeTime, bloodPackId
+    ),
+  };
+
+  sgMail.send(message);
+};
+
+exports.sendDisposeBloodProductMail = (
+  donorEmail, donorFistName, donorLastName,
+  organizationName, disposeTime, bloodProductId
+) => {
+  const message = {
+    from: getSenderInfo(),
+    to: donorEmail,
+    subject: 'BloodChain: Your blood has been disposed',
+    html: getDisposeBloodProductMailTemplate(
+      donorFistName, donorLastName,
+      organizationName, disposeTime, bloodProductId
+    ),
+  };
+
+  sgMail.send(message);
+};
+
 exports.sendUseBloodProductMail = (
   donorEmail, donorFistName, donorLastName,
-  hospitalName, patientName,
+  hospitalName, patientInfo,
   useTime, bloodProductId
 ) => {
   const message = {
@@ -180,7 +264,7 @@ exports.sendUseBloodProductMail = (
     subject: 'BloodChain: Your blood has been used',
     html: getUseBloodProductMailTemplate(
       donorFistName, donorLastName,
-      hospitalName, patientName,
+      hospitalName, patientInfo,
       useTime, bloodProductId
     ),
   };

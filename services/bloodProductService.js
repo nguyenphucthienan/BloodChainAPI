@@ -362,12 +362,11 @@ exports.disposeBloodProducts = async (
           description
         );
 
-        // const donor = await userService.getUserById(updatedBloodProduct.donor);
-        // mailService.sendTransferBloodProductMail(
-        //   donor.email, donor.firstName, donor.lastName,
-        //   organization.name, toOrganization.name,
-        //   new Date(), updatedBloodProduct._id
-        // );
+        const donor = await userService.getUserById(updatedBloodProduct.donor);
+        mailService.sendDisposeBloodProductMail(
+          donor.email, donor.firstName, donor.lastName,
+          organization.name, new Date(), updatedBloodProduct._id
+        );
 
         success.push(bloodProductId);
       } catch (error) {

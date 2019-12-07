@@ -488,12 +488,11 @@ exports.disposeBloodPacks = async (
           description
         );
 
-        // const donor = await userService.getUserById(updatedBloodProduct.donor);
-        // mailService.sendTransferBloodProductMail(
-        //   donor.email, donor.firstName, donor.lastName,
-        //   organization.name, toOrganization.name,
-        //   new Date(), updatedBloodProduct._id
-        // );
+        const donor = await userService.getUserById(updatedBloodPack.donor);
+        mailService.sendDisposeBloodPackMail(
+          donor.email, donor.firstName, donor.lastName,
+          organization.name, new Date(), updatedBloodPack._id
+        );
 
         success.push(bloodPackId);
       } catch (error) {
