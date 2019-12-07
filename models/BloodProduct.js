@@ -53,6 +53,10 @@ const bloodProductSchema = new Schema({
     type: Boolean,
     default: false
   },
+  disposed: {
+    type: Boolean,
+    default: false
+  },
   currentLocation: {
     type: Schema.Types.ObjectId,
     require: 'Current location is required'

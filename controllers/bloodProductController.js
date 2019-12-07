@@ -115,3 +115,40 @@ exports.useBloodProducts = async (req, res) => {
 
   return res.send(results);
 };
+
+exports.disposeBloodProducts = async (req, res) => {
+  const { username } = req.user;
+  const {
+    organizationType,
+    organizationId,
+    bloodProductIds,
+    description
+  } = req.body;
+
+  let organization;
+  switch (organizationType) {
+    case RoleNames.BLOOD_SEPARATION_CENTER:
+      organization = req.user.bloodSeparationCenter;
+      break;
+    case RoleNames.BLOOD_BANK:
+      organization = req.user.bloodBank;
+      break;
+    case RoleNames.HOSPITAL:
+      organization = req.user.hospital;
+      break;
+  }
+
+  if (!organization) {
+    return res.status(400).send();
+  }
+
+  const results = await bloodProductService.disposeBloodProducts(
+    username,
+    organizationType,
+    organizationId,
+    bloodProductIds,
+    description
+  );
+
+  return res.send(results);
+};

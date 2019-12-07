@@ -43,9 +43,6 @@ const bloodPackSchema = new Schema({
   testPassed: {
     type: Boolean
   },
-  disposed: {
-    type: Boolean
-  },
   testResults: [
     { type: testResultSchema }
   ],
@@ -64,6 +61,10 @@ const bloodPackSchema = new Schema({
   bloodSeparationCenter: {
     type: Schema.Types.ObjectId,
     ref: 'BloodSeparationCenter'
+  },
+  disposed: {
+    type: Boolean,
+    default: false
   },
   currentLocation: {
     type: Schema.Types.ObjectId,

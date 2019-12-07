@@ -86,4 +86,14 @@ router.post('/transfer/blood-separation-center',
   catchErrors(bloodPackController.transferBloodPacksToBloodSeparationCenter)
 );
 
+router.post('/dispose',
+  requireJwtAuth,
+  hasRoles([
+    RoleNames.BLOOD_CAMP,
+    RoleNames.BLOOD_TEST_CENTER,
+    RoleNames.BLOOD_SEPARATION_CENTER
+  ]),
+  catchErrors(bloodPackController.disposeBloodPacks)
+);
+
 module.exports = router;

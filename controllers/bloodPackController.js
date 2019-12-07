@@ -1,3 +1,4 @@
+const RoleNames = require('../constants/RoleNames');
 const bloodPackService = require('../services/bloodPackService');
 const UrlUtils = require('../utils/UrlUtils');
 const Pagination = require('../helpers/Pagination');
@@ -184,6 +185,43 @@ exports.transferBloodPacksToBloodSeparationCenter = async (req, res) => {
     bloodTestCenterId,
     bloodPackIds,
     bloodSeparationCenterId,
+    description
+  );
+
+  return res.send(results);
+};
+
+exports.disposeBloodPacks = async (req, res) => {
+  const { username } = req.user;
+  const {
+    organizationType,
+    organizationId,
+    bloodPackIds,
+    description
+  } = req.body;
+
+  let organization;
+  switch (organizationType) {
+    case RoleNames.BLOOD_CAMP:
+      organization = req.user.bloodCamp;
+      break;
+    case RoleNames.BLOOD_TEST_CENTER:
+      organization = req.user.bloodTestCenter;
+      break;
+    case RoleNames.BLOOD_SEPARATION_CENTER:
+      organization = req.user.bloodSeparationCenter;
+      break;
+  }
+
+  if (!organization) {
+    return res.status(400).send();
+  }
+
+  const results = await bloodPackService.disposeBloodPacks(
+    username,
+    organizationType,
+    organizationId,
+    bloodPackIds,
     description
   );
 

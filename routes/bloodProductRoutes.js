@@ -63,4 +63,14 @@ router.post('/use',
   catchErrors(bloodProductController.useBloodProducts)
 );
 
+router.post('/dispose',
+  requireJwtAuth,
+  hasRoles([
+    RoleNames.BLOOD_SEPARATION_CENTER,
+    RoleNames.BLOOD_BANK,
+    RoleNames.HOSPITAL
+  ]),
+  catchErrors(bloodProductController.disposeBloodProducts)
+);
+
 module.exports = router;

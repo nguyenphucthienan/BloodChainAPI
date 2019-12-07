@@ -66,6 +66,7 @@ exports.getBloodProducts = (paginationObj, filterObj, sortObj) => (
         expirationDate: 1,
         description: 1,
         used: 1,
+        disposed: 1,
         currentLocation: 1,
         history: 1,
         'donor._id': 1,
@@ -296,6 +297,80 @@ exports.useBloodProducts = async (username, hospitalId, patientInfo, bloodProduc
           }
         );
 
+        errors.push(bloodProductId);
+      }
+    } else {
+      errors.push(bloodProductId);
+    }
+  }
+
+  return { success, errors };
+};
+
+exports.disposeBloodProducts = async (
+  username,
+  organizationType, organizationId,
+  bloodProductIds, description
+) => {
+  let organization;
+  switch (organizationType) {
+    case RoleNames.BLOOD_SEPARATION_CENTER:
+      organization = await BloodSeparationCenter.findById(organizationId);
+      break;
+    case RoleNames.BLOOD_BANK:
+      organization = await BloodBank.findById(organizationId);
+      break;
+    case RoleNames.HOSPITAL:
+      organization = await Hospital.findById(organizationId);
+      break;
+  }
+
+  if (!organization) {
+    return { success: [], errors: bloodProductIds };
+  }
+
+  const success = [], errors = [];
+  for (let bloodProductId of bloodProductIds) {
+    const bloodProduct = await BloodProduct.findById(bloodProductId);
+    if (bloodProduct.currentLocation.toString() !== organizationId.toString()) {
+      errors.push(bloodProductId);
+      continue;
+    }
+
+    const updatedBloodProduct = await BloodProduct.findOneAndUpdate(
+      {
+        _id: bloodProductId,
+        currentLocation: mongoose.Types.ObjectId(organizationId),
+        used: false,
+        disposed: false
+      },
+      {
+        $set: { disposed: true }
+      },
+      { new: true }
+    );
+
+    if (updatedBloodProduct) {
+      try {
+        const bloodPackId = updatedBloodProduct.bloodPack.toString()
+        const bloodPackAddress = await web3BloodChainService.getBloodPackAddress(bloodPackId);
+        await web3BloodPackService.transfer(
+          bloodPackAddress,
+          HistoryTypes.DISPOSE_BLOOD_PRODUCT, username, bloodProductId,
+          organizationType, organizationId.toString(), organization.name,
+          '', '', '',
+          description
+        );
+
+        // const donor = await userService.getUserById(updatedBloodProduct.donor);
+        // mailService.sendTransferBloodProductMail(
+        //   donor.email, donor.firstName, donor.lastName,
+        //   organization.name, toOrganization.name,
+        //   new Date(), updatedBloodProduct._id
+        // );
+
+        success.push(bloodProductId);
+      } catch (error) {
         errors.push(bloodProductId);
       }
     } else {
