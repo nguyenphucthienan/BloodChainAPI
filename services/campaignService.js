@@ -51,7 +51,14 @@ exports.getCampaigns = (paginationObj, filterObj, sortObj) => (
 exports.getCampaignById = id => (
   Campaign
     .findById(id)
-    .populate('bloodCamp')
+    .populate({
+      path: 'bloodCamp',
+      populate: {
+        path: 'photos',
+        model: 'Photo',
+        select: '_id url secureUrl'
+      }
+    })
     .populate('photos', '_id url secureUrl')
     .exec()
 );
