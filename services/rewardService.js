@@ -259,7 +259,10 @@ exports.redeemEthereum = async (userId, planName, address) => {
   }
 
   const userInfoAddress = await web3BloodChainService.getUserInfoAddress(userId);
-  await web3UserInfoService.updatePoint(
+
+  // Due to Heroku timeout limit
+  // await web3UserInfoService.updatePoint(
+  web3UserInfoService.updatePoint(
     userInfoAddress,
     UpdatePointTypes.SUBTRACT,
     point,
