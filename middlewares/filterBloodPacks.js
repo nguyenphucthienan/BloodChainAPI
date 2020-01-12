@@ -7,14 +7,12 @@ module.exports = (req, res, next) => {
   if (donor) {
     return next();
   }
+  
+  if (!organization) {
+    return next();
+  }
 
   const roleNames = req.user.roles.map(role => role.name);
-
-  if (!organization && roleNames.includes(RoleNames.ADMIN)) {
-    return next();
-  } else if (!organization) {
-    return res.status(400).send({ message: 'Organization type is required' });
-  }
 
   if (!roleNames.includes(organization)) {
     return res.status(400).send({ message: 'Role and organization type do not match' });
